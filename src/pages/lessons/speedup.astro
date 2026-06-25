@@ -1,0 +1,57 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import procedural from "../../../derived/speedup/procedural.trace.json";
+import buggy from "../../../derived/speedup/buggy.trace.json";
+
+// Parallel first (establish that 2 workers can give 2x), then the dependency chain (which can't).
+const registers = [procedural, buggy];
+---
+
+<Base
+  title="Parallel speedup — GlassBox"
+  description="Watch two workers halve the time on independent tasks — and watch a dependency chain refuse to speed up at all."
+>
+  <h1>Parallel speedup</h1>
+  <p class="lede">
+    Throwing more workers at a job only helps if the work can actually be split. <strong>Speedup</strong>
+    measures it: <code>sequential time / parallel time</code>. Independent tasks divide cleanly and you get
+    real speedup; a chain where each step waits for the last cannot be parallelized at all, no matter how
+    many workers you add. Switch on the Gantt chart and watch the difference — and try <strong>Predict</strong>
+    mode to call the parallel time before it's revealed.
+  </p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>
+      Four tasks, 8 ticks of work in total, two workers. The Gantt chart has one lane per worker; each
+      block is a task, drawn across the time it runs. The <strong>speedup</strong> is computed live.
+    </p>
+    <ul>
+      <li>
+        <strong>Procedural</strong> — independent tasks, scheduled onto whichever worker is free. Both
+        lanes stay busy, the run finishes in 4 ticks, and <code>speedup = 8/4 = 2</code>. Clean
+        parallelism.
+      </li>
+      <li>
+        <strong>Buggy</strong> — the same tasks, but each depends on the one before it. The blocks march
+        across the timeline one after another even though there are two lanes, so the run still takes 8
+        ticks and <code>speedup = 8/8 = 1</code>. Two workers bought nothing. Sequential dependencies are
+        the ceiling on parallel speedup — the single most-missed idea in this corner of the course.
+      </li>
+    </ul>
+    <p class="fineprint">
+      The schedule and timings are real execution output; that this models real parallel hardware is a
+      modelling claim (marked <em>model: author-asserted</em>) — see <a href="../../verification/">how GlassBox stays honest</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>

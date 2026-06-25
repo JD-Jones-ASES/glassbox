@@ -1,0 +1,54 @@
+id = "speedup-dependent"
+title = "Parallel speedup — a chain you can't parallelize"
+register = "naive"
+problem = "Run four tasks on two workers and measure the speedup over running them one at a time."
+author = "GlassBox"
+created = "2026-06-25"
+# A traced scheduling model — the schedule and timings are real execution; that it models real parallel
+# hardware is the author's claim.
+domain_model = "author-asserted-simulation"
+
+# Same four tasks, same two workers — but now each task depends on the one before it, so it cannot start
+# until the previous finishes. The work runs strictly one-at-a-time no matter how many workers exist:
+# parallel_time stays 8, and speedup = 8 / 8 = 1. Adding workers bought nothing.
+source = """
+tasks = [["A", 3], ["B", 2], ["C", 2], ["D", 1]]
+lanes = [[], []]
+clock = 0
+i = 0
+for task in tasks:
+    w = i % 2
+    start = clock
+    end = start + task[1]
+    lanes[w].append([task[0], start, end])
+    clock = end
+    i = i + 1
+sequential_time = 0
+for task in tasks:
+    sequential_time = sequential_time + task[1]
+parallel_time = clock
+speedup = sequential_time / parallel_time
+"""
+
+# The tempting prediction is 4 (two workers should halve it). The dependency chain forces 8.
+[[checkpoints]]
+step = 42
+ask = "8 ticks of work, 2 workers — but each task must wait for the one before it. Add a variable parallel_time and predict it: how long does this 'parallel' run really take?"
+
+[abstraction]
+type = "gantt"
+label = "Two workers, a dependency chain"
+
+[abstraction.bind]
+lanes = "lanes"
+speedup = "speedup"
+sequential_time = "sequential_time"
+parallel_time = "parallel_time"
+
+[[notes]]
+step = 1
+text = "The same four tasks, 8 ticks of work, two workers — but this time each task depends on the one before it and cannot start early."
+
+[[notes]]
+step = 44
+text = "speedup = 8 / 8 = 1.0. Two workers, and ZERO speedup. Each task waited for the previous one, so the work ran one-at-a-time however many workers we had. The Gantt shows the blocks staggered across the whole timeline, each lane mostly idle. Sequential dependencies cap parallelization — the core reason some problems just don't get faster with more processors. CPython shows it; we don't have to claim it."

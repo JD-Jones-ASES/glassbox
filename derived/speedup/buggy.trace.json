@@ -1,0 +1,2521 @@
+{
+  "id": "speedup-dependent",
+  "title": "Parallel speedup — a chain you can't parallelize",
+  "problem": "Run four tasks on two workers and measure the speedup over running them one at a time.",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "author-asserted-simulation",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "abstraction": {
+    "type": "gantt",
+    "label": "Two workers, a dependency chain",
+    "bind": {
+      "lanes": "lanes",
+      "speedup": "speedup",
+      "sequential_time": "sequential_time",
+      "parallel_time": "parallel_time"
+    }
+  },
+  "source": "tasks = [[\"A\", 3], [\"B\", 2], [\"C\", 2], [\"D\", 1]]\nlanes = [[], []]\nclock = 0\ni = 0\nfor task in tasks:\n    w = i % 2\n    start = clock\n    end = start + task[1]\n    lanes[w].append([task[0], start, end])\n    clock = end\n    i = i + 1\nsequential_time = 0\nfor task in tasks:\n    sequential_time = sequential_time + task[1]\nparallel_time = clock\nspeedup = sequential_time / parallel_time\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [],
+          []
+        ]
+      },
+      "stdout": "",
+      "note": "The same four tasks, 8 ticks of work, two workers — but this time each task depends on the one before it and cannot start early."
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [],
+          []
+        ],
+        "clock": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [],
+          []
+        ],
+        "clock": 0,
+        "i": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 4,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [],
+          []
+        ],
+        "clock": 0,
+        "i": 0,
+        "task": [
+          "A",
+          3
+        ]
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[0]": 2,
+        "task": 2
+      }
+    },
+    {
+      "step": 5,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [],
+          []
+        ],
+        "clock": 0,
+        "i": 0,
+        "task": [
+          "A",
+          3
+        ],
+        "w": 0
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[0]": 2,
+        "task": 2
+      }
+    },
+    {
+      "step": 6,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [],
+          []
+        ],
+        "clock": 0,
+        "i": 0,
+        "task": [
+          "A",
+          3
+        ],
+        "w": 0,
+        "start": 0
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[0]": 2,
+        "task": 2
+      }
+    },
+    {
+      "step": 7,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [],
+          []
+        ],
+        "clock": 0,
+        "i": 0,
+        "task": [
+          "A",
+          3
+        ],
+        "w": 0,
+        "start": 0,
+        "end": 3
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[0]": 2,
+        "task": 2
+      }
+    },
+    {
+      "step": 8,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ]
+          ],
+          []
+        ],
+        "clock": 0,
+        "i": 0,
+        "task": [
+          "A",
+          3
+        ],
+        "w": 0,
+        "start": 0,
+        "end": 3
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[0]": 2,
+        "task": 2
+      }
+    },
+    {
+      "step": 9,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ]
+          ],
+          []
+        ],
+        "clock": 3,
+        "i": 0,
+        "task": [
+          "A",
+          3
+        ],
+        "w": 0,
+        "start": 0,
+        "end": 3
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[0]": 2,
+        "task": 2
+      }
+    },
+    {
+      "step": 10,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ]
+          ],
+          []
+        ],
+        "clock": 3,
+        "i": 1,
+        "task": [
+          "A",
+          3
+        ],
+        "w": 0,
+        "start": 0,
+        "end": 3
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[0]": 2,
+        "task": 2
+      }
+    },
+    {
+      "step": 11,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ]
+          ],
+          []
+        ],
+        "clock": 3,
+        "i": 1,
+        "task": [
+          "B",
+          2
+        ],
+        "w": 0,
+        "start": 0,
+        "end": 3
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[1]": 3,
+        "task": 3
+      }
+    },
+    {
+      "step": 12,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ]
+          ],
+          []
+        ],
+        "clock": 3,
+        "i": 1,
+        "task": [
+          "B",
+          2
+        ],
+        "w": 1,
+        "start": 0,
+        "end": 3
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[1]": 3,
+        "task": 3
+      }
+    },
+    {
+      "step": 13,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ]
+          ],
+          []
+        ],
+        "clock": 3,
+        "i": 1,
+        "task": [
+          "B",
+          2
+        ],
+        "w": 1,
+        "start": 3,
+        "end": 3
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[1]": 3,
+        "task": 3
+      }
+    },
+    {
+      "step": 14,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ]
+          ],
+          []
+        ],
+        "clock": 3,
+        "i": 1,
+        "task": [
+          "B",
+          2
+        ],
+        "w": 1,
+        "start": 3,
+        "end": 5
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[1]": 3,
+        "task": 3
+      }
+    },
+    {
+      "step": 15,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ]
+          ]
+        ],
+        "clock": 3,
+        "i": 1,
+        "task": [
+          "B",
+          2
+        ],
+        "w": 1,
+        "start": 3,
+        "end": 5
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[1]": 3,
+        "task": 3
+      }
+    },
+    {
+      "step": 16,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ]
+          ]
+        ],
+        "clock": 5,
+        "i": 1,
+        "task": [
+          "B",
+          2
+        ],
+        "w": 1,
+        "start": 3,
+        "end": 5
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[1]": 3,
+        "task": 3
+      }
+    },
+    {
+      "step": 17,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ]
+          ]
+        ],
+        "clock": 5,
+        "i": 2,
+        "task": [
+          "B",
+          2
+        ],
+        "w": 1,
+        "start": 3,
+        "end": 5
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[1]": 3,
+        "task": 3
+      }
+    },
+    {
+      "step": 18,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ]
+          ]
+        ],
+        "clock": 5,
+        "i": 2,
+        "task": [
+          "C",
+          2
+        ],
+        "w": 1,
+        "start": 3,
+        "end": 5
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[2]": 4,
+        "task": 4
+      }
+    },
+    {
+      "step": 19,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ]
+          ]
+        ],
+        "clock": 5,
+        "i": 2,
+        "task": [
+          "C",
+          2
+        ],
+        "w": 0,
+        "start": 3,
+        "end": 5
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[2]": 4,
+        "task": 4
+      }
+    },
+    {
+      "step": 20,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ]
+          ]
+        ],
+        "clock": 5,
+        "i": 2,
+        "task": [
+          "C",
+          2
+        ],
+        "w": 0,
+        "start": 5,
+        "end": 5
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[2]": 4,
+        "task": 4
+      }
+    },
+    {
+      "step": 21,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ]
+          ]
+        ],
+        "clock": 5,
+        "i": 2,
+        "task": [
+          "C",
+          2
+        ],
+        "w": 0,
+        "start": 5,
+        "end": 7
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[2]": 4,
+        "task": 4
+      }
+    },
+    {
+      "step": 22,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ]
+          ]
+        ],
+        "clock": 5,
+        "i": 2,
+        "task": [
+          "C",
+          2
+        ],
+        "w": 0,
+        "start": 5,
+        "end": 7
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[2]": 4,
+        "task": 4
+      }
+    },
+    {
+      "step": 23,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ]
+          ]
+        ],
+        "clock": 7,
+        "i": 2,
+        "task": [
+          "C",
+          2
+        ],
+        "w": 0,
+        "start": 5,
+        "end": 7
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[2]": 4,
+        "task": 4
+      }
+    },
+    {
+      "step": 24,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ]
+          ]
+        ],
+        "clock": 7,
+        "i": 3,
+        "task": [
+          "C",
+          2
+        ],
+        "w": 0,
+        "start": 5,
+        "end": 7
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[2]": 4,
+        "task": 4
+      }
+    },
+    {
+      "step": 25,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ]
+          ]
+        ],
+        "clock": 7,
+        "i": 3,
+        "task": [
+          "D",
+          1
+        ],
+        "w": 0,
+        "start": 5,
+        "end": 7
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[3]": 5,
+        "task": 5
+      }
+    },
+    {
+      "step": 26,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ]
+          ]
+        ],
+        "clock": 7,
+        "i": 3,
+        "task": [
+          "D",
+          1
+        ],
+        "w": 1,
+        "start": 5,
+        "end": 7
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[3]": 5,
+        "task": 5
+      }
+    },
+    {
+      "step": 27,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ]
+          ]
+        ],
+        "clock": 7,
+        "i": 3,
+        "task": [
+          "D",
+          1
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 7
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[3]": 5,
+        "task": 5
+      }
+    },
+    {
+      "step": 28,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ]
+          ]
+        ],
+        "clock": 7,
+        "i": 3,
+        "task": [
+          "D",
+          1
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[3]": 5,
+        "task": 5
+      }
+    },
+    {
+      "step": 29,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 7,
+        "i": 3,
+        "task": [
+          "D",
+          1
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[3]": 5,
+        "task": 5
+      }
+    },
+    {
+      "step": 30,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 8,
+        "i": 3,
+        "task": [
+          "D",
+          1
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[3]": 5,
+        "task": 5
+      }
+    },
+    {
+      "step": 31,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 8,
+        "i": 4,
+        "task": [
+          "D",
+          1
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[3]": 5,
+        "task": 5
+      }
+    },
+    {
+      "step": 32,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 8,
+        "i": 4,
+        "task": [
+          "D",
+          1
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[3]": 5,
+        "task": 5
+      }
+    },
+    {
+      "step": 33,
+      "line": 12,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 8,
+        "i": 4,
+        "task": [
+          "D",
+          1
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8,
+        "sequential_time": 0
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[3]": 5,
+        "task": 5
+      }
+    },
+    {
+      "step": 34,
+      "line": 13,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 8,
+        "i": 4,
+        "task": [
+          "A",
+          3
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8,
+        "sequential_time": 0
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[0]": 2,
+        "task": 2
+      }
+    },
+    {
+      "step": 35,
+      "line": 14,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 8,
+        "i": 4,
+        "task": [
+          "A",
+          3
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8,
+        "sequential_time": 3
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[0]": 2,
+        "task": 2
+      }
+    },
+    {
+      "step": 36,
+      "line": 13,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 8,
+        "i": 4,
+        "task": [
+          "B",
+          2
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8,
+        "sequential_time": 3
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[1]": 3,
+        "task": 3
+      }
+    },
+    {
+      "step": 37,
+      "line": 14,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 8,
+        "i": 4,
+        "task": [
+          "B",
+          2
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8,
+        "sequential_time": 5
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[1]": 3,
+        "task": 3
+      }
+    },
+    {
+      "step": 38,
+      "line": 13,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 8,
+        "i": 4,
+        "task": [
+          "C",
+          2
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8,
+        "sequential_time": 5
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[2]": 4,
+        "task": 4
+      }
+    },
+    {
+      "step": 39,
+      "line": 14,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 8,
+        "i": 4,
+        "task": [
+          "C",
+          2
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8,
+        "sequential_time": 7
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[2]": 4,
+        "task": 4
+      }
+    },
+    {
+      "step": 40,
+      "line": 13,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 8,
+        "i": 4,
+        "task": [
+          "D",
+          1
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8,
+        "sequential_time": 7
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[3]": 5,
+        "task": 5
+      }
+    },
+    {
+      "step": 41,
+      "line": 14,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 8,
+        "i": 4,
+        "task": [
+          "D",
+          1
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8,
+        "sequential_time": 8
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[3]": 5,
+        "task": 5
+      }
+    },
+    {
+      "step": 42,
+      "line": 13,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 8,
+        "i": 4,
+        "task": [
+          "D",
+          1
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8,
+        "sequential_time": 8
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[3]": 5,
+        "task": 5
+      },
+      "checkpoint": true,
+      "checkpoint_prompt": "8 ticks of work, 2 workers — but each task must wait for the one before it. Add a variable parallel_time and predict it: how long does this 'parallel' run really take?"
+    },
+    {
+      "step": 43,
+      "line": 15,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 8,
+        "i": 4,
+        "task": [
+          "D",
+          1
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8,
+        "sequential_time": 8,
+        "parallel_time": 8
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[3]": 5,
+        "task": 5
+      }
+    },
+    {
+      "step": 44,
+      "line": 16,
+      "event": "line",
+      "state": {
+        "tasks": [
+          [
+            "A",
+            3
+          ],
+          [
+            "B",
+            2
+          ],
+          [
+            "C",
+            2
+          ],
+          [
+            "D",
+            1
+          ]
+        ],
+        "lanes": [
+          [
+            [
+              "A",
+              0,
+              3
+            ],
+            [
+              "C",
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              "B",
+              3,
+              5
+            ],
+            [
+              "D",
+              7,
+              8
+            ]
+          ]
+        ],
+        "clock": 8,
+        "i": 4,
+        "task": [
+          "D",
+          1
+        ],
+        "w": 1,
+        "start": 7,
+        "end": 8,
+        "sequential_time": 8,
+        "parallel_time": 8,
+        "speedup": 1.0
+      },
+      "stdout": "",
+      "refs": {
+        "tasks[3]": 5,
+        "task": 5
+      },
+      "note": "speedup = 8 / 8 = 1.0. Two workers, and ZERO speedup. Each task waited for the previous one, so the work ran one-at-a-time however many workers we had. The Gantt shows the blocks staggered across the whole timeline, each lane mostly idle. Sequential dependencies cap parallelization — the core reason some problems just don't get faster with more processors. CPython shows it; we don't have to claim it."
+    }
+  ]
+}

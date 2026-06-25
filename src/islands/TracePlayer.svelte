@@ -390,6 +390,24 @@
               <div class="net-path">path: <code>{model.path.length ? model.path.join(" → ") : "—"}</code>{#if model.down.length}<span class="net-down">· down: {model.down.join(", ")}</span>{/if}</div>
             {/if}
           </div>
+        {:else if view === "abstraction" && model && model.kind === "gantt"}
+          <div class="gantt">
+            <svg viewBox={`0 0 100 ${model.lanes.length * 15 + 8}`} class="gantt-svg" role="img" aria-label="Gantt schedule">
+              {#each Array(model.maxTime + 1) as _, t}
+                <line class="g-grid" x1={12 + (t / model.maxTime) * 86} y1="2" x2={12 + (t / model.maxTime) * 86} y2={model.lanes.length * 15 + 2} />
+              {/each}
+              {#each model.lanes as lane, li}
+                <text class="g-label" x="0.5" y={li * 15 + 11}>w{lane.worker}</text>
+                {#each lane.blocks as b}
+                  <rect class="g-block" x={12 + (b.start / model.maxTime) * 86} y={li * 15 + 4} width={Math.max(1.5, ((b.end - b.start) / model.maxTime) * 86)} height="9" rx="1.5" />
+                  <text class="g-btext" x={12 + (b.start / model.maxTime) * 86 + 2} y={li * 15 + 10.5}>{b.name}</text>
+                {/each}
+              {/each}
+            </svg>
+            {#if model.speedup != null}
+              <div class="g-speedup">speedup = {model.seqTime} / {model.parTime} = <strong>{model.speedup}×</strong></div>
+            {/if}
+          </div>
         {:else}
           <table class="vars">
             <thead><tr><th>variable</th><th>value</th></tr></thead>
@@ -674,6 +692,15 @@
   .net-x { fill: var(--asserted) !important; font-size: 9px; font-weight: 700; }
   .net-pkt circle { fill: var(--live); stroke: #fff; stroke-width: 0.6; }
   .net-pkt text { fill: #fff; font-family: var(--font-mono); font-size: 4px; font-weight: 700; }
+
+  .gantt { padding: 0.8rem; display: flex; flex-direction: column; gap: 0.6rem; align-items: center; }
+  .gantt-svg { width: 100%; max-width: 22rem; height: auto; }
+  .g-grid { stroke: var(--border); stroke-width: 0.3; }
+  .g-label { font-family: var(--font-mono); font-size: 5px; fill: var(--ink-faint); }
+  .g-block { fill: var(--live); stroke: var(--surface); stroke-width: 0.5; }
+  .g-btext { font-family: var(--font-mono); font-size: 5px; fill: #fff; font-weight: 700; }
+  .g-speedup { font-family: var(--font-mono); font-size: 0.95rem; color: var(--ink-soft); }
+  .g-speedup strong { color: var(--live-ink); font-size: 1.1rem; }
 
   @media (prefers-reduced-motion: no-preference) {
     .fill { transition: d 0.25s ease, fill 0.25s ease; }

@@ -4,12 +4,14 @@ import { cupsModel } from "./cups.js";
 import { pilesModel } from "./piles.js";
 import { binaryModel } from "./binary.js";
 import { networkModel } from "./network.js";
+import { ganttModel } from "./gantt.js";
 
 const REGISTRY = {
   cups: cupsModel,
   piles: pilesModel,
   binary: binaryModel,
   network: networkModel,
+  gantt: ganttModel,
 };
 
 export function abstractionModel(abstraction, state) {

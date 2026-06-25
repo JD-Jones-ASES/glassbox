@@ -1,0 +1,50 @@
+id = "speedup-parallel"
+title = "Parallel speedup — independent work splits cleanly"
+register = "procedural"
+problem = "Run four tasks on two workers and measure the speedup over running them one at a time."
+author = "GlassBox"
+created = "2026-06-25"
+# A traced scheduling model — the schedule and timings are real execution; that it models real parallel
+# hardware is the author's claim.
+domain_model = "author-asserted-simulation"
+
+# Four independent tasks scheduled greedily onto the least-busy of two workers. Because nothing depends
+# on anything else, both workers stay busy and the run finishes in half the time: speedup = 8 / 4 = 2.
+source = """
+tasks = [["A", 3], ["B", 2], ["C", 2], ["D", 1]]
+finish = [0, 0]
+lanes = [[], []]
+for task in tasks:
+    w = finish.index(min(finish))
+    start = finish[w]
+    end = start + task[1]
+    lanes[w].append([task[0], start, end])
+    finish[w] = end
+sequential_time = 0
+for task in tasks:
+    sequential_time = sequential_time + task[1]
+parallel_time = max(finish)
+speedup = sequential_time / parallel_time
+"""
+
+[[checkpoints]]
+step = 37
+ask = "8 ticks of work across 2 workers, and no task depends on another. Add a variable parallel_time and predict it: how long does the parallel run take?"
+
+[abstraction]
+type = "gantt"
+label = "Two workers, independent tasks"
+
+[abstraction.bind]
+lanes = "lanes"
+speedup = "speedup"
+sequential_time = "sequential_time"
+parallel_time = "parallel_time"
+
+[[notes]]
+step = 1
+text = "Four tasks (A, B, C, D) with their durations — 3 + 2 + 2 + 1 = 8 ticks of work in total. We have two workers."
+
+[[notes]]
+step = 39
+text = "speedup = 8 / 4 = 2.0. Two workers finished 8 ticks of work in 4 — a clean 2× — because the tasks are independent, so both workers stay busy the whole time. The Gantt shows the blocks packed tight with no gaps."
