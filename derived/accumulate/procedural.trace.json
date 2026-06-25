@@ -1,0 +1,199 @@
+{
+  "id": "accumulate-procedural",
+  "title": "Adding up a list — a running total",
+  "problem": "Add up all the numbers in the list and report the total.",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "source": "nums = [3, 8, 5, 2]\ntotal = 0\nfor n in nums:\n    total = total + n\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "total": 0
+      },
+      "stdout": "",
+      "note": "total starts at 0 — the running total, before we add anything."
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "total": 0,
+        "n": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "total": 3,
+        "n": 3
+      },
+      "stdout": "",
+      "note": "Add the first number: total = 0 + 3 = 3."
+    },
+    {
+      "step": 4,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "total": 3,
+        "n": 8
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "total is 3 so far and n is now 8. After `total = total + n` runs, what will total be?"
+    },
+    {
+      "step": 5,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "total": 11,
+        "n": 8
+      },
+      "stdout": "",
+      "note": "Add the second: total = 3 + 8 = 11. Each pass adds onto what is already there."
+    },
+    {
+      "step": 6,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "total": 11,
+        "n": 5
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "total": 16,
+        "n": 5
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "total": 16,
+        "n": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 9,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "total": 18,
+        "n": 2
+      },
+      "stdout": "",
+      "note": "Add the last: total = 16 + 2 = 18. The running total grew with every number."
+    },
+    {
+      "step": 10,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "total": 18,
+        "n": 2
+      },
+      "stdout": "",
+      "note": "Loop done. total = 18 — the sum of all four numbers. `total = total + n` accumulated correctly."
+    }
+  ]
+}

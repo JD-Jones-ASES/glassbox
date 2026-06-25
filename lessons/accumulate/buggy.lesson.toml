@@ -1,0 +1,40 @@
+id = "accumulate-buggy"
+title = "Adding up a list — the overwrite bug"
+register = "naive"
+problem = "Add up all the numbers in the list and report the total."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The classic beginner accumulator bug: `total = n` REPLACES the total each pass instead of adding to
+# it (`total += n`). The total never accumulates — it just ends up as the last number.
+source = """
+nums = [3, 8, 5, 2]
+total = 0
+for n in nums:
+    total = n
+"""
+
+# The tempting wrong prediction: that total keeps growing. `total = n` replaces, so total becomes 8.
+[[checkpoints]]
+step = 4
+ask = "You've added 3 so far; now n is 8. After `total = n` runs, what will total be? (Is this line adding, or replacing?)"
+
+[[notes]]
+step = 1
+text = "total starts at 0 — a clean slate before the loop."
+
+[[notes]]
+step = 3
+text = "First number: 3. total is now 3. So far it looks right."
+
+[[notes]]
+step = 5
+text = "Second number: 8. But `total = n` REPLACES total with 8 — the 3 is gone. This line overwrites instead of adding."
+
+[[notes]]
+step = 9
+text = "Last number: 2. total ends at 2 — just the final number, never the sum."
+
+[[notes]]
+step = 10
+text = "Loop done. total = 2, not 18. CPython shows the bug: `total = n` should have been `total = total + n`."

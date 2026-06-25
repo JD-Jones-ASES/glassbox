@@ -1,0 +1,54 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import buggy from "../../../derived/accumulate/buggy.trace.json";
+import procedural from "../../../derived/accumulate/procedural.trace.json";
+
+// Buggy first: watch `total = n` overwrite, then `total = total + n` accumulate.
+const registers = [buggy, procedural];
+---
+
+<Base
+  title="Running total — GlassBox"
+  description="Add up a list with an accumulator — and watch the one-word bug that stops it from adding."
+>
+  <h1>Adding up a list</h1>
+  <p class="lede">
+    Adding up a list is the most common loop you will ever write: keep a running total, and add each
+    number onto it. The trap is one character — <code>=</code> where you meant <code>+=</code> — and the
+    state pane shows exactly what it costs. Try <strong>Predict</strong> mode and call each total before
+    you reveal it.
+  </p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>
+      There is no cup or pile here — just one number, <code>total</code>, that you watch grow (or fail to).
+      Keep your eye on it as each <code>n</code> comes through the loop.
+    </p>
+    <ul>
+      <li>
+        <strong>Buggy</strong> — <code>total = n</code> <em>replaces</em> the total every pass, so the 3 is
+        gone the moment 8 arrives. total ends at 2 — just the last number, never the sum. The failure is
+        shown by CPython, not asserted by us.
+      </li>
+      <li>
+        <strong>Procedural</strong> — <code>total = total + n</code> <em>adds onto</em> what is already
+        there. Watch total climb 0 → 3 → 11 → 16 → 18. That is the accumulator pattern, and it underlies
+        counting, averaging, and almost every loop that summarises a list.
+      </li>
+    </ul>
+    <p class="fineprint">
+      Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>

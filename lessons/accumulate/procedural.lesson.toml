@@ -1,0 +1,40 @@
+id = "accumulate-procedural"
+title = "Adding up a list — a running total"
+register = "procedural"
+problem = "Add up all the numbers in the list and report the total."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The accumulator pattern: start a total at 0, then add each number onto it as you walk the list.
+source = """
+nums = [3, 8, 5, 2]
+total = 0
+for n in nums:
+    total = total + n
+"""
+
+# total is 3 and n is 8 — predict the accumulation BEFORE seeing it. Contrast with the buggy register,
+# where the same prediction comes out wrong.
+[[checkpoints]]
+step = 4
+ask = "total is 3 so far and n is now 8. After `total = total + n` runs, what will total be?"
+
+[[notes]]
+step = 1
+text = "total starts at 0 — the running total, before we add anything."
+
+[[notes]]
+step = 3
+text = "Add the first number: total = 0 + 3 = 3."
+
+[[notes]]
+step = 5
+text = "Add the second: total = 3 + 8 = 11. Each pass adds onto what is already there."
+
+[[notes]]
+step = 9
+text = "Add the last: total = 16 + 2 = 18. The running total grew with every number."
+
+[[notes]]
+step = 10
+text = "Loop done. total = 18 — the sum of all four numbers. `total = total + n` accumulated correctly."
