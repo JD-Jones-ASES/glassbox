@@ -120,7 +120,8 @@ Adding a lesson is the common task; it touches data, never the engine:
    `src/lib/abstractions/<type>.js` (a pure `(abstraction, state) → viewModel`), register it in
    `src/lib/abstractions/index.js`, and add one `{:else if … model.kind === "<type>"}` branch + scoped
    styles in `src/islands/TracePlayer.svelte`. Existing renderers: `cups`, `piles`, `binary`, `network`
-   (functions use the built-in call-stack chrome — no renderer).
+   (slots: topology/current/path/route/down/packets/arrived), `gantt` (lane chart); functions use the
+   built-in call-stack chrome — no renderer. Many lessons need none and ride the generic variables table.
 
 The engine (`tracer/`) should rarely change. If it must, keep the `swap` and `partition-procedural` traces
 byte-identical (`partition-buggy` carries aliasing `refs` by design; ADR-0009) and add a golden test in
@@ -133,7 +134,7 @@ straight-line code, loops, lists, and **multi-frame functions** (call/return, de
 recursion, defaults; ADR-0008), now with **object identity** (`refs` make aliasing visible — the
 `partition-buggy` repair), a **two-axis provenance** model (`derivation_source` + `domain_model`; routing is
 a real trace of an author-asserted model), and serialization hardening (typed dict keys, cycle back-edges,
-deterministic set reprs, captured return-value flags). Thirteen lessons across three pillars, browsable
+deterministic set reprs, captured return-value flags). Fifteen lessons across three pillars, browsable
 from `/lessons/`:
 
 - **Programs & State** — `swap` (cups), `partition` (piles; aliasing bug via `refs`), `accumulate`
@@ -143,10 +144,12 @@ from `/lessons/`:
   bridge; lost-last-run bug), `bindecimal` (binary→decimal; ×2-vs-×10 base confusion), `overflow` (8-bit
   wrap vs Python's unbounded int), `roundoff` (0.1+0.2; the == trap vs a tolerance).
 - **Systems & Networks** — `routing` (node-link graph; a traced packet sim, ADR-0006), `faulttolerance`
-  (reroute around a dead node vs strand on a single path; `network.js` now has a `down` slot).
+  (reroute around a dead node vs strand on a single path), `multipacket` (one message, three packets,
+  different routes, out-of-order arrival + reassembly), `speedup` (parallel vs a dependency chain; the
+  Gantt lane chart, live `speedup = sequential/parallel`).
 
-Newer lessons ride the **generic state view** (no bespoke renderer); existing renderers: cups, piles,
-binary, network, call-stack.
+Renderers: cups, piles, binary, network (with `down` + multi-`packet` slots), call-stack, and `gantt`
+(lane chart). Many newer lessons ride the **generic state view** (no bespoke renderer).
 
 **Phase 2 (DONE) — the prediction–evidence–revision loop (the pedagogical product; ADR-0011).** A
 `checkpoint` step gates forward motion and asks the learner to predict the next step's state; the real
@@ -157,17 +160,20 @@ produced the state, adjudicated vs `steps[k].line`). The third mode, construct-t
 mapping, adjudicate vs `abstractionModel()`), is **deferred** — highest effort, most in need of live UX
 iteration.
 
-**Phase 3 in progress — content to rigorous, exam-relevant coverage (P0+P1, all execution-derived, each
-with a buggy register).** Done: accumulate, search, filter, rle, bindecimal, overflow, roundoff (generic
-view), and `faulttolerance` (first renderer extension — `network.js` `down` slot, owner-verified-blind).
-**Remaining (the two hardest, both need new renderers + live visual verification):**
-- *multi-packet + reassembly + internet-vs-web* — `network.js` must render multiple packets at once on
-  different routes, reassembling by sequence number; a composite "type a URL → page loads" trace nails
-  internet-vs-web. Builds on the just-added `down` work.
-- *sequential-vs-parallel speedup* — a tick-sim across 1 vs N workers; needs a **brand-new Gantt
-  renderer** (lane chart) with the live `speedup = sequential/parallel` payload. The biggest single piece.
-- *Deferred:* construct-the-viz exercise mode; granular pedagogical lessons; weak-guarantee "reveals";
-  Pages go-live; a transfer-measurement rubric riding the exercise modes.
+**Phase 3 (DONE) — content to rigorous, exam-relevant coverage (P0+P1, all execution-derived, each with a
+buggy register).** Ten new lessons shipped this line of work (accumulate, search, filter, rle, bindecimal,
+overflow, roundoff, faulttolerance, multipacket, speedup), spanning iteration/search/filtering, binary &
+representation limits, and packet switching / fault tolerance / parallel speedup. The network and gantt
+lessons are traced sims (`domain_model = author-asserted-simulation`).
+
+**Phase 4 / remaining (mostly owner-gated or optional):**
+- *Pages go-live* — owner enables GitHub Pages in repo Settings when ready (Source: GitHub Actions).
+- *Transfer-measurement rubric* — the predict/findline exercise modes are the instrument; a light static
+  rubric (prediction accuracy, first-divergence step, transfer to an unseen example) is the deliverable.
+- *Deferred lessons/features:* construct-the-viz exercise mode; the internet-vs-web composite ("type a URL
+  → page loads") and a standalone DNS lesson (both reuse `network.js`); granular pedagogical lessons
+  (truthiness, modular arithmetic, if/elif ladder, function variants); weak-guarantee "reveals" (metadata,
+  lossy/lossless, bandwidth) — out of the execution-derived core by design.
 
 When adding a lesson, see "Extending GlassBox" above. New convention since Phase 2: author a
 `[[checkpoints]]` table where a scalar state-delta is predictable (most lessons); network/structural
