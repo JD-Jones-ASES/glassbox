@@ -1,0 +1,57 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import buggy from "../../../derived/partition/buggy.trace.json";
+import procedural from "../../../derived/partition/procedural.trace.json";
+
+// Naive first: see the aliasing bug put everything in one pile, then the version with two real piles.
+const registers = [buggy, procedural];
+---
+
+<Base
+  title="Partition — GlassBox"
+  description="Sort numbers into two piles — and watch a one-character setup bug put them all in one."
+>
+  <h1>Sorting into two piles</h1>
+  <p class="lede">
+    Walk down a row of numbers and drop each one onto the evens pile or the odds pile. Easy — until the
+    way you make the two piles quietly makes them the same pile. Step the buggy version and watch every
+    number land on both piles at once.
+  </p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>
+      Four numbers — 3, 8, 5, 2 — and two piles. Each number is even or odd, so it belongs in exactly one
+      pile. The loop visits them one at a time (the current number is <code>n</code>) and appends it to the
+      right pile.
+    </p>
+    <ul>
+      <li>
+        <strong>Buggy</strong> — the setup is <code>evens = odds = []</code>. It looks like two empty piles,
+        but it creates <em>one</em> list with two names. Step it: the first append shows the number landing
+        on <em>both</em> piles, because they are the same object. By the end, both piles hold every number —
+        the partition never happened. CPython shows the aliasing; we don't have to claim it.
+      </li>
+      <li>
+        <strong>Procedural</strong> — make two genuinely separate lists
+        (<code>evens = []</code> then <code>odds = []</code>). Now each append touches only its own pile,
+        and the numbers split cleanly: evens 8, 2 and odds 3, 5.
+      </li>
+    </ul>
+    <p class="fineprint">
+      Try clicking the <code>for</code> line repeatedly to walk one iteration at a time. Every pile you see
+      came from running the program under CPython's tracer —
+      see <a href="../../verification/">how GlassBox stays honest</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>

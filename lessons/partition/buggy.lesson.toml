@@ -1,0 +1,46 @@
+id = "partition-buggy"
+title = "Sorting into two piles — the aliasing trap"
+register = "naive"
+problem = "Sort the numbers into two piles: evens in one pile, odds in the other."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The aliasing bug: `evens = odds = []` makes both names point at ONE list.
+source = """
+nums = [3, 8, 5, 2]
+evens = odds = []
+for n in nums:
+    if n % 2 == 0:
+        evens.append(n)
+    else:
+        odds.append(n)
+"""
+
+[abstraction]
+type = "piles"
+
+[abstraction.bind]
+nums = "source"
+n = "cursor"
+evens = "pile_a"
+odds = "pile_b"
+
+[[notes]]
+step = 0
+text = "Our numbers: 3, 8, 5, 2. We want evens in one pile and odds in the other."
+
+[[notes]]
+step = 1
+text = "evens = odds = [] looks like two empty piles — but it makes evens and odds the SAME list. One pile wearing two name tags."
+
+[[notes]]
+step = 4
+text = "3 is odd, so we drop it on the odds pile. But watch: 3 lands on BOTH piles, because they are the same list. CPython shows the trap; we don't have to claim it."
+
+[[notes]]
+step = 7
+text = "8 is even, onto evens — and again both piles change together. Every append hits the one shared list."
+
+[[notes]]
+step = 14
+text = "Both piles hold every number. The partition failed: there was only ever one pile."

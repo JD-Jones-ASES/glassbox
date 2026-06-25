@@ -1,0 +1,51 @@
+id = "partition-procedural"
+title = "Sorting into two piles — two separate piles"
+register = "procedural"
+problem = "Sort the numbers into two piles: evens in one pile, odds in the other."
+author = "GlassBox"
+created = "2026-06-25"
+
+# Two genuinely separate lists, one pass, append to the matching pile.
+source = """
+nums = [3, 8, 5, 2]
+evens = []
+odds = []
+for n in nums:
+    if n % 2 == 0:
+        evens.append(n)
+    else:
+        odds.append(n)
+"""
+
+[abstraction]
+type = "piles"
+
+[abstraction.bind]
+nums = "source"
+n = "cursor"
+evens = "pile_a"
+odds = "pile_b"
+
+[[notes]]
+step = 0
+text = "Our numbers: 3, 8, 5, 2."
+
+[[notes]]
+step = 2
+text = "Two genuinely separate empty piles — evens and odds are different lists this time."
+
+[[notes]]
+step = 3
+text = "Take the first number, n = 3."
+
+[[notes]]
+step = 5
+text = "3 is odd, so it goes on the odds pile — and only the odds pile moves."
+
+[[notes]]
+step = 8
+text = "8 is even — onto the evens pile. Each number lands in exactly one pile."
+
+[[notes]]
+step = 15
+text = "Every number sorted: evens hold 8 and 2, odds hold 3 and 5. Two clean piles."

@@ -1,0 +1,357 @@
+{
+  "id": "partition-buggy",
+  "title": "Sorting into two piles — the aliasing trap",
+  "problem": "Sort the numbers into two piles: evens in one pile, odds in the other.",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "abstraction": {
+    "type": "piles",
+    "bind": {
+      "nums": "source",
+      "n": "cursor",
+      "evens": "pile_a",
+      "odds": "pile_b"
+    }
+  },
+  "source": "nums = [3, 8, 5, 2]\nevens = odds = []\nfor n in nums:\n    if n % 2 == 0:\n        evens.append(n)\n    else:\n        odds.append(n)\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ]
+      },
+      "stdout": "",
+      "note": "Our numbers: 3, 8, 5, 2. We want evens in one pile and odds in the other."
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "evens": [],
+        "odds": []
+      },
+      "stdout": "",
+      "note": "evens = odds = [] looks like two empty piles — but it makes evens and odds the SAME list. One pile wearing two name tags."
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "evens": [],
+        "odds": [],
+        "n": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "evens": [],
+        "odds": [],
+        "n": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 4,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "evens": [
+          3
+        ],
+        "odds": [
+          3
+        ],
+        "n": 3
+      },
+      "stdout": "",
+      "note": "3 is odd, so we drop it on the odds pile. But watch: 3 lands on BOTH piles, because they are the same list. CPython shows the trap; we don't have to claim it."
+    },
+    {
+      "step": 5,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "evens": [
+          3
+        ],
+        "odds": [
+          3
+        ],
+        "n": 8
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "evens": [
+          3
+        ],
+        "odds": [
+          3
+        ],
+        "n": 8
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "evens": [
+          3,
+          8
+        ],
+        "odds": [
+          3,
+          8
+        ],
+        "n": 8
+      },
+      "stdout": "",
+      "note": "8 is even, onto evens — and again both piles change together. Every append hits the one shared list."
+    },
+    {
+      "step": 8,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "evens": [
+          3,
+          8
+        ],
+        "odds": [
+          3,
+          8
+        ],
+        "n": 5
+      },
+      "stdout": ""
+    },
+    {
+      "step": 9,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "evens": [
+          3,
+          8
+        ],
+        "odds": [
+          3,
+          8
+        ],
+        "n": 5
+      },
+      "stdout": ""
+    },
+    {
+      "step": 10,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "evens": [
+          3,
+          8,
+          5
+        ],
+        "odds": [
+          3,
+          8,
+          5
+        ],
+        "n": 5
+      },
+      "stdout": ""
+    },
+    {
+      "step": 11,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "evens": [
+          3,
+          8,
+          5
+        ],
+        "odds": [
+          3,
+          8,
+          5
+        ],
+        "n": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 12,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "evens": [
+          3,
+          8,
+          5
+        ],
+        "odds": [
+          3,
+          8,
+          5
+        ],
+        "n": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 13,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "evens": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "odds": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "n": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 14,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "evens": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "odds": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "n": 2
+      },
+      "stdout": "",
+      "note": "Both piles hold every number. The partition failed: there was only ever one pile."
+    }
+  ]
+}

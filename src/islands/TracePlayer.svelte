@@ -55,6 +55,10 @@
     if (typeof v === "string") return '"' + v + '"';
     return JSON.stringify(v);
   }
+  function fmtChip(v) {
+    if (v && typeof v === "object" && v.__unserializable__) return v.__repr__;
+    return typeof v === "string" ? v : JSON.stringify(v);
+  }
 </script>
 
 {#if current}
@@ -118,6 +122,30 @@
                 </figcaption>
               </figure>
             {/each}
+          </div>
+        {:else if view === "abstraction" && model && model.kind === "piles"}
+          <div class="piles">
+            {#if model.source}
+              <div class="piles-source">
+                <code class="src-label">{model.source.name}</code>
+                <div class="chips">
+                  {#each model.source.items as it}<span class="chip src">{fmtChip(it)}</span>{/each}
+                </div>
+              </div>
+            {/if}
+            {#if model.cursor}
+              <div class="piles-cursor"><code>{model.cursor.name}</code> = <span class="chip cur">{fmtChip(model.cursor.value)}</span></div>
+            {/if}
+            <div class="piles-cols">
+              {#each model.piles as p, pi}
+                <div class="pile" class:a={pi === 0} class:b={pi === 1}>
+                  <div class="pile-head">{p.label}</div>
+                  <div class="pile-items">
+                    {#if p.items.length === 0}<span class="empty-pile">empty</span>{:else}{#each p.items as it}<span class="chip">{fmtChip(it)}</span>{/each}{/if}
+                  </div>
+                </div>
+              {/each}
+            </div>
           </div>
         {:else}
           <table class="vars">
@@ -238,6 +266,33 @@
   .cup-label { font-family: var(--font-display); font-size: 0.8rem; font-weight: 600; }
   .cup .var { font-size: 0.72rem; color: var(--ink-faint); }
   .cup .liquid { font-size: 0.82rem; color: var(--ink); }
+
+  .piles { padding: 0.9rem 0.8rem; display: flex; flex-direction: column; gap: 0.85rem; }
+  .piles-source { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+  .src-label { font-size: 0.76rem; color: var(--ink-faint); }
+  .chips { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+  .chip {
+    font-family: var(--font-mono); font-size: 0.85rem; padding: 0.1rem 0.5rem; border-radius: 6px;
+    background: var(--surface); border: 1px solid var(--border-strong); color: var(--ink);
+  }
+  .chip.src { color: var(--ink-soft); }
+  .chip.cur { background: var(--live); border-color: var(--live); color: #fff; }
+  .piles-cursor { font-size: 0.85rem; color: var(--ink-soft); display: flex; align-items: center; gap: 0.4rem; }
+  .piles-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+  .pile { border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); overflow: hidden; }
+  .pile-head {
+    padding: 0.32rem 0.6rem; font-family: var(--font-display); font-size: 0.82rem; font-weight: 600;
+    border-bottom: 1px solid var(--border);
+  }
+  .pile.a .pile-head { background: var(--live-wash); color: var(--live-ink); }
+  .pile.b .pile-head { background: var(--asserted-wash); color: var(--asserted); }
+  .pile-items {
+    padding: 0.5rem 0.6rem; display: flex; gap: 0.3rem; flex-wrap: wrap; min-height: 2.6rem;
+    align-content: flex-start;
+  }
+  .pile.a .pile-items .chip { border-color: var(--live); }
+  .pile.b .pile-items .chip { border-color: var(--asserted); }
+  .empty-pile { color: var(--ink-faint); font-size: 0.78rem; font-style: italic; }
 
   @media (prefers-reduced-motion: no-preference) {
     .fill { transition: d 0.25s ease, fill 0.25s ease; }

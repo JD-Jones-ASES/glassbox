@@ -1,0 +1,67 @@
+---
+import Base from "../../layouts/Base.astro";
+import { withBase } from "../../lib/withBase.js";
+
+// The lesson catalog. One entry per anchor; add a line as each lesson lands. (Could be generated from
+// derived/ later, but the editorial titles/blurbs live here for now.)
+const pillars = [
+  {
+    name: "Programs & State",
+    blurb: "The small programs, traced line by line.",
+    lessons: [
+      {
+        slug: "swap",
+        title: "Swapping two values",
+        blurb: "Three ways to swap two cups — including the one a beginner writes, watched failing.",
+      },
+      {
+        slug: "partition",
+        title: "Sorting into two piles",
+        blurb: "Split numbers into evens and odds — and watch a one-character bug merge the piles.",
+      },
+    ],
+  },
+];
+---
+
+<Base title="Lessons — GlassBox" description="Step through small programs and watch their state, line by line.">
+  <h1>Lessons</h1>
+  <p class="lede">
+    Each lesson is a small program you step through, watching the state change one line at a time. Pick a
+    register — including the buggy one — and let CPython, not a teacher, show you what really happens.
+  </p>
+
+  {pillars.map((p) => (
+    <section class="pillar">
+      <h2>{p.name}</h2>
+      <p class="pillar-blurb">{p.blurb}</p>
+      <ul class="lesson-list">
+        {p.lessons.map((l) => (
+          <li class="card">
+            <a href={withBase(`/lessons/${l.slug}/`)}>
+              <span class="lesson-title">{l.title}</span>
+              <span class="lesson-blurb">{l.blurb}</span>
+              <span class="go">Open →</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .pillar { margin-top: 1.6rem; }
+  .pillar-blurb { color: var(--ink-faint); margin: 0 0 0.8rem; }
+  .lesson-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+  @media (max-width: 720px) { .lesson-list { grid-template-columns: 1fr; } }
+  .lesson-list .card { padding: 0; }
+  .lesson-list a {
+    display: flex; flex-direction: column; gap: 0.3rem; padding: 1rem 1.1rem; text-decoration: none;
+    color: var(--ink); height: 100%;
+  }
+  .lesson-title { font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; }
+  .lesson-blurb { color: var(--ink-soft); font-size: 0.92rem; }
+  .go { margin-top: auto; color: var(--live); font-size: 0.85rem; font-weight: 600; }
+  .lesson-list a:hover .go { text-decoration: underline; }
+</style>

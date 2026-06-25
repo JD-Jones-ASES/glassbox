@@ -1,9 +1,11 @@
 // Abstraction registry. Keyed by abstraction.type; returns a view-model the player renders, or null
 // when there is no renderer for the type (the player then falls back to the generic state view).
 import { cupsModel } from "./cups.js";
+import { pilesModel } from "./piles.js";
 
 const REGISTRY = {
   cups: cupsModel,
+  piles: pilesModel,
 };
 
 export function abstractionModel(abstraction, state) {
