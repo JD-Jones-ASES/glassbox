@@ -41,7 +41,8 @@ for the decision log.
 
 ## Status
 
-**Phase 0** — the `swap` vertical slice, proving the instrument before the rest of the curriculum is built.
+**Early.** Two anchors are live — `swap` and `partition` — proving the instrument (loops, lists, multiple
+registers, two abstractions, a buggy register that fails in front of you). The rest of the curriculum follows.
 
 ## License
 

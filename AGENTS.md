@@ -99,6 +99,7 @@ Push to `main` → GitHub Actions runs `astro build` → GitHub Pages. Project b
 
 ## Status
 
-**Phase 0** — the `swap` vertical slice (three registers: buggy / procedural / idiomatic) proving the
-instrument end to end. The remaining anchors and the data / systems-&-networks topics come next. See
-`DECISIONS.md` for the decision log and the open Phase-1 question (network sims: traced vs. hand-authored).
+**Two anchors shipped** — `swap` (cups abstraction; three registers) and `partition` (piles abstraction;
+loops + the list-aliasing bug), browsable from `/lessons/`. The instrument is proven end to end. More
+anchors and the data / systems-&-networks topics come next — network processes will be **traced Python
+sims** (ADR-0006), not hand-authored. See `DECISIONS.md` for the full decision log.
