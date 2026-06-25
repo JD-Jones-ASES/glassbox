@@ -111,6 +111,10 @@
   function guessLine(n) { lineGuess = n; lineGuessKey = stepKey; }
   function onKey(e) {
     if (e.key === "Escape" && predicting) { closePrediction(); e.preventDefault(); return; }
+    // Don't hijack arrow/Home/End while the learner is typing in a field (prediction inputs, the
+    // correction box) or dragging the range slider — let the browser handle the key natively.
+    const t = e.target;
+    if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
     if (e.key === "ArrowRight" || e.key === "ArrowDown") { forward(); e.preventDefault(); }
     else if (e.key === "ArrowLeft" || e.key === "ArrowUp") { go(-1); e.preventDefault(); }
     else if (e.key === "Home") { step = 0; e.preventDefault(); }
