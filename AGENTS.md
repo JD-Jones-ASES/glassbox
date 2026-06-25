@@ -133,15 +133,17 @@ straight-line code, loops, lists, and **multi-frame functions** (call/return, de
 recursion, defaults; ADR-0008), now with **object identity** (`refs` make aliasing visible — the
 `partition-buggy` repair), a **two-axis provenance** model (`derivation_source` + `domain_model`; routing is
 a real trace of an author-asserted model), and serialization hardening (typed dict keys, cycle back-edges,
-deterministic set reprs, captured return-value flags). Ten lessons across three pillars, browsable from
-`/lessons/`:
+deterministic set reprs, captured return-value flags). Thirteen lessons across three pillars, browsable
+from `/lessons/`:
 
 - **Programs & State** — `swap` (cups), `partition` (piles; aliasing bug via `refs`), `accumulate`
   (=vs+= running total), `search` (linear search; index-vs-value bug), `filter` (build-new-list vs the
   delete-while-looping skip), `functions` (call stack; forgot-`return` bug).
 - **Data** — `binary` (decimal→binary place-value columns), `rle` (run-length encoding; the compression
-  bridge; lost-last-run bug), `bindecimal` (binary→decimal; ×2-vs-×10 base confusion).
-- **Systems & Networks** — `routing` (node-link graph; a traced packet sim, ADR-0006).
+  bridge; lost-last-run bug), `bindecimal` (binary→decimal; ×2-vs-×10 base confusion), `overflow` (8-bit
+  wrap vs Python's unbounded int), `roundoff` (0.1+0.2; the == trap vs a tolerance).
+- **Systems & Networks** — `routing` (node-link graph; a traced packet sim, ADR-0006), `faulttolerance`
+  (reroute around a dead node vs strand on a single path; `network.js` now has a `down` slot).
 
 Newer lessons ride the **generic state view** (no bespoke renderer); existing renderers: cups, piles,
 binary, network, call-stack.
@@ -156,13 +158,18 @@ mapping, adjudicate vs `abstractionModel()`), is **deferred** — highest effort
 iteration.
 
 **Phase 3 in progress — content to rigorous, exam-relevant coverage (P0+P1, all execution-derived, each
-with a buggy register).** Done: accumulate, search, filter, rle, bindecimal (all generic-view, fully
-build/SSR/data-verified). **Remaining, and why each waits:**
-- *Needs new/extended renderers (visual verification needed — the preview can't hydrate islands, so these
-  want live eyes):* fault tolerance (kill a node mid-trace — `network.js` + a downed-node state),
-  multi-packet + reassembly + internet-vs-web (`network.js` + multiple packets), sequential-vs-parallel
-  speedup (a **new Gantt renderer**).
-- *Buildable on the generic view, but the register model fits awkwardly (design call):* overflow
-  (8-bit `%256` wrap) vs roundoff (`0.1 + 0.2`) — two *models*, not a bug/fix pair.
-- *Deferred:* the construct-the-viz exercise mode; granular pedagogical lessons; weak-guarantee
-  "reveals"; Pages go-live; a transfer-measurement rubric riding the exercise modes.
+with a buggy register).** Done: accumulate, search, filter, rle, bindecimal, overflow, roundoff (generic
+view), and `faulttolerance` (first renderer extension — `network.js` `down` slot, owner-verified-blind).
+**Remaining (the two hardest, both need new renderers + live visual verification):**
+- *multi-packet + reassembly + internet-vs-web* — `network.js` must render multiple packets at once on
+  different routes, reassembling by sequence number; a composite "type a URL → page loads" trace nails
+  internet-vs-web. Builds on the just-added `down` work.
+- *sequential-vs-parallel speedup* — a tick-sim across 1 vs N workers; needs a **brand-new Gantt
+  renderer** (lane chart) with the live `speedup = sequential/parallel` payload. The biggest single piece.
+- *Deferred:* construct-the-viz exercise mode; granular pedagogical lessons; weak-guarantee "reveals";
+  Pages go-live; a transfer-measurement rubric riding the exercise modes.
+
+When adding a lesson, see "Extending GlassBox" above. New convention since Phase 2: author a
+`[[checkpoints]]` table where a scalar state-delta is predictable (most lessons); network/structural
+lessons may ship without one (the insight is visual). Network/gantt/dns abstractions MUST set
+`domain_model = "author-asserted-simulation"` or the build gate fails.
