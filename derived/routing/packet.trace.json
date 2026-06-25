@@ -1,0 +1,415 @@
+{
+  "id": "routing-packet",
+  "title": "Packet switching — one hop at a time",
+  "problem": "Send a packet across a small network from A to D, one hop at a time, and record the path it took.",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "abstraction": {
+    "type": "network",
+    "bind": {
+      "network": "topology",
+      "at": "current",
+      "path": "path",
+      "route": "route"
+    }
+  },
+  "source": "network = {\"A\": [\"B\", \"C\"], \"B\": [\"A\", \"D\"], \"C\": [\"A\", \"D\"], \"D\": [\"B\", \"C\"]}\nroute = [\"A\", \"B\", \"D\"]\nat = route[0]\npath = [at]\nfor hop in route[1:]:\n    at = hop\n    path.append(at)\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        }
+      },
+      "stdout": "",
+      "note": "Our network: four nodes — A, B, C, D — and the links between them. This dict just says who connects to whom."
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "route": [
+          "A",
+          "B",
+          "D"
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "route": [
+          "A",
+          "B",
+          "D"
+        ],
+        "at": "A"
+      },
+      "stdout": "",
+      "note": "The packet starts at A, its source."
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "route": [
+          "A",
+          "B",
+          "D"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 4,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "route": [
+          "A",
+          "B",
+          "D"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ],
+        "hop": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "route": [
+          "A",
+          "B",
+          "D"
+        ],
+        "at": "B",
+        "path": [
+          "A"
+        ],
+        "hop": "B"
+      },
+      "stdout": "",
+      "note": "First hop: the packet moves from A to its neighbour B. We're following one chosen path."
+    },
+    {
+      "step": 6,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "route": [
+          "A",
+          "B",
+          "D"
+        ],
+        "at": "B",
+        "path": [
+          "A",
+          "B"
+        ],
+        "hop": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "route": [
+          "A",
+          "B",
+          "D"
+        ],
+        "at": "B",
+        "path": [
+          "A",
+          "B"
+        ],
+        "hop": "D"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "route": [
+          "A",
+          "B",
+          "D"
+        ],
+        "at": "D",
+        "path": [
+          "A",
+          "B"
+        ],
+        "hop": "D"
+      },
+      "stdout": "",
+      "note": "Second hop: B to D. The packet has reached its destination."
+    },
+    {
+      "step": 9,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "route": [
+          "A",
+          "B",
+          "D"
+        ],
+        "at": "D",
+        "path": [
+          "A",
+          "B",
+          "D"
+        ],
+        "hop": "D"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 10,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "route": [
+          "A",
+          "B",
+          "D"
+        ],
+        "at": "D",
+        "path": [
+          "A",
+          "B",
+          "D"
+        ],
+        "hop": "D"
+      },
+      "stdout": "",
+      "note": "Arrived at D, and we recorded the path A → B → D. Real routers choose each next hop on the fly — and different packets of one message can take different routes, then reassemble at the end."
+    }
+  ]
+}

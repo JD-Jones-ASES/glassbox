@@ -1,0 +1,46 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import packet from "../../../derived/routing/packet.trace.json";
+
+const registers = [packet];
+---
+
+<Base
+  title="Packet switching — GlassBox"
+  description="A network is a graph and a packet hops across it. The routing animation falls out of a traced Python sim."
+>
+  <h1>Packet switching: one hop at a time</h1>
+  <p class="lede">
+    A network is just a graph: nodes (computers and routers) and the links between them. A message is
+    broken into packets, and each packet hops from node to node until it reaches its destination. Step
+    through one packet's journey from A to D and watch its path light up.
+  </p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>
+      The dict at the top is the whole network — each node listed with its neighbours. The packet starts at
+      its source A, and on each hop it moves to the next node on its route, appending where it has been.
+      Two hops later it reaches D, with a recorded path of A → B → D.
+    </p>
+    <p>
+      Real routers decide each next hop on the fly. Crucially, different packets of the same message can
+      take different routes and still reassemble at the destination — that flexibility is what makes the
+      internet robust when a link gets congested or fails.
+    </p>
+    <p class="fineprint">
+      This routing picture is not a hand-drawn diagram: it is a tiny Python simulation, traced like every
+      other lesson. Model the process as code, trace it, and the animation falls out for free —
+      see <a href="../../verification/">how GlassBox stays honest</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain p { margin: 0.6rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>

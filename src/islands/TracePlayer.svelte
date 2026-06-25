@@ -188,6 +188,21 @@
             </div>
             <div class="bin-result">= <code>{model.value || "—"}</code><span class="bin-base">binary</span></div>
           </div>
+        {:else if view === "abstraction" && model && model.kind === "network"}
+          <div class="network">
+            <svg viewBox="0 0 100 100" class="net-svg" role="img" aria-label="Network graph">
+              {#each model.edges as e}
+                <line class="net-edge" class:on={e.on} x1={model.pos[e.a].x} y1={model.pos[e.a].y} x2={model.pos[e.b].x} y2={model.pos[e.b].y} />
+              {/each}
+              {#each model.nodes as n}
+                <g class="net-node" class:current={n === model.current} class:visited={model.path.includes(n)} class:dest={n === model.dest}>
+                  <circle cx={model.pos[n].x} cy={model.pos[n].y} r="8.5" />
+                  <text x={model.pos[n].x} y={model.pos[n].y} dy="0.34em" text-anchor="middle">{n}</text>
+                </g>
+              {/each}
+            </svg>
+            <div class="net-path">path: <code>{model.path.length ? model.path.join(" → ") : "—"}</code></div>
+          </div>
         {:else}
           <table class="vars">
             <thead><tr><th>variable</th><th>value</th></tr></thead>
@@ -358,6 +373,19 @@
   .bin-result { font-family: var(--font-mono); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem; }
   .bin-result code { font-size: 1.15rem; letter-spacing: 0.1em; color: var(--ink); }
   .bin-base { font-size: 0.68rem; color: var(--ink-faint); }
+
+  .network { padding: 0.7rem; display: flex; flex-direction: column; gap: 0.5rem; align-items: center; }
+  .net-svg { width: 100%; max-width: 15rem; height: auto; aspect-ratio: 1 / 1; }
+  .net-edge { stroke: var(--border-strong); stroke-width: 1.2; }
+  .net-edge.on { stroke: var(--live); stroke-width: 2.6; }
+  .net-node circle { fill: var(--surface); stroke: var(--border-strong); stroke-width: 1.5; }
+  .net-node text { font-family: var(--font-mono); font-size: 6px; fill: var(--ink); font-weight: 700; }
+  .net-node.visited circle { fill: var(--live-wash); stroke: var(--live); }
+  .net-node.current circle { fill: var(--live); stroke: var(--live); }
+  .net-node.current text { fill: #fff; }
+  .net-node.dest circle { stroke-dasharray: 2.2 1.6; }
+  .net-path { font-family: var(--font-mono); font-size: 0.85rem; color: var(--ink-soft); }
+  .net-path code { color: var(--live-ink); }
 
   @media (prefers-reduced-motion: no-preference) {
     .fill { transition: d 0.25s ease, fill 0.25s ease; }

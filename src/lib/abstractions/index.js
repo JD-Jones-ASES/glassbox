@@ -3,11 +3,13 @@
 import { cupsModel } from "./cups.js";
 import { pilesModel } from "./piles.js";
 import { binaryModel } from "./binary.js";
+import { networkModel } from "./network.js";
 
 const REGISTRY = {
   cups: cupsModel,
   piles: pilesModel,
   binary: binaryModel,
+  network: networkModel,
 };
 
 export function abstractionModel(abstraction, state) {

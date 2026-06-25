@@ -1,0 +1,47 @@
+id = "routing-packet"
+title = "Packet switching — one hop at a time"
+register = "procedural"
+problem = "Send a packet across a small network from A to D, one hop at a time, and record the path it took."
+author = "GlassBox"
+created = "2026-06-25"
+
+# A network is just a graph of who-connects-to-whom. A packet hops along a path, node by node.
+source = """
+network = {"A": ["B", "C"], "B": ["A", "D"], "C": ["A", "D"], "D": ["B", "C"]}
+route = ["A", "B", "D"]
+at = route[0]
+path = [at]
+for hop in route[1:]:
+    at = hop
+    path.append(at)
+"""
+
+[abstraction]
+type = "network"
+
+[abstraction.bind]
+network = "topology"
+at = "current"
+path = "path"
+route = "route"
+
+[[notes]]
+step = 0
+text = "Our network: four nodes — A, B, C, D — and the links between them. This dict just says who connects to whom."
+
+[[notes]]
+step = 2
+text = "The packet starts at A, its source."
+
+[[notes]]
+step = 5
+text = "First hop: the packet moves from A to its neighbour B. We're following one chosen path."
+
+[[notes]]
+step = 8
+text = "Second hop: B to D. The packet has reached its destination."
+
+[[notes]]
+step = 10
+text = "Arrived at D, and we recorded the path A → B → D. Real routers choose each next hop on the fly — and different packets of one message can take different routes, then reassemble at the end."
+
