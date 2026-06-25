@@ -59,9 +59,10 @@ lessons/<topic>/*.lesson.yaml  →  sys.settrace tracer (Python)  →  derived/<
   inspectable, small. It is the heart of the project; get it bulletproof before authoring lessons.
 - **The content layer** (`lessons/*.lesson.toml`) adds human meaning — per-step notes, the abstraction
   spec, the problem statement — kept **separate** from the trace and merged by step index at build time.
-- **The player** (`src/islands/TracePlayer.svelte`) is a dumb stepper: code pane (current line lit), a
-  right pane toggling generic-state ⇄ domain-abstraction (both from the same trace), the step note,
-  register tabs, and a provenance badge.
+- **The player** (`src/islands/TracePlayer.svelte`) is a dumb stepper: code pane (current line lit, and
+  every executable line clickable to jump to its step), a right pane toggling generic-state ⇄
+  domain-abstraction (both from the same trace), the step note, register tabs, a scrubber + arrow keys,
+  and a provenance badge.
 
 ## Repo map
 

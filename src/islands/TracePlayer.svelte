@@ -20,6 +20,8 @@
   const model = $derived(current && cur ? abstractionModel(current.abstraction, cur.state) : null);
   const stateEntries = $derived(cur ? Object.entries(cur.state) : []);
   const isFinal = $derived(safeStep === stepCount - 1);
+  // Source lines that correspond to at least one step are clickable (blank/comment lines are not).
+  const linesWithSteps = $derived(new Set(steps.map((s) => s.line)));
 
   function selectRegister(i) {
     regIdx = i;
@@ -28,6 +30,19 @@
   }
   function go(delta) {
     step = Math.max(0, Math.min(stepCount - 1, safeStep + delta));
+  }
+  // Jump to the step that highlights a clicked line. If that line runs more than once (e.g. a loop),
+  // clicking it again while already there walks to its next execution, wrapping around.
+  function goToLine(line) {
+    const occ = [];
+    steps.forEach((s, i) => { if (s.line === line) occ.push(i); });
+    if (occ.length === 0) return;
+    if (cur && cur.line === line && occ.length > 1) {
+      const pos = occ.indexOf(safeStep);
+      step = occ[(pos + 1) % occ.length];
+    } else if (!cur || cur.line !== line) {
+      step = occ[0];
+    }
   }
   function onKey(e) {
     if (e.key === "ArrowRight" || e.key === "ArrowDown") { go(1); e.preventDefault(); }
@@ -73,7 +88,7 @@
               : "author-asserted"}
           </span>
         </div>
-        <pre class="code"><code>{#each sourceLines as ln, i}<span class="line" class:hl={cur && cur.line === i + 1}><span class="ln">{i + 1}</span>{ln || " "}</span>{/each}</code></pre>
+        <pre class="code"><code>{#each sourceLines as ln, i}{#if linesWithSteps.has(i + 1)}<button type="button" class="line clk" class:hl={cur && cur.line === i + 1} onclick={() => goToLine(i + 1)} title={`Jump to line ${i + 1}`}><span class="ln">{i + 1}</span>{ln || " "}</button>{:else}<span class="line" class:hl={cur && cur.line === i + 1}><span class="ln">{i + 1}</span>{ln || " "}</span>{/if}{/each}</code></pre>
       </div>
 
       <!-- state / abstraction pane -->
@@ -140,6 +155,7 @@
       <button class="nav" onclick={() => go(1)} disabled={isFinal} aria-label="Next step">›</button>
       <span class="counter">step {safeStep + 1} / {stepCount}</span>
     </div>
+    <p class="hint">Click a line, drag the slider, or use the <kbd>←</kbd> <kbd>→</kbd> keys.</p>
   </section>
 {/if}
 
@@ -185,12 +201,23 @@
 
   .code { margin: 0; padding: 0.6rem 0; overflow-x: auto; font-family: var(--font-mono); font-size: 0.92rem; }
   .code code { display: block; }
-  .line { display: block; padding: 0.08rem 0.8rem 0.08rem 0; white-space: pre; border-left: 3px solid transparent; }
+  .line {
+    display: block; width: 100%; padding: 0.08rem 0.8rem 0.08rem 0; white-space: pre;
+    border-left: 3px solid transparent; text-align: left;
+  }
+  /* clickable lines are real buttons; strip the chrome so they read as code, keep the affordance */
+  button.line {
+    font: inherit; color: inherit; background: none; border-top: 0; border-right: 0; border-bottom: 0;
+    cursor: pointer;
+  }
+  button.line:hover { background: var(--surface); }
+  button.line:focus-visible { outline: 2px solid var(--live); outline-offset: -2px; }
   .line .ln {
     display: inline-block; width: 2.2rem; padding-right: 0.9rem; text-align: right;
     color: var(--ink-faint); user-select: none;
   }
   .line.hl { background: var(--line-hl); border-left-color: var(--line-hl-edge); }
+  button.line.hl:hover { background: var(--line-hl); }
 
   .toggle { display: inline-flex; border: 1px solid var(--border-strong); border-radius: 999px; overflow: hidden; }
   .toggle button {
@@ -241,4 +268,9 @@
   .nav:disabled { opacity: 0.4; cursor: default; }
   .scrub { flex: 1; accent-color: var(--live); }
   .counter { font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-soft); white-space: nowrap; }
+  .hint { margin: 0.55rem 0 0; font-size: 0.78rem; color: var(--ink-faint); text-align: center; }
+  .hint kbd {
+    font-family: var(--font-mono); font-size: 0.72rem; padding: 0.04rem 0.32rem;
+    border: 1px solid var(--border-strong); border-radius: 4px; background: var(--surface-2);
+  }
 </style>

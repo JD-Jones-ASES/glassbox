@@ -75,11 +75,32 @@ which suits an input format; YAML was rejected to avoid a pyyaml build dependenc
 **Consequences.** Editing `source` shifts step indices, so notes must be re-checked on any source change —
 mitigated by always re-running `prepare:traces`. For larger lessons we may later key notes by line+intent.
 
----
+## ADR-0006 — Network processes are modeled as traced Python sims (2026-06-25)
 
-### Open question (resolve before Phase 1 "Systems & Networks")
+**Context.** The "Systems & Networks" processes (packet routing, DNS resolution, parallelism & speedup)
+could be hand-authored as `author-asserted` process traces or modeled as small Python simulations and
+traced like any other lesson. This was the one open question carried out of Phase 0.
 
-Model network processes (routing, DNS, parallelism) as **traced Python sims** (preferred — preserves the
-execution-derived guarantee) or as **hand-authored process traces** (faster to author, `author-asserted`,
-weaker guarantee). The schema supports either via `derivation_source`/`step_provenance`. Confirm the
-preference with the owner before building Big-picture network lessons.
+**Decision (owner, 2026-06-25).** Model them as **traced Python sims**. A packet router, a DNS resolver, a
+work scheduler are each tens of lines of Python whose state is the process state (packet positions, the
+`name → IP` walk, which tasks are done per tick). They run through the same `sys.settrace` producer, so the
+network lessons keep the **execution-derived** guarantee and the routing / DNS / Gantt animations fall out
+of the same trace data — one tracer, one schema, one player for the whole portal. Hand-authored
+`author-asserted` traces remain the rare fallback for a process that genuinely resists being modeled as code.
+
+**Consequences.** The data/network material is "more traces," not a second codebase. The abstraction
+renderers grow (a network graph, a Gantt lane chart); the spine is unchanged.
+
+## ADR-0007 — Code lines are clickable, mapped to steps (2026-06-25)
+
+**Context.** The player stepped via a scrubber, prev/next, and arrow keys. A learner reading the code often
+wants to ask "what does *this* line do" directly.
+
+**Decision (owner request, 2026-06-25).** Every executable source line is a button: clicking it jumps to the
+step that highlights that line, updating the state/abstraction/note in sync — the same destination the arrow
+keys reach, offered as an alternative. Where a line runs more than once (loops, once we have them), clicking
+it again walks to its next execution, wrapping around. Blank/comment lines (no corresponding step) are not
+clickable. Keyboard stepping and the scrubber are unchanged.
+
+**Consequences.** Generic across all lessons (it reads `trace[].line`); no per-lesson authoring. The loop
+behavior is forward-looking — the swap anchors are straight-line, so each line maps to one step today.
