@@ -1,0 +1,37 @@
+id = "filter-buggy"
+title = "Filtering a list — deleting as you go"
+register = "naive"
+problem = "Keep only the numbers greater than 10, and leave the original list untouched."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The trap: deleting the small numbers from the list WHILE looping over it. Every removal shifts the
+# list left, but the for-loop keeps its own counter — so the element that slides into the freed slot is
+# skipped. A small number leaks through, and the original list is wrecked too.
+source = """
+nums = [4, 3, 22, 18, 7, 15]
+for n in nums:
+    if n <= 10:
+        nums.remove(n)
+"""
+
+# 4 was just removed. Predict the next loop value — the trap is that it is NOT 3.
+[[checkpoints]]
+step = 3
+ask = "We just removed 4, so nums shifted left and 3 is now at the front. But the for-loop keeps its OWN position counter, not the list's. What will n be on the next pass — 3, or something else?"
+
+[[notes]]
+step = 1
+text = "No new list here — this version tries to delete the small numbers from nums itself, while looping over it. That is the trap."
+
+[[notes]]
+step = 3
+text = "4 is ≤ 10, so we remove it. nums shifts left: 3 slides into the front slot."
+
+[[notes]]
+step = 4
+text = "But the for-loop kept its own counter and moved to slot 1 — which is now 22. It SKIPPED 3 entirely. 3 will never be checked."
+
+[[notes]]
+step = 11
+text = "Done — and nums is [3, 22, 18, 15]. The 3 leaked through: removing 4 shifted it into a slot the loop had already passed. Never delete from a list while looping over it — build a new list instead (see the Procedural version)."

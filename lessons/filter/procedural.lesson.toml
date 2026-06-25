@@ -1,0 +1,32 @@
+id = "filter-procedural"
+title = "Filtering a list — build a new one"
+register = "procedural"
+problem = "Keep only the numbers greater than 10, and leave the original list untouched."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The safe way to filter: walk the list and copy the items that pass the test into a NEW list. The
+# original is never modified, so nothing can shift under you. (This is also the BI2 'extract info' move.)
+source = """
+nums = [4, 3, 22, 18, 7, 15]
+big = []
+for n in nums:
+    if n > 10:
+        big.append(n)
+"""
+
+[[checkpoints]]
+step = 7
+ask = "22 is greater than 10, so it passes the gate. After `big.append(n)` runs, what will big be?"
+
+[[notes]]
+step = 1
+text = "big starts empty — we copy the numbers over 10 into it, and leave nums completely alone."
+
+[[notes]]
+step = 8
+text = "22 is over 10, so it passes the gate and joins big. nums itself never changes."
+
+[[notes]]
+step = 16
+text = "15 passes too. big ends as [22, 18, 15] — the three big numbers, in order — and nums is exactly as it started. Building a new list keeps the original safe."

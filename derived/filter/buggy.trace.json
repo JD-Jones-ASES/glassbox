@@ -1,0 +1,217 @@
+{
+  "id": "filter-buggy",
+  "title": "Filtering a list — deleting as you go",
+  "problem": "Keep only the numbers greater than 10, and leave the original list untouched.",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "source": "nums = [4, 3, 22, 18, 7, 15]\nfor n in nums:\n    if n <= 10:\n        nums.remove(n)\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          3,
+          22,
+          18,
+          7,
+          15
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          3,
+          22,
+          18,
+          7,
+          15
+        ],
+        "n": 4
+      },
+      "stdout": "",
+      "note": "No new list here — this version tries to delete the small numbers from nums itself, while looping over it. That is the trap."
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          3,
+          22,
+          18,
+          7,
+          15
+        ],
+        "n": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          22,
+          18,
+          7,
+          15
+        ],
+        "n": 4
+      },
+      "stdout": "",
+      "note": "4 is ≤ 10, so we remove it. nums shifts left: 3 slides into the front slot.",
+      "checkpoint": true,
+      "checkpoint_prompt": "We just removed 4, so nums shifted left and 3 is now at the front. But the for-loop keeps its OWN position counter, not the list's. What will n be on the next pass — 3, or something else?"
+    },
+    {
+      "step": 4,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          22,
+          18,
+          7,
+          15
+        ],
+        "n": 22
+      },
+      "stdout": "",
+      "note": "But the for-loop kept its own counter and moved to slot 1 — which is now 22. It SKIPPED 3 entirely. 3 will never be checked."
+    },
+    {
+      "step": 5,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          22,
+          18,
+          7,
+          15
+        ],
+        "n": 22
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          22,
+          18,
+          7,
+          15
+        ],
+        "n": 18
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          22,
+          18,
+          7,
+          15
+        ],
+        "n": 18
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          22,
+          18,
+          7,
+          15
+        ],
+        "n": 7
+      },
+      "stdout": ""
+    },
+    {
+      "step": 9,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          22,
+          18,
+          7,
+          15
+        ],
+        "n": 7
+      },
+      "stdout": ""
+    },
+    {
+      "step": 10,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          22,
+          18,
+          15
+        ],
+        "n": 7
+      },
+      "stdout": ""
+    },
+    {
+      "step": 11,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          22,
+          18,
+          15
+        ],
+        "n": 7
+      },
+      "stdout": "",
+      "note": "Done — and nums is [3, 22, 18, 15]. The 3 leaked through: removing 4 shifted it into a slot the loop had already passed. Never delete from a list while looping over it — build a new list instead (see the Procedural version)."
+    }
+  ]
+}

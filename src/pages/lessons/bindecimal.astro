@@ -1,0 +1,52 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import buggy from "../../../derived/bindecimal/buggy.trace.json";
+import procedural from "../../../derived/bindecimal/procedural.trace.json";
+
+// Buggy first: watch ×10 read it as decimal, then watch ×2 find the real value.
+const registers = [buggy, procedural];
+---
+
+<Base
+  title="Binary to decimal — GlassBox"
+  description="Turn a binary number back into decimal — and watch the base mix-up that reads 1101 as eleven hundred."
+>
+  <h1>Binary to decimal</h1>
+  <p class="lede">
+    Going from binary back to decimal is one loop: read the bits left to right, and at each step double
+    what you have and add the next bit. The whole lesson hides in one number — the base you multiply by.
+    Get it wrong and <code>1101</code> comes out as eleven hundred and one instead of thirteen.
+  </p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>
+      The bits are <code>1 1 0 1</code>. In binary the places are <code>8 4 2 1</code>, so this is
+      <code>8 + 4 + 0 + 1 = 13</code>. The loop builds that up by doubling: <code>0 → 1 → 3 → 6 → 13</code>.
+    </p>
+    <ul>
+      <li>
+        <strong>Buggy</strong> — <code>value * 10 + b</code> multiplies by ten, treating the bits as
+        decimal digits. value climbs <code>1 → 11 → 110 → 1101</code> — it just reassembles the digits as
+        a base-ten number, not the value the binary actually represents.
+      </li>
+      <li>
+        <strong>Procedural</strong> — <code>value * 2 + b</code> doubles, which is what shifting up one
+        binary place means. value climbs <code>1 → 3 → 6 → 13</code> and lands on the right answer.
+      </li>
+    </ul>
+    <p class="fineprint">
+      Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>

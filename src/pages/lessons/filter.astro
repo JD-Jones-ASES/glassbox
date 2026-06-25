@@ -1,0 +1,53 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import buggy from "../../../derived/filter/buggy.trace.json";
+import procedural from "../../../derived/filter/procedural.trace.json";
+
+// Buggy first: watch deleting-while-looping skip an element, then watch the safe build-a-new-list way.
+const registers = [buggy, procedural];
+---
+
+<Base
+  title="Filtering a list — GlassBox"
+  description="Keep the items that pass a test — and watch why deleting from a list while looping over it skips elements."
+>
+  <h1>Filtering a list</h1>
+  <p class="lede">
+    Filtering — keeping only the items that pass some test — is the everyday move behind "find the data
+    that matters." The safe way is to build a <em>new</em> list. The tempting way is to delete the
+    unwanted items in place, and the state pane shows exactly why that backfires.
+  </p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>
+      The list is <code>[4, 3, 22, 18, 7, 15]</code> and we want only the numbers over 10. The right
+      answer is <code>[22, 18, 15]</code>.
+    </p>
+    <ul>
+      <li>
+        <strong>Buggy</strong> — deletes each small number from <code>nums</code> while looping over it.
+        Removing <code>4</code> shifts <code>3</code> into a slot the loop has already passed, so
+        <code>3</code> is skipped and survives. <code>nums</code> ends as <code>[3, 22, 18, 15]</code> —
+        a small number leaked through, and the original list is destroyed.
+      </li>
+      <li>
+        <strong>Procedural</strong> — copies the passing numbers into a fresh list <code>big</code> and
+        never touches <code>nums</code>. Nothing shifts under the loop, so nothing is skipped.
+      </li>
+    </ul>
+    <p class="fineprint">
+      Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>

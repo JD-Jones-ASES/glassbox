@@ -1,0 +1,35 @@
+id = "bindecimal-procedural"
+title = "Binary to decimal — doubling down the bits"
+register = "procedural"
+problem = "Read a binary number left to right and work out the decimal value it represents."
+author = "GlassBox"
+created = "2026-06-25"
+
+# Read the bits left to right: each step, double what you have (shift the old bits up one place) and
+# add the new bit. value = value * 2 + b. This is exactly how place value works in base two.
+source = """
+bits = [1, 1, 0, 1]
+value = 0
+for b in bits:
+    value = value * 2 + b
+"""
+
+[[checkpoints]]
+step = 4
+ask = "value is 1 and the next bit is 1. Binary works in powers of TWO. After `value = value * 2 + b` runs, what will value be?"
+
+[[notes]]
+step = 1
+text = "value starts at 0. We read the bits left to right, doubling as we go."
+
+[[notes]]
+step = 3
+text = "First bit is 1: value = 0×2 + 1 = 1."
+
+[[notes]]
+step = 5
+text = "Next bit 1: value = 1×2 + 1 = 3. Doubling shifts the old bits up a place, then we add the new one — exactly how place value works in base two."
+
+[[notes]]
+step = 9
+text = "Last bit 1: value = 6×2 + 1 = 13. So 1101 in binary is 13 — eight plus four plus one."

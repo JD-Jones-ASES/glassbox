@@ -1,0 +1,32 @@
+id = "bindecimal-buggy"
+title = "Binary to decimal — reading it as base ten"
+register = "naive"
+problem = "Read a binary number left to right and work out the decimal value it represents."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The base confusion: multiplying by 10 each step treats the bits as DECIMAL digits, so 1101 (binary)
+# comes out as the number 1101 instead of its real value, 13. The places of binary are 1, 2, 4, 8 — not
+# 1, 10, 100, 1000.
+source = """
+bits = [1, 1, 0, 1]
+value = 0
+for b in bits:
+    value = value * 10 + b
+"""
+
+[[checkpoints]]
+step = 4
+ask = "value is 1 and the next bit is 1. After `value = value * 10 + b` runs, what will value be? (Is base ten the right base for a binary number?)"
+
+[[notes]]
+step = 1
+text = "value starts at 0. This version multiplies by 10 each step — as if the bits were decimal digits."
+
+[[notes]]
+step = 5
+text = "value = 1×10 + 1 = 11. But binary doubles (×2); it doesn't ×10. The places are 1, 2, 4, 8 — not 1, 10, 100."
+
+[[notes]]
+step = 9
+text = "value = 1101 — just the digits read as a decimal number, not the value of the binary number, which is 13. The bug: `value * 10` should be `value * 2`. CPython shows the gap; we don't have to claim it."
