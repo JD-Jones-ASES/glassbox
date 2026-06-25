@@ -1,0 +1,974 @@
+{
+  "id": "faulttolerance-redundant",
+  "title": "Fault tolerance — rerouting around a dead node",
+  "problem": "Send a packet from A to D after node B fails. A redundant network should find another way.",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "author-asserted-simulation",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "abstraction": {
+    "type": "network",
+    "label": "Network with a failed node",
+    "bind": {
+      "network": "topology",
+      "at": "current",
+      "path": "path",
+      "down": "down"
+    }
+  },
+  "source": "network = {\"A\": [\"B\", \"C\"], \"B\": [\"A\", \"D\"], \"C\": [\"A\", \"D\"], \"D\": [\"B\", \"C\"]}\ndown = [\"B\"]\nat = \"A\"\npath = [at]\nwhile at != \"D\":\n    moved = False\n    for nxt in network[at]:\n        if nxt not in down and nxt not in path:\n            at = nxt\n            path.append(at)\n            moved = True\n            break\n    if not moved:\n        break\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        }
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ]
+      },
+      "stdout": "",
+      "note": "Node B has failed — it is marked down (the ✕), and its links are unusable. A fault-tolerant network should still get the packet through."
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 4,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ],
+        "moved": false
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ],
+        "moved": false,
+        "nxt": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ],
+        "moved": false,
+        "nxt": "B"
+      },
+      "stdout": "",
+      "note": "The router tries B first — but B is down, so that link is dead. It looks for another neighbour instead of giving up."
+    },
+    {
+      "step": 8,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ],
+        "moved": false,
+        "nxt": "C"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 9,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ],
+        "moved": false,
+        "nxt": "C"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 10,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "C",
+        "path": [
+          "A"
+        ],
+        "moved": false,
+        "nxt": "C"
+      },
+      "stdout": "",
+      "note": "It routes to C, going AROUND the failure. That option only exists because the network is redundant: A can reach D two different ways."
+    },
+    {
+      "step": 11,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "C",
+        "path": [
+          "A",
+          "C"
+        ],
+        "moved": false,
+        "nxt": "C"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 12,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "C",
+        "path": [
+          "A",
+          "C"
+        ],
+        "moved": true,
+        "nxt": "C"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 13,
+      "line": 12,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "C",
+        "path": [
+          "A",
+          "C"
+        ],
+        "moved": true,
+        "nxt": "C"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 14,
+      "line": 13,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "C",
+        "path": [
+          "A",
+          "C"
+        ],
+        "moved": true,
+        "nxt": "C"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 15,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "C",
+        "path": [
+          "A",
+          "C"
+        ],
+        "moved": true,
+        "nxt": "C"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 16,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "C",
+        "path": [
+          "A",
+          "C"
+        ],
+        "moved": false,
+        "nxt": "C"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 17,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "C",
+        "path": [
+          "A",
+          "C"
+        ],
+        "moved": false,
+        "nxt": "A"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 18,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "C",
+        "path": [
+          "A",
+          "C"
+        ],
+        "moved": false,
+        "nxt": "A"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 19,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "C",
+        "path": [
+          "A",
+          "C"
+        ],
+        "moved": false,
+        "nxt": "D"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 20,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "C",
+        "path": [
+          "A",
+          "C"
+        ],
+        "moved": false,
+        "nxt": "D"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 21,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "D",
+        "path": [
+          "A",
+          "C"
+        ],
+        "moved": false,
+        "nxt": "D"
+      },
+      "stdout": "",
+      "note": "From C the packet reaches D. It arrived despite B being down — the network rerouted itself. Final path: A → C → D. Redundancy IS fault tolerance."
+    },
+    {
+      "step": 22,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "D",
+        "path": [
+          "A",
+          "C",
+          "D"
+        ],
+        "moved": false,
+        "nxt": "D"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 23,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "D",
+        "path": [
+          "A",
+          "C",
+          "D"
+        ],
+        "moved": true,
+        "nxt": "D"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 24,
+      "line": 12,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "D",
+        "path": [
+          "A",
+          "C",
+          "D"
+        ],
+        "moved": true,
+        "nxt": "D"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 25,
+      "line": 13,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "D",
+        "path": [
+          "A",
+          "C",
+          "D"
+        ],
+        "moved": true,
+        "nxt": "D"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 26,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "D",
+        "path": [
+          "A",
+          "C",
+          "D"
+        ],
+        "moved": true,
+        "nxt": "D"
+      },
+      "stdout": ""
+    }
+  ]
+}

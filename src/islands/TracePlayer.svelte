@@ -367,16 +367,17 @@
           <div class="network">
             <svg viewBox="0 0 100 100" class="net-svg" role="img" aria-label="Network graph">
               {#each model.edges as e}
-                <line class="net-edge" class:on={e.on} x1={model.pos[e.a].x} y1={model.pos[e.a].y} x2={model.pos[e.b].x} y2={model.pos[e.b].y} />
+                <line class="net-edge" class:on={e.on} class:dead={e.dead} x1={model.pos[e.a].x} y1={model.pos[e.a].y} x2={model.pos[e.b].x} y2={model.pos[e.b].y} />
               {/each}
               {#each model.nodes as n}
-                <g class="net-node" class:current={n === model.current} class:visited={model.path.includes(n)} class:dest={n === model.dest}>
+                <g class="net-node" class:current={n === model.current} class:visited={model.path.includes(n)} class:dest={n === model.dest} class:down={model.down.includes(n)}>
                   <circle cx={model.pos[n].x} cy={model.pos[n].y} r="8.5" />
                   <text x={model.pos[n].x} y={model.pos[n].y} dy="0.34em" text-anchor="middle">{n}</text>
+                  {#if model.down.includes(n)}<text class="net-x" x={model.pos[n].x} y={model.pos[n].y} dy="0.34em" text-anchor="middle">✕</text>{/if}
                 </g>
               {/each}
             </svg>
-            <div class="net-path">path: <code>{model.path.length ? model.path.join(" → ") : "—"}</code></div>
+            <div class="net-path">path: <code>{model.path.length ? model.path.join(" → ") : "—"}</code>{#if model.down.length}<span class="net-down">· down: {model.down.join(", ")}</span>{/if}</div>
           </div>
         {:else}
           <table class="vars">
@@ -655,6 +656,11 @@
   .net-node.dest circle { stroke-dasharray: 2.2 1.6; }
   .net-path { font-family: var(--font-mono); font-size: 0.85rem; color: var(--ink-soft); }
   .net-path code { color: var(--live-ink); }
+  .net-down { color: var(--asserted); margin-left: 0.3rem; }
+  .net-edge.dead { stroke: var(--asserted); stroke-width: 1; opacity: 0.3; stroke-dasharray: 2 2; }
+  .net-node.down circle { fill: var(--surface-2); stroke: var(--asserted); stroke-dasharray: 2 1.5; opacity: 0.85; }
+  .net-node.down text { fill: var(--ink-faint); }
+  .net-x { fill: var(--asserted) !important; font-size: 9px; font-weight: 700; }
 
   @media (prefers-reduced-motion: no-preference) {
     .fill { transition: d 0.25s ease, fill 0.25s ease; }

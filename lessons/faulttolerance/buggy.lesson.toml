@@ -1,0 +1,53 @@
+id = "faulttolerance-single-path"
+title = "Fault tolerance — the single point of failure"
+register = "naive"
+problem = "Send a packet from A to D after node B fails. A redundant network should find another way."
+author = "GlassBox"
+created = "2026-06-25"
+# A traced routing model, not a real router — the path is real execution, the network is a hand-built model.
+domain_model = "author-asserted-simulation"
+
+# Same failure (B is down), but this network is a straight line A-B-D with NO backup path. When B dies,
+# A has nowhere else to go — the packet is stranded. One dead node takes the whole route down.
+source = """
+network = {"A": ["B"], "B": ["A", "D"], "D": ["B"]}
+down = ["B"]
+at = "A"
+path = [at]
+while at != "D":
+    moved = False
+    for nxt in network[at]:
+        if nxt not in down and nxt not in path:
+            at = nxt
+            path.append(at)
+            moved = True
+            break
+    if not moved:
+        break
+"""
+
+[abstraction]
+type = "network"
+label = "Network with no backup path"
+
+[abstraction.bind]
+network = "topology"
+at = "current"
+path = "path"
+down = "down"
+
+[[notes]]
+step = 1
+text = "Node B has failed — marked down. But this network has no backup: A's only link is to B."
+
+[[notes]]
+step = 7
+text = "A tries its only neighbour, B — and B is down. There is no other link to try."
+
+[[notes]]
+step = 9
+text = "Nothing moved this round (moved is False), so the router gives up — there is no live path out of A."
+
+[[notes]]
+step = 10
+text = "Stranded at A. The packet never reaches D. With no redundant path, a single failed node is a single point of failure — exactly what fault tolerance is meant to prevent. CPython shows the dead end; we don't have to claim it."

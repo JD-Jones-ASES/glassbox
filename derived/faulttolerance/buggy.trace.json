@@ -1,0 +1,327 @@
+{
+  "id": "faulttolerance-single-path",
+  "title": "Fault tolerance — the single point of failure",
+  "problem": "Send a packet from A to D after node B fails. A redundant network should find another way.",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "author-asserted-simulation",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "abstraction": {
+    "type": "network",
+    "label": "Network with no backup path",
+    "bind": {
+      "network": "topology",
+      "at": "current",
+      "path": "path",
+      "down": "down"
+    }
+  },
+  "source": "network = {\"A\": [\"B\"], \"B\": [\"A\", \"D\"], \"D\": [\"B\"]}\ndown = [\"B\"]\nat = \"A\"\npath = [at]\nwhile at != \"D\":\n    moved = False\n    for nxt in network[at]:\n        if nxt not in down and nxt not in path:\n            at = nxt\n            path.append(at)\n            moved = True\n            break\n    if not moved:\n        break\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B"
+          ]
+        }
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B"
+          ]
+        },
+        "down": [
+          "B"
+        ]
+      },
+      "stdout": "",
+      "note": "Node B has failed — marked down. But this network has no backup: A's only link is to B."
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 4,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ],
+        "moved": false
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ],
+        "moved": false,
+        "nxt": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ],
+        "moved": false,
+        "nxt": "B"
+      },
+      "stdout": "",
+      "note": "A tries its only neighbour, B — and B is down. There is no other link to try."
+    },
+    {
+      "step": 8,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ],
+        "moved": false,
+        "nxt": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 9,
+      "line": 13,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ],
+        "moved": false,
+        "nxt": "B"
+      },
+      "stdout": "",
+      "note": "Nothing moved this round (moved is False), so the router gives up — there is no live path out of A."
+    },
+    {
+      "step": 10,
+      "line": 14,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B"
+          ]
+        },
+        "down": [
+          "B"
+        ],
+        "at": "A",
+        "path": [
+          "A"
+        ],
+        "moved": false,
+        "nxt": "B"
+      },
+      "stdout": "",
+      "note": "Stranded at A. The packet never reaches D. With no redundant path, a single failed node is a single point of failure — exactly what fault tolerance is meant to prevent. CPython shows the dead end; we don't have to claim it."
+    }
+  ]
+}

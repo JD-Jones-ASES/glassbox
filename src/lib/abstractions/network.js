@@ -1,8 +1,9 @@
 // The "network" abstraction: a node-link graph with a packet hopping along its path. Slots:
 //   topology -> an adjacency dict {node: [neighbors]}; current -> the node the packet is at now;
 //   path -> the nodes visited so far; route (optional) -> the planned path (first = source, last =
-//   destination). Pure and data-driven: the graph comes from the program's own state. Node positions
-//   are auto-laid-out on a circle, so no presentational data needs to live in the trace.
+//   destination); down (optional) -> a list of failed nodes, marked dead with their links unusable.
+//   Pure and data-driven: the graph comes from the program's own state. Node positions are auto-laid-out
+//   on a circle, so no presentational data needs to live in the trace.
 
 export function networkModel(abstraction, state) {
   const bind = abstraction?.bind ?? {};
@@ -36,13 +37,20 @@ export function networkModel(abstraction, state) {
   const current = slotToVar.current ? state[slotToVar.current] : null;
   const path = slotToVar.path && Array.isArray(state[slotToVar.path]) ? state[slotToVar.path] : [];
   const route = slotToVar.route && Array.isArray(state[slotToVar.route]) ? state[slotToVar.route] : [];
+  const down = slotToVar.down && Array.isArray(state[slotToVar.down]) ? state[slotToVar.down] : [];
+  const downSet = new Set(down);
   const source = route[0] ?? path[0] ?? null;
   const dest = route.length ? route[route.length - 1] : null;
 
-  // Which edges are part of the path walked so far (so the template can just read edge.on).
+  // Which edges are part of the path walked so far (so the template can just read edge.on); an edge
+  // touching a failed node is dead (unusable).
   const pathSet = new Set();
   for (let i = 0; i < path.length - 1; i++) pathSet.add([path[i], path[i + 1]].sort().join(" "));
-  const edgeObjs = edges.map(([a, b]) => ({ a, b, on: pathSet.has([a, b].sort().join(" ")) }));
+  const edgeObjs = edges.map(([a, b]) => ({
+    a, b,
+    on: pathSet.has([a, b].sort().join(" ")),
+    dead: downSet.has(a) || downSet.has(b),
+  }));
 
-  return { kind: "network", nodes, edges: edgeObjs, pos, current, path, source, dest };
+  return { kind: "network", nodes, edges: edgeObjs, pos, current, path, source, dest, down };
 }

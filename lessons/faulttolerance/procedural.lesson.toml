@@ -1,0 +1,54 @@
+id = "faulttolerance-redundant"
+title = "Fault tolerance — rerouting around a dead node"
+register = "procedural"
+problem = "Send a packet from A to D after node B fails. A redundant network should find another way."
+author = "GlassBox"
+created = "2026-06-25"
+# A traced routing model, not a real router — the path is real execution, the network is a hand-built model.
+domain_model = "author-asserted-simulation"
+
+# B has failed. The router walks the graph, skipping any node that is down or already visited, and
+# picks the first live neighbour toward the destination. Because this network is REDUNDANT (A reaches D
+# two ways), it finds the detour A -> C -> D on its own.
+source = """
+network = {"A": ["B", "C"], "B": ["A", "D"], "C": ["A", "D"], "D": ["B", "C"]}
+down = ["B"]
+at = "A"
+path = [at]
+while at != "D":
+    moved = False
+    for nxt in network[at]:
+        if nxt not in down and nxt not in path:
+            at = nxt
+            path.append(at)
+            moved = True
+            break
+    if not moved:
+        break
+"""
+
+[abstraction]
+type = "network"
+label = "Network with a failed node"
+
+[abstraction.bind]
+network = "topology"
+at = "current"
+path = "path"
+down = "down"
+
+[[notes]]
+step = 1
+text = "Node B has failed — it is marked down (the ✕), and its links are unusable. A fault-tolerant network should still get the packet through."
+
+[[notes]]
+step = 7
+text = "The router tries B first — but B is down, so that link is dead. It looks for another neighbour instead of giving up."
+
+[[notes]]
+step = 10
+text = "It routes to C, going AROUND the failure. That option only exists because the network is redundant: A can reach D two different ways."
+
+[[notes]]
+step = 21
+text = "From C the packet reaches D. It arrived despite B being down — the network rerouted itself. Final path: A → C → D. Redundancy IS fault tolerance."

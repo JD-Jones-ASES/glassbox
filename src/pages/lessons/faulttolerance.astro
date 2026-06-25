@@ -1,0 +1,56 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import buggy from "../../../derived/faulttolerance/buggy.trace.json";
+import procedural from "../../../derived/faulttolerance/procedural.trace.json";
+
+// Single-path first (watch it strand), then redundant (watch it reroute).
+const registers = [buggy, procedural];
+---
+
+<Base
+  title="Fault tolerance — GlassBox"
+  description="Kill a node mid-network and watch a redundant path reroute around it — while a single-path network strands the packet."
+>
+  <h1>Fault tolerance</h1>
+  <p class="lede">
+    The internet keeps working when pieces of it fail because there is usually more than one path between
+    any two points. Fail a node on a <em>redundant</em> network and the traffic reroutes; fail the one node
+    a <em>single-path</em> network depends on and everything past it goes dark. Switch the abstraction on
+    to watch a node die (the ✕) and the packet find — or fail to find — a way around.
+  </p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>
+      In both versions node <code>B</code> has failed, and the router walks the graph picking the first
+      live neighbour toward <code>D</code>. The only difference is the shape of the network.
+    </p>
+    <ul>
+      <li>
+        <strong>Buggy</strong> — a straight line <code>A–B–D</code>. <code>A</code>'s only link is to
+        <code>B</code>, so when <code>B</code> dies the packet is stranded at <code>A</code> and never
+        reaches <code>D</code>. <code>B</code> is a single point of failure.
+      </li>
+      <li>
+        <strong>Procedural</strong> — a redundant network where <code>A</code> also connects to
+        <code>C</code>. The router skips the dead <code>B</code> and reroutes <code>A → C → D</code>. Same
+        failure, but the extra path saves the delivery — that redundancy is exactly what "fault tolerant"
+        means.
+      </li>
+    </ul>
+    <p class="fineprint">
+      The packet's path is real execution output; the little network is a hand-built model (marked
+      <em>model: author-asserted</em>) — see <a href="../../verification/">how GlassBox stays honest</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>
