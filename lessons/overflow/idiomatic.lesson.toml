@@ -1,0 +1,30 @@
+id = "overflow-python"
+title = "Overflow — the width Python hides from you"
+register = "idiomatic"
+problem = "Count upward in a fixed 8-bit register (it can only hold 0 to 255) and see what happens past the top."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The same count, but in plain Python — whose ints have NO fixed width. There is no register to overflow,
+# so it never wraps. Real hardware does have fixed widths; Python hides that, which is why overflow surprises.
+source = """
+count = 254
+for tick in range(4):
+    count = count + 1
+"""
+
+[[checkpoints]]
+step = 3
+ask = "count is at 255. After `count = count + 1` runs in plain Python (no fixed width), what will count be?"
+
+[[notes]]
+step = 0
+text = "Same start of 254 — but plain Python this time. Python's integers have no fixed width."
+
+[[notes]]
+step = 4
+text = "count is 256 — no wrap. Python grows the integer as large as it needs; it would happily reach a thousand-digit number. The fixed-width overflow is hidden from you, which is exactly why it surprises people working close to real hardware."
+
+[[notes]]
+step = 8
+text = "258 and still climbing. Compare with the 8-bit register, which wrapped back to 0 three ticks ago. Same counting, completely different behaviour — because one has a fixed width and one does not."

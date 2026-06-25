@@ -1,0 +1,124 @@
+{
+  "id": "overflow-fixed",
+  "title": "Overflow — when the counter runs out of room",
+  "problem": "Count upward in a fixed 8-bit register (it can only hold 0 to 255) and see what happens past the top.",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "source": "count = 254\nfor tick in range(4):\n    count = (count + 1) % 256\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "count": 254
+      },
+      "stdout": "",
+      "note": "count starts at 254. Pretend count lives in a fixed 8-bit register — it can only hold whole numbers from 0 to 255."
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "count": 254,
+        "tick": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "count": 255,
+        "tick": 0
+      },
+      "stdout": "",
+      "note": "One tick: count is 255 — the maximum an 8-bit register can store (all eight bits set to 1)."
+    },
+    {
+      "step": 3,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "count": 255,
+        "tick": 1
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "count is at 255 — the largest value an 8-bit register can hold. After `count = (count + 1) % 256` runs, what will count be?"
+    },
+    {
+      "step": 4,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "count": 0,
+        "tick": 1
+      },
+      "stdout": "",
+      "note": "Tick again — and count rolls over to 0. There was no room for 256, so the carry fell off the end. This is OVERFLOW: a fixed-width counter wrapping past its maximum, like an odometer rolling 999 → 000."
+    },
+    {
+      "step": 5,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "count": 0,
+        "tick": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "count": 1,
+        "tick": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "count": 1,
+        "tick": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "count": 2,
+        "tick": 3
+      },
+      "stdout": "",
+      "note": "It just keeps counting up from 0 again. The register has no memory that it overflowed — which is exactly why overflow bugs are so easy to miss."
+    },
+    {
+      "step": 9,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "count": 2,
+        "tick": 3
+      },
+      "stdout": ""
+    }
+  ]
+}

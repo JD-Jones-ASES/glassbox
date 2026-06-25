@@ -1,0 +1,34 @@
+id = "overflow-fixed"
+title = "Overflow — when the counter runs out of room"
+register = "procedural"
+problem = "Count upward in a fixed 8-bit register (it can only hold 0 to 255) and see what happens past the top."
+author = "GlassBox"
+created = "2026-06-25"
+
+# A fixed 8-bit register can hold 0..255. We simulate that with `% 256`: add one, then wrap. Watch the
+# counter roll over 255 -> 0. That wrap IS overflow — the high bit falls off the end with nowhere to go.
+source = """
+count = 254
+for tick in range(4):
+    count = (count + 1) % 256
+"""
+
+[[checkpoints]]
+step = 3
+ask = "count is at 255 — the largest value an 8-bit register can hold. After `count = (count + 1) % 256` runs, what will count be?"
+
+[[notes]]
+step = 0
+text = "count starts at 254. Pretend count lives in a fixed 8-bit register — it can only hold whole numbers from 0 to 255."
+
+[[notes]]
+step = 2
+text = "One tick: count is 255 — the maximum an 8-bit register can store (all eight bits set to 1)."
+
+[[notes]]
+step = 4
+text = "Tick again — and count rolls over to 0. There was no room for 256, so the carry fell off the end. This is OVERFLOW: a fixed-width counter wrapping past its maximum, like an odometer rolling 999 → 000."
+
+[[notes]]
+step = 8
+text = "It just keeps counting up from 0 again. The register has no memory that it overflowed — which is exactly why overflow bugs are so easy to miss."

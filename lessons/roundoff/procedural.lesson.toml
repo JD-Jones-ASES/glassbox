@@ -1,0 +1,33 @@
+id = "roundoff-procedural"
+title = "Roundoff — comparing floats safely"
+register = "procedural"
+problem = "Add 0.1 + 0.2 and check whether the result equals 0.3."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The fix for the float trap: never compare with ==. Instead ask whether the two numbers are CLOSE —
+# within a small tolerance. Same roundoff error, but now the check is robust to it.
+source = """
+total = 0.1 + 0.2
+close = abs(total - 0.3) < 0.0001
+if close:
+    result = "close enough"
+else:
+    result = "off by a hair"
+"""
+
+[[checkpoints]]
+step = 0
+ask = "total is 0.30000000000000004 — a hair off 0.3. After `close = abs(total - 0.3) < 0.0001` runs, will close be True or False? (Add a variable named close and predict it.)"
+
+[[notes]]
+step = 0
+text = "Same total, 0.30000000000000004 — still a hair off 0.3. The roundoff error has not gone away."
+
+[[notes]]
+step = 1
+text = "But this time we ask whether total is CLOSE to 0.3, within a small tolerance. The difference is tiny, far under 0.0001, so close is True."
+
+[[notes]]
+step = 3
+text = "result = 'close enough'. The fix for float comparison: never ==, check that the difference is small. Exactly the same numbers as the buggy version, opposite verdict — because the question changed from 'equal?' to 'close enough?'."

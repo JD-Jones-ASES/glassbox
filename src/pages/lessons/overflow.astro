@@ -1,0 +1,53 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import procedural from "../../../derived/overflow/procedural.trace.json";
+import idiomatic from "../../../derived/overflow/idiomatic.trace.json";
+
+// Fixed-width first (watch it wrap), then Python (watch it refuse to).
+const registers = [procedural, idiomatic];
+---
+
+<Base
+  title="Overflow — GlassBox"
+  description="Watch a fixed 8-bit counter wrap 255 to 0 — and watch Python's unbounded ints refuse to."
+>
+  <h1>Overflow</h1>
+  <p class="lede">
+    A real computer stores a number in a fixed number of bits. Count past the largest value those bits can
+    hold and there is nowhere for the carry to go — so it wraps around to zero. Python hides this from you,
+    which is exactly why it catches people out. (This is <em>not</em> the same as <a href="../roundoff/">roundoff</a> — keep the two straight.)
+  </p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>
+      An 8-bit register holds whole numbers from <code>0</code> to <code>255</code> — that is all
+      <code>8 bits</code> can encode. We start at <code>254</code> and tick upward.
+    </p>
+    <ul>
+      <li>
+        <strong>Procedural</strong> — a simulated 8-bit register (<code>(count + 1) % 256</code>). At
+        <code>255</code> every bit is already a 1; one more tick wraps it to <code>0</code>. That wrap is
+        overflow — the odometer rolling <code>999 → 000</code>.
+      </li>
+      <li>
+        <strong>Idiomatic</strong> — plain Python. Its integers have no fixed width, so <code>255</code>
+        becomes <code>256</code>, <code>257</code>, on and on. No wrap, because there is no register to
+        overrun. Useful, but it can lull you into forgetting that real hardware <em>does</em> overflow.
+      </li>
+    </ul>
+    <p class="fineprint">
+      Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>

@@ -1,0 +1,64 @@
+{
+  "id": "roundoff-buggy",
+  "title": "Roundoff — when 0.1 + 0.2 isn't 0.3",
+  "problem": "Add 0.1 + 0.2 and check whether the result equals 0.3.",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "source": "total = 0.1 + 0.2\nis_exact = total == 0.3\nif is_exact:\n    result = \"exact match\"\nelse:\n    result = \"off by a hair\"\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "total": 0.30000000000000004
+      },
+      "stdout": "",
+      "note": "total is 0.1 + 0.2 — but look closely: it is 0.30000000000000004, not 0.3. Neither 0.1 nor 0.2 has an exact binary fraction, so the sum lands a hair off.",
+      "checkpoint": true,
+      "checkpoint_prompt": "We added 0.1 + 0.2. After `is_exact = total == 0.3` runs, will is_exact be True or False? (Add a variable named is_exact and predict it.)"
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "total": 0.30000000000000004,
+        "is_exact": false
+      },
+      "stdout": "",
+      "note": "is_exact = total == 0.3 is False. That tiny tail means total is NOT exactly 0.3, so == fails — even though the maths looks right on paper."
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "total": 0.30000000000000004,
+        "is_exact": false
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "total": 0.30000000000000004,
+        "is_exact": false,
+        "result": "off by a hair"
+      },
+      "stdout": "",
+      "note": "result = 'off by a hair'. Comparing floats with == is a classic trap. This is ROUNDOFF — a representation error from squeezing decimals into binary — and it is completely different from overflow, which is a fixed-width wrap. CPython shows the gap; we don't have to claim it."
+    }
+  ]
+}

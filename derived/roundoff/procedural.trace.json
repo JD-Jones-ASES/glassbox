@@ -1,0 +1,64 @@
+{
+  "id": "roundoff-procedural",
+  "title": "Roundoff — comparing floats safely",
+  "problem": "Add 0.1 + 0.2 and check whether the result equals 0.3.",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "source": "total = 0.1 + 0.2\nclose = abs(total - 0.3) < 0.0001\nif close:\n    result = \"close enough\"\nelse:\n    result = \"off by a hair\"\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "total": 0.30000000000000004
+      },
+      "stdout": "",
+      "note": "Same total, 0.30000000000000004 — still a hair off 0.3. The roundoff error has not gone away.",
+      "checkpoint": true,
+      "checkpoint_prompt": "total is 0.30000000000000004 — a hair off 0.3. After `close = abs(total - 0.3) < 0.0001` runs, will close be True or False? (Add a variable named close and predict it.)"
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "total": 0.30000000000000004,
+        "close": true
+      },
+      "stdout": "",
+      "note": "But this time we ask whether total is CLOSE to 0.3, within a small tolerance. The difference is tiny, far under 0.0001, so close is True."
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "total": 0.30000000000000004,
+        "close": true
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "total": 0.30000000000000004,
+        "close": true,
+        "result": "close enough"
+      },
+      "stdout": "",
+      "note": "result = 'close enough'. The fix for float comparison: never ==, check that the difference is small. Exactly the same numbers as the buggy version, opposite verdict — because the question changed from 'equal?' to 'close enough?'."
+    }
+  ]
+}

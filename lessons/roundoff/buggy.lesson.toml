@@ -1,0 +1,34 @@
+id = "roundoff-buggy"
+title = "Roundoff — when 0.1 + 0.2 isn't 0.3"
+register = "naive"
+problem = "Add 0.1 + 0.2 and check whether the result equals 0.3."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The float-equality trap. 0.1 and 0.2 have no exact binary representation, so their sum is a hair off
+# 0.3 — and comparing with == returns False, even though the arithmetic is 'right'.
+source = """
+total = 0.1 + 0.2
+is_exact = total == 0.3
+if is_exact:
+    result = "exact match"
+else:
+    result = "off by a hair"
+"""
+
+# The tempting prediction is True. CPython will say False — and the displayed total shows why.
+[[checkpoints]]
+step = 0
+ask = "We added 0.1 + 0.2. After `is_exact = total == 0.3` runs, will is_exact be True or False? (Add a variable named is_exact and predict it.)"
+
+[[notes]]
+step = 0
+text = "total is 0.1 + 0.2 — but look closely: it is 0.30000000000000004, not 0.3. Neither 0.1 nor 0.2 has an exact binary fraction, so the sum lands a hair off."
+
+[[notes]]
+step = 1
+text = "is_exact = total == 0.3 is False. That tiny tail means total is NOT exactly 0.3, so == fails — even though the maths looks right on paper."
+
+[[notes]]
+step = 3
+text = "result = 'off by a hair'. Comparing floats with == is a classic trap. This is ROUNDOFF — a representation error from squeezing decimals into binary — and it is completely different from overflow, which is a fixed-width wrap. CPython shows the gap; we don't have to claim it."

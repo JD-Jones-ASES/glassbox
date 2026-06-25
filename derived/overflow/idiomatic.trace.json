@@ -1,0 +1,123 @@
+{
+  "id": "overflow-python",
+  "title": "Overflow — the width Python hides from you",
+  "problem": "Count upward in a fixed 8-bit register (it can only hold 0 to 255) and see what happens past the top.",
+  "register": "idiomatic",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "source": "count = 254\nfor tick in range(4):\n    count = count + 1\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "count": 254
+      },
+      "stdout": "",
+      "note": "Same start of 254 — but plain Python this time. Python's integers have no fixed width."
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "count": 254,
+        "tick": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "count": 255,
+        "tick": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "count": 255,
+        "tick": 1
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "count is at 255. After `count = count + 1` runs in plain Python (no fixed width), what will count be?"
+    },
+    {
+      "step": 4,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "count": 256,
+        "tick": 1
+      },
+      "stdout": "",
+      "note": "count is 256 — no wrap. Python grows the integer as large as it needs; it would happily reach a thousand-digit number. The fixed-width overflow is hidden from you, which is exactly why it surprises people working close to real hardware."
+    },
+    {
+      "step": 5,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "count": 256,
+        "tick": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "count": 257,
+        "tick": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "count": 257,
+        "tick": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "count": 258,
+        "tick": 3
+      },
+      "stdout": "",
+      "note": "258 and still climbing. Compare with the 8-bit register, which wrapped back to 0 three ticks ago. Same counting, completely different behaviour — because one has a fixed width and one does not."
+    },
+    {
+      "step": 9,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "count": 258,
+        "tick": 3
+      },
+      "stdout": ""
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import buggy from "../../../derived/roundoff/buggy.trace.json";
+import procedural from "../../../derived/roundoff/procedural.trace.json";
+
+// Buggy first: watch == fail on 0.1 + 0.2, then watch a tolerance check do it right.
+const registers = [buggy, procedural];
+---
+
+<Base
+  title="Roundoff — GlassBox"
+  description="Watch 0.1 + 0.2 come out as 0.30000000000000004 — and why comparing floats with == is a trap."
+>
+  <h1>Roundoff</h1>
+  <p class="lede">
+    Decimals like <code>0.1</code> have no exact representation in binary, the same way <code>1/3</code> has
+    no exact decimal. So <code>0.1 + 0.2</code> lands a hair off <code>0.3</code>, and asking
+    <code>== 0.3</code> returns <code>False</code>. This is roundoff — a representation error — and it is a
+    different beast from <a href="../overflow/">overflow</a>, which is a fixed-width wrap.
+  </p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>
+      Both versions compute <code>total = 0.1 + 0.2</code>, and both show the same surprising value:
+      <code>0.30000000000000004</code>. The difference is how they <em>compare</em> it.
+    </p>
+    <ul>
+      <li>
+        <strong>Buggy</strong> — asks <code>total == 0.3</code>. The tiny tail means total is not exactly
+        <code>0.3</code>, so the answer is <code>False</code> and the program decides they are "off by a
+        hair". Comparing floats with <code>==</code> is the classic mistake.
+      </li>
+      <li>
+        <strong>Procedural</strong> — asks whether <code>total</code> is <em>close</em> to <code>0.3</code>
+        (<code>abs(total - 0.3) &lt; 0.0001</code>). It is, so the answer is <code>True</code>. The fix for
+        float comparison: never <code>==</code>, always a tolerance.
+      </li>
+    </ul>
+    <p class="fineprint">
+      Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>
