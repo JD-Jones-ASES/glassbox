@@ -1,0 +1,3133 @@
+{
+  "id": "multipacket-procedural",
+  "title": "Packet switching — different routes, reassembled in order",
+  "problem": "Send one message as three packets across the network and reassemble it correctly at the destination.",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "author-asserted-simulation",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "abstraction": {
+    "type": "network",
+    "label": "One message, three packets",
+    "bind": {
+      "network": "topology",
+      "at": "packets",
+      "arrived": "arrived"
+    }
+  },
+  "source": "network = {\"A\": [\"B\", \"C\"], \"B\": [\"A\", \"D\"], \"C\": [\"A\", \"D\"], \"D\": [\"B\", \"C\"]}\nroutes = [[\"A\", \"B\", \"C\", \"D\"], [\"A\", \"C\", \"D\"], [\"A\", \"B\", \"D\"]]\nat = [\"A\", \"A\", \"A\"]\npos = [0, 0, 0]\narrived = []\nwhile len(arrived) < 3:\n    for p in range(3):\n        if pos[p] < len(routes[p]) - 1:\n            pos[p] = pos[p] + 1\n            at[p] = routes[p][pos[p]]\n            if at[p] == \"D\" and p not in arrived:\n                arrived.append(p)\nmessage = sorted(arrived)\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        }
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "A",
+          "A",
+          "A"
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "A",
+          "A",
+          "A"
+        ],
+        "pos": [
+          0,
+          0,
+          0
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 4,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "A",
+          "A",
+          "A"
+        ],
+        "pos": [
+          0,
+          0,
+          0
+        ],
+        "arrived": []
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "A",
+          "A",
+          "A"
+        ],
+        "pos": [
+          0,
+          0,
+          0
+        ],
+        "arrived": []
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "A",
+          "A",
+          "A"
+        ],
+        "pos": [
+          0,
+          0,
+          0
+        ],
+        "arrived": [],
+        "p": 0
+      },
+      "stdout": "",
+      "note": "Three packets of one message (numbered 0, 1, 2), all starting at A. They will NOT travel together."
+    },
+    {
+      "step": 7,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "A",
+          "A",
+          "A"
+        ],
+        "pos": [
+          0,
+          0,
+          0
+        ],
+        "arrived": [],
+        "p": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "A",
+          "A",
+          "A"
+        ],
+        "pos": [
+          1,
+          0,
+          0
+        ],
+        "arrived": [],
+        "p": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 9,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "A",
+          "A"
+        ],
+        "pos": [
+          1,
+          0,
+          0
+        ],
+        "arrived": [],
+        "p": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 10,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "A",
+          "A"
+        ],
+        "pos": [
+          1,
+          0,
+          0
+        ],
+        "arrived": [],
+        "p": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 11,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "A",
+          "A"
+        ],
+        "pos": [
+          1,
+          0,
+          0
+        ],
+        "arrived": [],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 12,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "A",
+          "A"
+        ],
+        "pos": [
+          1,
+          0,
+          0
+        ],
+        "arrived": [],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 13,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "A",
+          "A"
+        ],
+        "pos": [
+          1,
+          1,
+          0
+        ],
+        "arrived": [],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 14,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "C",
+          "A"
+        ],
+        "pos": [
+          1,
+          1,
+          0
+        ],
+        "arrived": [],
+        "p": 1
+      },
+      "stdout": "",
+      "note": "Already they have split up: packet 0 is at B, packet 1 at C, packet 2 just leaving A. Packet switching sends each packet independently, by whatever route is free."
+    },
+    {
+      "step": 15,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "C",
+          "A"
+        ],
+        "pos": [
+          1,
+          1,
+          0
+        ],
+        "arrived": [],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 16,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "C",
+          "A"
+        ],
+        "pos": [
+          1,
+          1,
+          0
+        ],
+        "arrived": [],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 17,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "C",
+          "A"
+        ],
+        "pos": [
+          1,
+          1,
+          0
+        ],
+        "arrived": [],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 18,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "C",
+          "A"
+        ],
+        "pos": [
+          1,
+          1,
+          1
+        ],
+        "arrived": [],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 19,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "C",
+          "B"
+        ],
+        "pos": [
+          1,
+          1,
+          1
+        ],
+        "arrived": [],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 20,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "C",
+          "B"
+        ],
+        "pos": [
+          1,
+          1,
+          1
+        ],
+        "arrived": [],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 21,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "C",
+          "B"
+        ],
+        "pos": [
+          1,
+          1,
+          1
+        ],
+        "arrived": [],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 22,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "C",
+          "B"
+        ],
+        "pos": [
+          1,
+          1,
+          1
+        ],
+        "arrived": [],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 23,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "C",
+          "B"
+        ],
+        "pos": [
+          1,
+          1,
+          1
+        ],
+        "arrived": [],
+        "p": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 24,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "C",
+          "B"
+        ],
+        "pos": [
+          1,
+          1,
+          1
+        ],
+        "arrived": [],
+        "p": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 25,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "B",
+          "C",
+          "B"
+        ],
+        "pos": [
+          2,
+          1,
+          1
+        ],
+        "arrived": [],
+        "p": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 26,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "C",
+          "B"
+        ],
+        "pos": [
+          2,
+          1,
+          1
+        ],
+        "arrived": [],
+        "p": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 27,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "C",
+          "B"
+        ],
+        "pos": [
+          2,
+          1,
+          1
+        ],
+        "arrived": [],
+        "p": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 28,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "C",
+          "B"
+        ],
+        "pos": [
+          2,
+          1,
+          1
+        ],
+        "arrived": [],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 29,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "C",
+          "B"
+        ],
+        "pos": [
+          2,
+          1,
+          1
+        ],
+        "arrived": [],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 30,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "C",
+          "B"
+        ],
+        "pos": [
+          2,
+          2,
+          1
+        ],
+        "arrived": [],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 31,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "D",
+          "B"
+        ],
+        "pos": [
+          2,
+          2,
+          1
+        ],
+        "arrived": [],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 32,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "D",
+          "B"
+        ],
+        "pos": [
+          2,
+          2,
+          1
+        ],
+        "arrived": [],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 33,
+      "line": 12,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "D",
+          "B"
+        ],
+        "pos": [
+          2,
+          2,
+          1
+        ],
+        "arrived": [
+          1
+        ],
+        "p": 1
+      },
+      "stdout": "",
+      "note": "Packet 1 reaches D first — even though packet 0 was sent first. Packets arrive out of order."
+    },
+    {
+      "step": 34,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "D",
+          "B"
+        ],
+        "pos": [
+          2,
+          2,
+          1
+        ],
+        "arrived": [
+          1
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 35,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "D",
+          "B"
+        ],
+        "pos": [
+          2,
+          2,
+          1
+        ],
+        "arrived": [
+          1
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 36,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "D",
+          "B"
+        ],
+        "pos": [
+          2,
+          2,
+          2
+        ],
+        "arrived": [
+          1
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 37,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "D",
+          "D"
+        ],
+        "pos": [
+          2,
+          2,
+          2
+        ],
+        "arrived": [
+          1
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 38,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "D",
+          "D"
+        ],
+        "pos": [
+          2,
+          2,
+          2
+        ],
+        "arrived": [
+          1
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 39,
+      "line": 12,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "D",
+          "D"
+        ],
+        "pos": [
+          2,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 40,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "D",
+          "D"
+        ],
+        "pos": [
+          2,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 41,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "D",
+          "D"
+        ],
+        "pos": [
+          2,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 42,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "D",
+          "D"
+        ],
+        "pos": [
+          2,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2
+        ],
+        "p": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 43,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "D",
+          "D"
+        ],
+        "pos": [
+          2,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2
+        ],
+        "p": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 44,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "C",
+          "D",
+          "D"
+        ],
+        "pos": [
+          3,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2
+        ],
+        "p": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 45,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "D",
+          "D",
+          "D"
+        ],
+        "pos": [
+          3,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2
+        ],
+        "p": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 46,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "D",
+          "D",
+          "D"
+        ],
+        "pos": [
+          3,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2
+        ],
+        "p": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 47,
+      "line": 12,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "D",
+          "D",
+          "D"
+        ],
+        "pos": [
+          3,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2,
+          0
+        ],
+        "p": 0
+      },
+      "stdout": "",
+      "note": "All three have arrived, in the order 1, 2, 0 — scrambled. Each packet carries a sequence number so the receiver can sort them back."
+    },
+    {
+      "step": 48,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "D",
+          "D",
+          "D"
+        ],
+        "pos": [
+          3,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2,
+          0
+        ],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 49,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "D",
+          "D",
+          "D"
+        ],
+        "pos": [
+          3,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2,
+          0
+        ],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 50,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "D",
+          "D",
+          "D"
+        ],
+        "pos": [
+          3,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2,
+          0
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 51,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "D",
+          "D",
+          "D"
+        ],
+        "pos": [
+          3,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2,
+          0
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 52,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "D",
+          "D",
+          "D"
+        ],
+        "pos": [
+          3,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2,
+          0
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 53,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "D",
+          "D",
+          "D"
+        ],
+        "pos": [
+          3,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2,
+          0
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 54,
+      "line": 13,
+      "event": "line",
+      "state": {
+        "network": {
+          "A": [
+            "B",
+            "C"
+          ],
+          "B": [
+            "A",
+            "D"
+          ],
+          "C": [
+            "A",
+            "D"
+          ],
+          "D": [
+            "B",
+            "C"
+          ]
+        },
+        "routes": [
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "C",
+            "D"
+          ],
+          [
+            "A",
+            "B",
+            "D"
+          ]
+        ],
+        "at": [
+          "D",
+          "D",
+          "D"
+        ],
+        "pos": [
+          3,
+          2,
+          2
+        ],
+        "arrived": [
+          1,
+          2,
+          0
+        ],
+        "p": 2,
+        "message": [
+          0,
+          1,
+          2
+        ]
+      },
+      "stdout": "",
+      "note": "message = sorted(arrived) = [0, 1, 2]. Reassembled by sequence number, the original order is restored. THAT is packet switching: split the message, route the packets independently, reassemble in order at the end."
+    }
+  ]
+}

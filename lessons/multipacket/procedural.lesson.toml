@@ -1,0 +1,56 @@
+id = "multipacket-procedural"
+title = "Packet switching — different routes, reassembled in order"
+register = "procedural"
+problem = "Send one message as three packets across the network and reassemble it correctly at the destination."
+author = "GlassBox"
+created = "2026-06-25"
+# A traced model of packet switching — the packet movements are real execution; the little network is a
+# hand-built model.
+domain_model = "author-asserted-simulation"
+
+# Three packets of one message, each routed independently to D. They take DIFFERENT paths, arrive OUT OF
+# ORDER, and are reassembled by sequence number. This is the exam's actual definition of packet switching.
+source = """
+network = {"A": ["B", "C"], "B": ["A", "D"], "C": ["A", "D"], "D": ["B", "C"]}
+routes = [["A", "B", "C", "D"], ["A", "C", "D"], ["A", "B", "D"]]
+at = ["A", "A", "A"]
+pos = [0, 0, 0]
+arrived = []
+while len(arrived) < 3:
+    for p in range(3):
+        if pos[p] < len(routes[p]) - 1:
+            pos[p] = pos[p] + 1
+            at[p] = routes[p][pos[p]]
+            if at[p] == "D" and p not in arrived:
+                arrived.append(p)
+message = sorted(arrived)
+"""
+
+[abstraction]
+type = "network"
+label = "One message, three packets"
+
+[abstraction.bind]
+network = "topology"
+at = "packets"
+arrived = "arrived"
+
+[[notes]]
+step = 6
+text = "Three packets of one message (numbered 0, 1, 2), all starting at A. They will NOT travel together."
+
+[[notes]]
+step = 14
+text = "Already they have split up: packet 0 is at B, packet 1 at C, packet 2 just leaving A. Packet switching sends each packet independently, by whatever route is free."
+
+[[notes]]
+step = 33
+text = "Packet 1 reaches D first — even though packet 0 was sent first. Packets arrive out of order."
+
+[[notes]]
+step = 47
+text = "All three have arrived, in the order 1, 2, 0 — scrambled. Each packet carries a sequence number so the receiver can sort them back."
+
+[[notes]]
+step = 54
+text = "message = sorted(arrived) = [0, 1, 2]. Reassembled by sequence number, the original order is restored. THAT is packet switching: split the message, route the packets independently, reassemble in order at the end."

@@ -1,0 +1,52 @@
+id = "multipacket-buggy"
+title = "Packet switching — the unsorted message"
+register = "naive"
+problem = "Send one message as three packets across the network and reassemble it correctly at the destination."
+author = "GlassBox"
+created = "2026-06-25"
+# A traced model of packet switching — the packet movements are real execution; the little network is a
+# hand-built model.
+domain_model = "author-asserted-simulation"
+
+# The same three packets and routes, but the receiver reassembles using ARRIVAL order instead of the
+# sequence numbers. Because packets arrive out of order, the message comes out scrambled.
+source = """
+network = {"A": ["B", "C"], "B": ["A", "D"], "C": ["A", "D"], "D": ["B", "C"]}
+routes = [["A", "B", "C", "D"], ["A", "C", "D"], ["A", "B", "D"]]
+at = ["A", "A", "A"]
+pos = [0, 0, 0]
+arrived = []
+while len(arrived) < 3:
+    for p in range(3):
+        if pos[p] < len(routes[p]) - 1:
+            pos[p] = pos[p] + 1
+            at[p] = routes[p][pos[p]]
+            if at[p] == "D" and p not in arrived:
+                arrived.append(p)
+message = arrived
+"""
+
+[abstraction]
+type = "network"
+label = "One message, three packets"
+
+[abstraction.bind]
+network = "topology"
+at = "packets"
+arrived = "arrived"
+
+[[notes]]
+step = 6
+text = "Three packets of one message (0, 1, 2), all starting at A. They will travel independently."
+
+[[notes]]
+step = 14
+text = "They split onto different routes immediately — packet 0 at B, packet 1 at C, packet 2 leaving A."
+
+[[notes]]
+step = 47
+text = "All arrived, but in the order 1, 2, 0 — out of order, because each took a different-length path."
+
+[[notes]]
+step = 54
+text = "message = arrived = [1, 2, 0]. The receiver just kept the ARRIVAL order — so the message is scrambled. Out-of-order delivery corrupts the data unless you reassemble by sequence number. The fix is one word: sorted. CPython shows the scramble; we don't have to claim it."

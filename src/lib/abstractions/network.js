@@ -1,9 +1,11 @@
 // The "network" abstraction: a node-link graph with a packet hopping along its path. Slots:
 //   topology -> an adjacency dict {node: [neighbors]}; current -> the node the packet is at now;
 //   path -> the nodes visited so far; route (optional) -> the planned path (first = source, last =
-//   destination); down (optional) -> a list of failed nodes, marked dead with their links unusable.
-//   Pure and data-driven: the graph comes from the program's own state. Node positions are auto-laid-out
-//   on a circle, so no presentational data needs to live in the trace.
+//   destination); down (optional) -> a list of failed nodes, marked dead with their links unusable;
+//   packets (optional) -> a list where index i is packet i's current node (drawn as numbered dots, so
+//   several packets can be in flight on different routes at once); arrived (optional) -> the order
+//   packets reached the destination. Pure and data-driven: the graph comes from the program's own state.
+//   Node positions are auto-laid-out on a circle, so no presentational data needs to live in the trace.
 
 export function networkModel(abstraction, state) {
   const bind = abstraction?.bind ?? {};
@@ -52,5 +54,20 @@ export function networkModel(abstraction, state) {
     dead: downSet.has(a) || downSet.has(b),
   }));
 
-  return { kind: "network", nodes, edges: edgeObjs, pos, current, path, source, dest, down };
+  // Multiple in-flight packets: index = packet id, value = the node it sits on now. Cluster packets
+  // that share a node so their numbered dots don't stack exactly on top of each other.
+  const packetsRaw = slotToVar.packets && Array.isArray(state[slotToVar.packets]) ? state[slotToVar.packets] : [];
+  const arrived = slotToVar.arrived && Array.isArray(state[slotToVar.arrived]) ? state[slotToVar.arrived] : [];
+  const nodeUse = {};
+  const packets = packetsRaw
+    .map((node, i) => {
+      if (!pos[node]) return null;
+      const k = nodeUse[node] ?? 0;
+      nodeUse[node] = k + 1;
+      const ang = (k / 3) * 2 * Math.PI - Math.PI / 2;
+      return { id: i, node, x: pos[node].x + 6.5 * Math.cos(ang), y: pos[node].y + 6.5 * Math.sin(ang) };
+    })
+    .filter(Boolean);
+
+  return { kind: "network", nodes, edges: edgeObjs, pos, current, path, source, dest, down, packets, arrived };
 }

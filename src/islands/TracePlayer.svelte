@@ -380,8 +380,15 @@
                   {#if model.down.includes(n)}<text class="net-x" x={model.pos[n].x} y={model.pos[n].y} dy="0.34em" text-anchor="middle">✕</text>{/if}
                 </g>
               {/each}
+              {#each model.packets as pk}
+                <g class="net-pkt"><circle cx={pk.x} cy={pk.y} r="3.4" /><text x={pk.x} y={pk.y} dy="0.32em" text-anchor="middle">{pk.id}</text></g>
+              {/each}
             </svg>
-            <div class="net-path">path: <code>{model.path.length ? model.path.join(" → ") : "—"}</code>{#if model.down.length}<span class="net-down">· down: {model.down.join(", ")}</span>{/if}</div>
+            {#if model.packets.length}
+              <div class="net-path">arrived: <code>{model.arrived.length ? model.arrived.join(" → ") : "—"}</code></div>
+            {:else}
+              <div class="net-path">path: <code>{model.path.length ? model.path.join(" → ") : "—"}</code>{#if model.down.length}<span class="net-down">· down: {model.down.join(", ")}</span>{/if}</div>
+            {/if}
           </div>
         {:else}
           <table class="vars">
@@ -665,6 +672,8 @@
   .net-node.down circle { fill: var(--surface-2); stroke: var(--asserted); stroke-dasharray: 2 1.5; opacity: 0.85; }
   .net-node.down text { fill: var(--ink-faint); }
   .net-x { fill: var(--asserted) !important; font-size: 9px; font-weight: 700; }
+  .net-pkt circle { fill: var(--live); stroke: #fff; stroke-width: 0.6; }
+  .net-pkt text { fill: #fff; font-family: var(--font-mono); font-size: 4px; font-weight: 700; }
 
   @media (prefers-reduced-motion: no-preference) {
     .fill { transition: d 0.25s ease, fill 0.25s ease; }

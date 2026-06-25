@@ -1,0 +1,56 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import buggy from "../../../derived/multipacket/buggy.trace.json";
+import procedural from "../../../derived/multipacket/procedural.trace.json";
+
+// Buggy first: watch the message arrive scrambled, then watch sequence numbers put it back.
+const registers = [buggy, procedural];
+---
+
+<Base
+  title="Packet switching — GlassBox"
+  description="Watch one message split into packets that take different routes, arrive out of order, and reassemble by sequence number."
+>
+  <h1>Packets take different routes</h1>
+  <p class="lede">
+    A message does not cross the internet in one piece. It is chopped into numbered <em>packets</em>, each
+    of which finds its own way to the destination — so they arrive <em>out of order</em> and have to be put
+    back together by sequence number. Switch the abstraction on and watch three packets (the numbered dots)
+    fan out across the network and reassemble at <code>D</code>.
+  </p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>
+      One message, three packets (<code>0</code>, <code>1</code>, <code>2</code>), each handed a different
+      route from <code>A</code> to <code>D</code>. Packet <code>0</code> takes the long way, so it is sent
+      first but arrives last — the packets reach <code>D</code> in the order <code>1, 2, 0</code>.
+    </p>
+    <ul>
+      <li>
+        <strong>Buggy</strong> — the receiver keeps the packets in <em>arrival</em> order, so the message
+        reassembles as <code>[1, 2, 0]</code>: scrambled. Out-of-order delivery has corrupted it.
+      </li>
+      <li>
+        <strong>Procedural</strong> — the receiver sorts by sequence number (<code>sorted(arrived)</code>),
+        restoring <code>[0, 1, 2]</code>. Split, route independently, reassemble in order — that is exactly
+        what "packet switching" means, and why the network can route around trouble without losing the
+        message.
+      </li>
+    </ul>
+    <p class="fineprint">
+      The packets' movements are real execution output; the little network is a hand-built model (marked
+      <em>model: author-asserted</em>) — see <a href="../../verification/">how GlassBox stays honest</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>
