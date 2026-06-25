@@ -143,13 +143,17 @@
     if (typeof v === "string") return "string";
     return "json"; // arrays, objects, tagged placeholders — edited as JSON text
   }
-  // What to pre-fill the editor with: the current value, in a form the learner would type.
+  // Strip one matching pair of surrounding double quotes, so a learner can type a string either bare
+  // (A) or quoted ("A") — the state pane shows strings quoted, so typing the quotes is natural.
+  const unquote = (s) => (s.length >= 2 && s[0] === '"' && s[s.length - 1] === '"' ? s.slice(1, -1) : s);
+  // What to pre-fill the editor with: the current value, in the SAME syntax the state pane shows it.
   function inputSeed(v) {
     const k = valueKind(v);
     if (k === "null") return "None";
     if (k === "boolean") return v ? "True" : "False";
     if (k === "json") return JSON.stringify(v);
-    return String(v);
+    if (k === "string") return '"' + v + '"';
+    return String(v); // number
   }
   // Parse a typed value back, given the kind we expect from the current value.
   function parseTyped(kind, raw) {
@@ -157,7 +161,7 @@
     if (kind === "number") { const n = Number(raw); return raw !== "" && !Number.isNaN(n) ? { ok: true, value: n } : { ok: false }; }
     if (kind === "boolean") { const t = raw.toLowerCase(); if (["true", "1", "yes"].includes(t)) return { ok: true, value: true }; if (["false", "0", "no"].includes(t)) return { ok: true, value: false }; return { ok: false }; }
     if (kind === "null") return { ok: true, value: null };
-    if (kind === "string") return { ok: true, value: raw };
+    if (kind === "string") return { ok: true, value: unquote(raw) };
     try { return { ok: true, value: JSON.parse(raw) }; } catch { return { ok: false }; }
   }
   // For an introduced variable, infer the type from what the learner typed.
@@ -169,7 +173,7 @@
     if (raw === "False") return { ok: true, value: false };
     if (/^-?\d+(\.\d+)?$/.test(raw)) return { ok: true, value: Number(raw) };
     if (/^[[{]/.test(raw)) { try { return { ok: true, value: JSON.parse(raw) }; } catch { return { ok: false }; } }
-    return { ok: true, value: raw }; // string fallback
+    return { ok: true, value: unquote(raw) }; // string fallback (bare or quoted)
   }
   const eq = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
