@@ -12,6 +12,11 @@
   let regIdx = $state(0);
   let step = $state(0);
   let view = $state("abstraction"); // "abstraction" | "generic"
+  // Practice modes — "hide one corner of the triangle". watch = read it; predict = hide the next
+  // state and predict it (every step); findline = hide the lit line and identify which one ran.
+  let mode = $state("watch"); // "watch" | "predict" | "findline"
+  let lineGuess = $state(null);   // the line number the learner clicked in findline mode
+  let lineGuessKey = $state("");  // "regIdx:step" the guess was made for
 
   // Prediction–evidence–revision: at a `checkpoint` step we gate forward motion and ask the learner to
   // predict the NEXT step's state. The ACTUAL next state is the only adjudicator — never a hidden answer.
@@ -33,11 +38,19 @@
   const model = $derived(current && cur ? abstractionModel(current.abstraction, cur.state) : null);
   const stateEntries = $derived(cur ? Object.entries(cur.state) : []);
   const isFinal = $derived(safeStep === stepCount - 1);
-  // A checkpoint gates the reveal of the NEXT step (so there must be a next step to predict).
-  const isCheckpoint = $derived(!!(cur && cur.checkpoint === true && !isFinal));
-  const checkpointKey = $derived(regIdx + ":" + safeStep);
+  const stepKey = $derived(regIdx + ":" + safeStep);
+  // A checkpoint gates the reveal of the NEXT step (so there must be a next step to predict). In
+  // "predict" mode EVERY non-final step is a checkpoint; in "findline" mode the prediction panel is off.
+  const isCheckpoint = $derived(!!(cur && !isFinal && mode !== "findline" && (cur.checkpoint === true || mode === "predict")));
+  const checkpointKey = $derived(stepKey);
   const answered = $derived(answeredKeys.has(checkpointKey));
   const nextState = $derived(!isFinal && steps[safeStep + 1] ? steps[safeStep + 1].state : null);
+  // findline: the learner identifies which source line produced the current state (highlight hidden).
+  const findline = $derived(mode === "findline");
+  const lineGuessed = $derived(findline && lineGuess !== null && lineGuessKey === stepKey);
+  const lineCorrect = $derived(lineGuessed && cur && lineGuess === cur.line);
+  // The lit line is hidden in findline until correctly identified (so the answer isn't given away).
+  const showHighlight = $derived(!findline || lineCorrect);
   // When the current line runs more than once (a loop), say which occurrence we're on so a click-walk
   // or scrub doesn't silently wrap. null when the line maps to a single step.
   const lineOccurrence = $derived.by(() => {
@@ -89,6 +102,13 @@
       step = occ[0];
     }
   }
+  function setMode(m) {
+    mode = m;
+    closePrediction();
+    lineGuess = null; lineGuessKey = "";
+  }
+  // findline: record which line the learner thinks produced the current state (adjudicated vs cur.line).
+  function guessLine(n) { lineGuess = n; lineGuessKey = stepKey; }
   function onKey(e) {
     if (e.key === "Escape" && predicting) { closePrediction(); e.preventDefault(); return; }
     if (e.key === "ArrowRight" || e.key === "ArrowDown") { forward(); e.preventDefault(); }
@@ -220,6 +240,12 @@
 
     <p class="problem">{current.problem}</p>
 
+    <div class="modes" role="tablist" aria-label="Practice mode">
+      <button role="tab" aria-selected={mode === "watch"} class:active={mode === "watch"} onclick={() => setMode("watch")}>Watch</button>
+      <button role="tab" aria-selected={mode === "predict"} class:active={mode === "predict"} onclick={() => setMode("predict")} title="Predict the next state at every step">Predict</button>
+      <button role="tab" aria-selected={mode === "findline"} class:active={mode === "findline"} onclick={() => setMode("findline")} title="Given the state, find the line that produced it">Find the line</button>
+    </div>
+
     {#if callStack.length > 1}
       <div class="callstack" aria-label="Call stack">
         {#each callStack as fr, i}<span class="frame-chip" class:top={i === callStack.length - 1}>{fr === "module" ? "module" : fr + "()"}</span>{#if i < callStack.length - 1}<span class="sep">›</span>{/if}{/each}
@@ -244,7 +270,7 @@
             {/if}
           </span>
         </div>
-        <pre class="code"><code>{#each sourceLines as ln, i}{#if linesWithSteps.has(i + 1)}<button type="button" class="line clk" class:hl={cur && cur.line === i + 1} onclick={() => goToLine(i + 1)} title={`Jump to line ${i + 1}`}><span class="ln">{i + 1}</span>{ln || " "}</button>{:else}<span class="line" class:hl={cur && cur.line === i + 1}><span class="ln">{i + 1}</span>{ln || " "}</span>{/if}{/each}</code></pre>
+        <pre class="code"><code>{#each sourceLines as ln, i}{#if linesWithSteps.has(i + 1)}<button type="button" class="line clk" class:hl={showHighlight && cur && cur.line === i + 1} class:guess-wrong={findline && lineGuessed && !lineCorrect && lineGuess === i + 1} onclick={() => (findline ? guessLine(i + 1) : goToLine(i + 1))} title={findline ? "Pick this line" : `Jump to line ${i + 1}`}><span class="ln">{i + 1}</span>{ln || " "}</button>{:else}<span class="line" class:hl={showHighlight && cur && cur.line === i + 1}><span class="ln">{i + 1}</span>{ln || " "}</span>{/if}{/each}</code></pre>
       </div>
 
       <!-- state / abstraction pane -->
@@ -265,8 +291,17 @@
           <div class="frame-event call">→ entering <code>{cur.frame}()</code></div>
         {:else if cur && cur.event === "return"}
           <div class="frame-event return">← <code>{cur.frame}()</code> returns <span class="retval">{fmtValue(cur.return_value)}</span></div>
-        {:else if cur && cur.event === "line"}
+        {:else if cur && cur.event === "line" && !findline}
           <div class="after-line">state <strong>after</strong> line {cur.line} runs{#if lineOccurrence} · pass {lineOccurrence.pos} of {lineOccurrence.total}{/if}</div>
+        {/if}
+
+        {#if findline}
+          <div class="findline-prompt">
+            {#if !lineGuessed}Which source line produced this state? <strong>Click it in the code.</strong>
+            {:else if lineCorrect}<span class="fl-ok">✓ Yes — line {cur.line} produced this state.</span>
+            {:else}<span class="fl-no">Not line {lineGuess}. Look at what changed, then try again.</span>
+            {/if}
+          </div>
         {/if}
 
         {#if view === "abstraction" && model && model.kind === "cups"}
@@ -359,8 +394,9 @@
       </div>
     </div>
 
-    <!-- note (author-asserted meaning, kept visually distinct from execution output) -->
-    {#if cur && cur.note}
+    <!-- note (author-asserted meaning, kept visually distinct from execution output). Hidden in
+         findline mode so the prose doesn't give away which line ran. -->
+    {#if cur && cur.note && !findline}
       <p class="note"><span class="note-tag">note</span>{cur.note}</p>
     {/if}
 
@@ -699,6 +735,24 @@
     border-left: 3px solid var(--ink-faint); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     font-size: 0.92rem;
   }
+
+  /* practice-mode selector + findline exercise */
+  .modes {
+    display: inline-flex; gap: 0; margin: 0 0 0.9rem; border: 1px solid var(--border-strong);
+    border-radius: 999px; overflow: hidden;
+  }
+  .modes button {
+    font-family: var(--font-display); font-size: 0.78rem; font-weight: 600; padding: 0.26rem 0.85rem;
+    border: 0; background: transparent; color: var(--ink-soft); cursor: pointer;
+  }
+  .modes button.active { background: var(--live); color: #fff; }
+  button.line.guess-wrong { background: var(--asserted-wash); border-left-color: var(--asserted); }
+  .findline-prompt {
+    margin: 0.55rem 0.7rem 0; padding: 0.5rem 0.7rem; background: var(--surface);
+    border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); font-size: 0.9rem;
+  }
+  .fl-ok { color: var(--live-ink); font-weight: 600; }
+  .fl-no { color: var(--asserted); }
 
   .controls { display: flex; align-items: center; gap: 0.7rem; margin-top: 1rem; }
   .nav {

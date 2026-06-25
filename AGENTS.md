@@ -141,10 +141,16 @@ browsable from `/lessons/`:
 - **Data** — `binary` (place-value columns).
 - **Systems & Networks** — `routing` (node-link graph; a traced packet sim, ADR-0006).
 
+**Phase 2 (DONE) — the prediction–evidence–revision loop (the pedagogical product; ADR-0011).** A
+`checkpoint` step gates forward motion and asks the learner to predict the next step's state; the real
+`trace[k+1].state` is the sole adjudicator (no authored answer). Authored via a `[[checkpoints]]` table
+(`step` + optional `ask`); swap/buggy and swap/procedural carry the canonical contrast. Two practice modes
+ship: **predict** (every step becomes a checkpoint) and **findline** (hide the lit line; identify which one
+produced the state, adjudicated vs `steps[k].line`). The third mode, construct-the-viz (fill the `bind`
+mapping, adjudicate vs `abstractionModel()`), is **deferred** — highest effort, most in need of live UX
+iteration.
+
 **Next, in rough priority** (the roadmap is now sequenced: engine/honesty → interaction → content):
-- *Phase 2 — the prediction–evidence–revision loop (the pedagogical product):* the `checkpoint` primitive
-  (gate a step, predict the next state, reveal the delta, correct the model — adjudicated only by the real
-  next state), then the "hide one corner of the triangle" exercise modes. Build before net-new lessons.
 - *Phase 3 — content to rigorous, exam-relevant coverage (P0+P1, all execution-derived, each with a buggy
   register):* fault tolerance (kill a node mid-trace, reuse `network.js`), multi-packet + reassembly +
   internet-vs-web, run-length encoding (the compression bridge), accumulate / running total; then overflow
