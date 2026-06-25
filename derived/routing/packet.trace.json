@@ -5,6 +5,7 @@
   "register": "procedural",
   "language": "python",
   "derivation_source": "execution-derived",
+  "domain_model": "author-asserted-simulation",
   "provenance": {
     "language": "python",
     "trace_source": "sys.settrace",

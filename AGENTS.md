@@ -9,10 +9,10 @@ watch*. Every lesson is a small Python program; we trace it with `sys.settrace` 
 trace as schema-validated JSON to a player that steps through it. Stepping through the code **is** the act
 that builds the abstraction in front of the learner, one element at a time.
 
-**The core guarantee:** the state shown at each line is **real CPython output**, not a hand-drawn slide. A
-hand-authored slide can lie about what a variable holds; a real execution trace cannot. *That guarantee is
-the product* — the same "verification is the product" stance as its sibling portals, except here the
-adjudicator is the Python interpreter itself.
+**The core guarantee:** the state shown at each line is **real CPython output**, not a hand-drawn slide.
+Every displayed execution claim is derived from CPython; coercions, omissions, and modeled interpretations
+are marked explicitly rather than hidden. *That honesty is the product* — the same "verification is the
+product" stance as its sibling portals, except here the adjudicator is the Python interpreter itself.
 
 It is **provider-agnostic**: a from-first-principles tour of how computers actually work (programs & state,
 data, systems & networks). It is **not** tied to, and must not name, any specific course, exam, or
@@ -46,7 +46,7 @@ lesson → `prepare:traces` locally → commit the regenerated `derived/` → pu
 ## How it works (the factory invariant)
 
 ```
-lessons/<topic>/*.lesson.yaml  →  sys.settrace tracer (Python)  →  derived/<topic>/*.trace.json
+lessons/<topic>/*.lesson.toml  →  sys.settrace tracer (Python)  →  derived/<topic>/*.trace.json
    (authored: source + notes)      (build-time producer)            (schema-valid, COMMITTED)
                                                                           │
                                               Ajv + scan gates ──────────┤  (fail loud)
@@ -80,9 +80,13 @@ src/               Astro app: pages/, components/, islands/ (Svelte), lib/ (vani
 
 1. **The trace is the product.** `derived/` comes only from the tracer; humans write only in `lessons/`.
    The two are merged at build, never co-mingled at authoring time.
-2. **Execution-derived vs. author-asserted is explicit.** Every trace declares `derivation_source`; real
-   `sys.settrace` output is `execution-derived`, a hand-authored process model is `author-asserted`. The
-   gate cross-checks the claim against `provenance.trace_source` and fails on a contradiction.
+2. **Two honest axes, kept separate (ADR-0009/0010).** `derivation_source` answers *did CPython produce
+   this state?* (`execution-derived` vs `author-asserted`). `domain_model` answers *does the program
+   faithfully model its real-world subject?* — `execution-derived` (a swap IS a swap) vs
+   `author-asserted-simulation` (a routing sim is a real run of a hand-built model) vs `real-world-data`.
+   A trace can be execution-derived AND an author-asserted simulation at once; the gate fails if a
+   network/gantt/dns abstraction tries to pass as `execution-derived` on the domain axis. Object identity
+   is explicit too: equal `refs` ids in a step mean the *same* object (aliasing), not just equal values.
 3. **Author notes are claims, not facts.** A note ("this finds the maximum") is author-asserted by
    definition; the player renders notes and state in visually distinct registers so prose never
    masquerades as execution output.
@@ -118,26 +122,32 @@ Adding a lesson is the common task; it touches data, never the engine:
    styles in `src/islands/TracePlayer.svelte`. Existing renderers: `cups`, `piles`, `binary`, `network`
    (functions use the built-in call-stack chrome — no renderer).
 
-The engine (`tracer/`) should rarely change. If it must, keep `swap`/`partition` traces byte-identical and
-add a golden test in `tracer/tests/`; `uv --project tracer run pytest` must stay green.
+The engine (`tracer/`) should rarely change. If it must, keep the `swap` and `partition-procedural` traces
+byte-identical (`partition-buggy` carries aliasing `refs` by design; ADR-0009) and add a golden test in
+`tracer/tests/`; `uv --project tracer run pytest` must stay green.
 
 ## Status & roadmap
 
-**The spine is built.** The tracer handles straight-line code, loops, lists, and **multi-frame functions**
-(call/return, depth, return values, recursion, defaults; ADR-0008). Six lessons across three pillars,
+**The spine is built, and the trust foundation is hardened (Phase 1, ADR-0009/0010).** The tracer handles
+straight-line code, loops, lists, and **multi-frame functions** (call/return, depth, return values,
+recursion, defaults; ADR-0008), now with **object identity** (`refs` make aliasing visible — the
+`partition-buggy` repair), a **two-axis provenance** model (`derivation_source` + `domain_model`; routing is
+a real trace of an author-asserted model), and serialization hardening (typed dict keys, cycle back-edges,
+deterministic set reprs, captured return-value flags). Five lessons (11 registers) across three pillars,
 browsable from `/lessons/`:
 
-- **Programs & State** — `swap` (cups), `partition` (piles; loops + aliasing bug), `functions` (call stack;
-  four registers incl. the forgot-`return` bug).
+- **Programs & State** — `swap` (cups), `partition` (piles; loops + aliasing bug, now shown via `refs`),
+  `functions` (call stack; four registers incl. the forgot-`return` bug).
 - **Data** — `binary` (place-value columns).
 - **Systems & Networks** — `routing` (node-link graph; a traced packet sim, ADR-0006).
 
-**Next, in rough priority** (all are "more traces", not new engine work):
-- *Granular, now unblocked by the spine — pedagogical, not mechanical:* data types & truthiness (`a == b` is
-  a Bool even when unbound), modular arithmetic, the `if / if-else / if-elif / if-elif-else` ladder, and
-  function variants (params or not, return or not, default args, when to use `None`).
-- *More anchors:* accumulate / running total, linear search, conditional counting, build/filter a list.
-- *Data:* binary→decimal, run-length encoding (the compression bridge), overflow vs. roundoff.
-- *Networks:* fault tolerance (kill a node mid-trace, watch the packet reroute — reuse `network.js`),
-  multi-packet + reassembly, DNS resolution, sequential-vs-parallel speedup (a Gantt abstraction).
-- *Deferred features:* the quiz primitive (the `checkpoint` schema flag exists; no UI yet); Pages go-live.
+**Next, in rough priority** (the roadmap is now sequenced: engine/honesty → interaction → content):
+- *Phase 2 — the prediction–evidence–revision loop (the pedagogical product):* the `checkpoint` primitive
+  (gate a step, predict the next state, reveal the delta, correct the model — adjudicated only by the real
+  next state), then the "hide one corner of the triangle" exercise modes. Build before net-new lessons.
+- *Phase 3 — content to rigorous, exam-relevant coverage (P0+P1, all execution-derived, each with a buggy
+  register):* fault tolerance (kill a node mid-trace, reuse `network.js`), multi-packet + reassembly +
+  internet-vs-web, run-length encoding (the compression bridge), accumulate / running total; then overflow
+  vs. roundoff, linear search, build/filter, binary→decimal, sequential-vs-parallel speedup (new Gantt
+  renderer). Granular pedagogical lessons and weak-guarantee "reveals" are deferred.
+- *Deferred features:* Pages go-live; a transfer-measurement rubric riding the exercise modes.

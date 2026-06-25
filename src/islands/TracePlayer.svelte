@@ -1,11 +1,13 @@
 <script>
   // The dumb stepper. It executes nothing — it steps through pre-baked, schema-validated traces.
-  // Props: `registers` = an array of trace objects (one per register: buggy / procedural / idiomatic).
+  // Props: `registers` = an array of trace objects (one per register: buggy / procedural / idiomatic / clever).
   import { abstractionModel } from "../lib/abstractions/index.js";
 
   let { registers = [] } = $props();
 
-  const DISPLAY = { naive: "Buggy", procedural: "Procedural", idiomatic: "Idiomatic", clever: "Clever" };
+  // Learner-facing register names. "Compact" (not "Clever") frames the last register as a tradeoff in
+  // visibility, not a rung on an intelligence ladder; the wire value stays `clever`.
+  const DISPLAY = { naive: "Buggy", procedural: "Procedural", idiomatic: "Idiomatic", clever: "Compact" };
 
   let regIdx = $state(0);
   let step = $state(0);
@@ -20,6 +22,15 @@
   const model = $derived(current && cur ? abstractionModel(current.abstraction, cur.state) : null);
   const stateEntries = $derived(cur ? Object.entries(cur.state) : []);
   const isFinal = $derived(safeStep === stepCount - 1);
+  // When the current line runs more than once (a loop), say which occurrence we're on so a click-walk
+  // or scrub doesn't silently wrap. null when the line maps to a single step.
+  const lineOccurrence = $derived.by(() => {
+    if (!cur) return null;
+    const occ = [];
+    steps.forEach((s, i) => { if (s.line === cur.line) occ.push(i); });
+    if (occ.length <= 1) return null;
+    return { pos: occ.indexOf(safeStep) + 1, total: occ.length };
+  });
   // Source lines that correspond to at least one step are clickable (blank/comment lines are not).
   const linesWithSteps = $derived(new Set(steps.map((s) => s.line)));
   const hasAbstraction = $derived(!!(current && current.abstraction));
@@ -64,11 +75,16 @@
   }
   function fmtValue(v) {
     if (v && typeof v === "object" && v.__unserializable__) return v.__repr__;
+    if (v && typeof v === "object" && v.__ref__) return "↩ same as #" + v.__ref__;
+    if (v && typeof v === "object" && v.__map__)
+      return "{" + v.entries.map(([k, val]) => k + ": " + fmtValue(val)).join(", ") + "}";
     if (typeof v === "string") return '"' + v + '"';
     return JSON.stringify(v);
   }
   function fmtChip(v) {
     if (v && typeof v === "object" && v.__unserializable__) return v.__repr__;
+    if (v && typeof v === "object" && v.__ref__) return "↩ #" + v.__ref__;
+    if (v && typeof v === "object" && v.__map__) return fmtValue(v);
     return typeof v === "string" ? v : JSON.stringify(v);
   }
 </script>
@@ -103,11 +119,17 @@
       <div class="pane code-pane">
         <div class="pane-head">
           <span>{current.title}</span>
-          <span class="prov badge {current.derivation_source === 'execution-derived' ? 'derived' : 'asserted'}">
-            <span class="led"></span>
-            {current.derivation_source === "execution-derived"
-              ? "execution-derived · CPython"
-              : "author-asserted"}
+          <span class="prov-row">
+            <span class="prov badge {current.derivation_source === 'execution-derived' ? 'derived' : 'asserted'}" title="How the state was produced">
+              <span class="led"></span>
+              {current.derivation_source === "execution-derived" ? "execution-derived · CPython" : "author-asserted"}
+            </span>
+            {#if current.domain_model && current.domain_model !== "execution-derived"}
+              <span class="prov badge asserted" title="The trace is real; that it models the real world is an author's claim">
+                <span class="led"></span>
+                {current.domain_model === "real-world-data" ? "real-world data" : "model: author-asserted"}
+              </span>
+            {/if}
           </span>
         </div>
         <pre class="code"><code>{#each sourceLines as ln, i}{#if linesWithSteps.has(i + 1)}<button type="button" class="line clk" class:hl={cur && cur.line === i + 1} onclick={() => goToLine(i + 1)} title={`Jump to line ${i + 1}`}><span class="ln">{i + 1}</span>{ln || " "}</button>{:else}<span class="line" class:hl={cur && cur.line === i + 1}><span class="ln">{i + 1}</span>{ln || " "}</span>{/if}{/each}</code></pre>
@@ -131,6 +153,8 @@
           <div class="frame-event call">→ entering <code>{cur.frame}()</code></div>
         {:else if cur && cur.event === "return"}
           <div class="frame-event return">← <code>{cur.frame}()</code> returns <span class="retval">{fmtValue(cur.return_value)}</span></div>
+        {:else if cur && cur.event === "line"}
+          <div class="after-line">state <strong>after</strong> line {cur.line} runs{#if lineOccurrence} · pass {lineOccurrence.pos} of {lineOccurrence.total}{/if}</div>
         {/if}
 
         {#if view === "abstraction" && model && model.kind === "cups"}
@@ -211,7 +235,10 @@
                 <tr><td colspan="2" class="muted">no variables yet</td></tr>
               {:else}
                 {#each stateEntries as [k, v]}
-                  <tr><td><code>{k}</code></td><td><code>{fmtValue(v)}</code></td></tr>
+                  <tr>
+                    <td><code>{k}</code>{#if cur.refs && cur.refs[k]}<span class="refb" title="object identity — equal #ids are the SAME object">#{cur.refs[k]}</span>{/if}</td>
+                    <td><code>{fmtValue(v)}</code>{#if cur.value_flags && cur.value_flags[k]}<span class="flag" title={`shown value was coerced: ${cur.value_flags[k]}`}>coerced</span>{/if}</td>
+                  </tr>
                 {/each}
               {/if}
             </tbody>
@@ -281,7 +308,25 @@
     font-family: var(--font-display); font-size: 0.82rem; color: var(--ink-soft);
   }
 
+  .prov-row { display: inline-flex; gap: 0.3rem; flex-wrap: wrap; justify-content: flex-end; }
   .prov { font-size: 0.68rem; }
+
+  .after-line {
+    margin: 0.55rem 0.7rem 0; font-family: var(--font-mono); font-size: 0.74rem; color: var(--ink-faint);
+  }
+  .after-line strong { color: var(--live-ink); font-weight: 700; }
+
+  .refb {
+    font-family: var(--font-mono); font-size: 0.64rem; margin-left: 0.4rem; padding: 0.02rem 0.32rem;
+    border-radius: 4px; background: var(--live-wash); color: var(--live-ink); border: 1px solid var(--live);
+    vertical-align: 0.08em;
+  }
+  .flag {
+    font-family: var(--font-mono); font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.04em;
+    margin-left: 0.45rem; padding: 0.04rem 0.32rem; border-radius: 4px;
+    background: var(--asserted-wash); color: var(--asserted); border: 1px solid var(--asserted);
+    vertical-align: 0.1em;
+  }
 
   .code { margin: 0; padding: 0.6rem 0; overflow-x: auto; font-family: var(--font-mono); font-size: 0.92rem; }
   .code code { display: block; }

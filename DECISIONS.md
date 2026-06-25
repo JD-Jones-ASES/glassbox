@@ -124,3 +124,54 @@ produce byte-identical traces. Object reprs are stripped of heap addresses (`<fu
 **Consequences.** The player renders a call-stack breadcrumb and call/return callouts. The call stack *is*
 the abstraction for function lessons (no bespoke renderer needed). A richer "all frames' locals at once"
 view is possible later but deliberately deferred.
+
+## ADR-0009 — Object identity (`refs`) + serialization hardening (2026-06-25)
+
+**Context.** The snapshot serialized every container by value, so two names bound to the *same* list showed
+as two equal-but-separate arrays. The `partition/buggy` lesson is *explicitly about aliasing*
+(`evens = odds = []`), yet its trace could not show the shared identity — the bug lived only in author
+prose, a thesis violation (the whole point is that CPython, not the teacher, delivers the verdict). A 5-agent
+audit also confirmed four latent serialization holes: dropped return-value coercion flags, silent dict-key
+collision (`{1:'a','1':'b'}` losing an entry), unbounded recursion on cyclic structures, and
+PYTHONHASHSEED-dependent set reprs that would churn committed traces.
+
+**Decision.** Intern mutable containers (list, dict) to small, stable integer object ids held for the whole
+trace (mirroring the frame-id interner). Emit a per-step `refs` map (variable path → id) **only where
+identity carries information** — a container shared by ≥2 names in that snapshot, or a cycle target — so
+scalar-only lessons (swap) and per-frame single-name containers (functions) keep `refs` empty and
+byte-identical step output. Equal ids in one step mean the *same* object. A self-referential container emits
+a `{__ref__: id}` back-edge (path-scoped `seen` set) instead of recursing. A dict with any non-string key
+renders as a tagged `{__map__, entries}` list so no entry is lost to a `repr()` key collision. Sets render
+as a deterministic, element-sorted repr. Return-value coercion flags are now captured under a
+`return_value` path. The tracer stays stdlib-only, pure, deterministic.
+
+**Consequences.** `partition/buggy` now *shows* one list under two names (`evens #2`, `odds #2`); only that
+trace's data changes (procedural stays byte-identical). The player gains `#id` badges, a `coerced` tag for
+`value_flags`, and back-edge/typed-map rendering. The back-edge primitive is reusable for future
+linked-structure/graph lessons.
+
+## ADR-0010 — `domain_model`: a second, orthogonal provenance axis (2026-06-25)
+
+**Context.** ADR-0003's single `derivation_source` conflated two different confidences. The routing sim is a
+*real* `sys.settrace` execution (so it earned `execution-derived`), but its hardcoded `A→B→D` path is a
+hand-built *model* of real routing — running the model perfectly says nothing about whether the model is
+faithful. The lesson's own note ("real routers choose each next hop on the fly… different packets take
+different routes") claims behavior the code never exhibits, while wearing the same green
+`execution-derived · CPython` badge as a literal swap. The single flag let the metaphor borrow the
+interpreter's authority. ADR-0006 ("network sims keep the execution-derived guarantee") papered over exactly
+this — true of the *trace*, silently borrowed for the *domain*.
+
+**Decision.** Add an orthogonal top-level `domain_model` enum
+(`execution-derived | author-asserted-simulation | real-world-data`). `derivation_source` keeps its job
+(*how the state was produced*); `domain_model` answers *the program's relationship to its real-world
+subject*. A swap/partition/functions/binary lesson is `execution-derived` on both axes (the program **is**
+the subject). A routing/DNS/Gantt sim is `execution-derived` (trace) **and** `author-asserted-simulation`
+(model). `build.py` defaults to `execution-derived` with a TOML opt-in; `validate-traces.mjs` **fails loud**
+if a `network`/`gantt`/`dns` abstraction tries to ship as `execution-derived` on the domain axis (forcing a
+conscious claim). The player shows a second amber `model: author-asserted` chip; `/verification` gains a
+two-axis legend; the public "a real trace cannot lie" wording is softened to "every displayed execution
+claim is derived from CPython; coercions, omissions, and modeled interpretations are explicitly marked."
+
+**Consequences.** Amends ADR-0003 and ADR-0006. The honesty claim is now defensible for sims: the animation
+is real, the world-fidelity is an author's claim, and the two are visibly separate. Future Systems/Networks
+lessons inherit `author-asserted-simulation`.

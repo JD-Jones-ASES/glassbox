@@ -22,6 +22,7 @@ from . import BuildError, __version__
 from .trace import trace
 
 REGISTERS = {"naive", "procedural", "idiomatic", "clever"}
+DOMAIN_MODELS = {"execution-derived", "author-asserted-simulation", "real-world-data"}
 REQUIRED = ("id", "title", "register", "problem", "source", "author", "created")
 DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
 
@@ -48,6 +49,9 @@ def _validate_lesson(path: Path, lesson: dict) -> None:
     language = lesson.get("language", "python")
     if language != "python":
         raise BuildError(f"{path}: only language='python' is supported in v1 (got {language!r})")
+    domain_model = lesson.get("domain_model", "execution-derived")
+    if domain_model not in DOMAIN_MODELS:
+        raise BuildError(f"{path}: domain_model {domain_model!r} not in {sorted(DOMAIN_MODELS)}")
     for note in lesson.get("notes", []):
         if "step" not in note or "text" not in note:
             raise BuildError(f"{path}: every [[notes]] entry needs 'step' and 'text'")
@@ -100,6 +104,7 @@ def build_lesson(path: Path) -> dict:
         "register": lesson["register"],
         "language": "python",
         "derivation_source": "execution-derived",
+        "domain_model": lesson.get("domain_model", "execution-derived"),
         "provenance": {
             "language": "python",
             "trace_source": "sys.settrace",

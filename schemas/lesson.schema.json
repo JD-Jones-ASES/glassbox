@@ -12,6 +12,7 @@
     "register": { "enum": ["naive", "procedural", "idiomatic", "clever"] },
     "problem": { "type": "string", "minLength": 1 },
     "language": { "enum": ["python"], "description": "Only 'python' is supported in v1; defaults to 'python'." },
+    "domain_model": { "enum": ["execution-derived", "author-asserted-simulation", "real-world-data"], "description": "Defaults to 'execution-derived' (the program IS the subject). Set 'author-asserted-simulation' when the program is a toy model of a larger real system (e.g. a routing/DNS/scheduler sim): the trace stays real, but the claim that it models the real world is yours, and the build gate requires this for network/gantt/dns abstractions." },
     "author": { "type": "string", "minLength": 1 },
     "created": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
     "source": { "type": "string", "minLength": 1, "description": "The Python program to trace (TOML multi-line string)." },

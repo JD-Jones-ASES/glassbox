@@ -5,6 +5,7 @@
   "register": "naive",
   "language": "python",
   "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
   "provenance": {
     "language": "python",
     "trace_source": "sys.settrace",

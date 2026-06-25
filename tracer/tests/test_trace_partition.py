@@ -59,6 +59,23 @@ def test_aliasing_bug_makes_both_piles_identical():
             assert st["evens"] == st["odds"]
 
 
+def test_aliasing_is_visible_as_a_shared_object_id_not_just_equal_values():
+    # The thesis: CPython, not prose, must show that evens and odds are ONE list. Equal arrays alone
+    # cannot prove that; the refs map must mark them as the same object.
+    steps = trace(BUGGY)
+    aliased = [s for s in steps if "evens" in s["state"] and "odds" in s["state"]]
+    assert aliased, "expected steps where both names are bound"
+    for s in aliased:
+        assert s["refs"]["evens"] == s["refs"]["odds"]  # same object id => same object
+
+
+def test_procedural_two_separate_lists_are_not_aliased():
+    # Separate `evens = []` / `odds = []` are distinct objects, so no ref id is emitted (lone
+    # containers carry none) — and the trace stays byte-identical to before this feature.
+    for s in trace(PROCEDURAL):
+        assert "refs" not in s
+
+
 def test_lists_serialize_as_arrays_without_flags():
     for src in (PROCEDURAL, BUGGY):
         for s in trace(src):

@@ -22,7 +22,7 @@ import io
 import sys
 from contextlib import redirect_stdout
 
-from .snapshot import safe_value, snapshot_locals
+from .snapshot import Interner, safe_value, snapshot_locals
 
 FILENAME = "<lesson>"
 
@@ -44,6 +44,7 @@ def trace(source: str, inputs: dict | None = None) -> list[dict]:
     frame_ids: dict[int, int] = {}  # id(frame) -> stable small int (survives recursion)
     next_fid = [0]
     depth = [0]
+    interner = Interner()         # object ids for mutable containers, stable across the whole trace
 
     def fid(frame) -> int:
         key = id(frame)
@@ -57,21 +58,25 @@ def trace(source: str, inputs: dict | None = None) -> list[dict]:
             return None  # never descend into library / interpreter frames
         name = frame.f_code.co_name
         if event == "call":
-            snap, flags = snapshot_locals(frame.f_locals)
+            snap, flags, refs = snapshot_locals(frame.f_locals, interner)
             raw.append({"kind": "call", "fid": fid(frame), "name": name, "depth": depth[0],
-                        "line": frame.f_lineno, "snap": snap, "flags": flags, "stdout": out.getvalue()})
+                        "line": frame.f_lineno, "snap": snap, "flags": flags, "refs": refs,
+                        "stdout": out.getvalue()})
             depth[0] += 1
             return _tracer
         if event == "line":
-            snap, flags = snapshot_locals(frame.f_locals)
+            snap, flags, refs = snapshot_locals(frame.f_locals, interner)
             raw.append({"kind": "line", "fid": fid(frame), "name": name, "depth": depth[0] - 1,
-                        "line": frame.f_lineno, "snap": snap, "flags": flags, "stdout": out.getvalue()})
+                        "line": frame.f_lineno, "snap": snap, "flags": flags, "refs": refs,
+                        "stdout": out.getvalue()})
             return _tracer
         if event == "return":
-            snap, flags = snapshot_locals(frame.f_locals)
-            ret, _ = safe_value(arg)
+            snap, flags, refs = snapshot_locals(frame.f_locals, interner)
+            ret, ret_flags = safe_value(arg, interner)
+            for k, reason in ret_flags.items():  # don't drop the return value's coercion reasons
+                flags[k.replace("<value>", "return_value", 1)] = reason
             raw.append({"kind": "return", "fid": fid(frame), "name": name, "depth": depth[0] - 1,
-                        "line": frame.f_lineno, "snap": snap, "flags": flags,
+                        "line": frame.f_lineno, "snap": snap, "flags": flags, "refs": refs,
                         "stdout": out.getvalue(), "ret": ret})
             depth[0] -= 1
             return _tracer
@@ -92,7 +97,7 @@ def trace(source: str, inputs: dict | None = None) -> list[dict]:
     steps: list[dict] = []
     pending: dict[int, dict] = {}  # fid -> a line event awaiting its after-snapshot
 
-    def emit(event, line, name, depth_i, snap, flags, stdout, ret=None):
+    def emit(event, line, name, depth_i, snap, flags, refs, stdout, ret=None):
         step: dict = {"step": len(steps), "line": line, "event": event}
         if depth_i > 0 or event in ("call", "return"):
             step["frame"] = name
@@ -103,16 +108,20 @@ def trace(source: str, inputs: dict | None = None) -> list[dict]:
             step["return_value"] = ret
         if flags:
             step["value_flags"] = flags
+        if refs:  # only present when aliasing/cycles make object identity meaningful
+            step["refs"] = refs
         steps.append(step)
 
     for e in raw:
         prev = pending.pop(e["fid"], None)
         if prev is not None:
-            # `e` is the next snapshot of prev's frame -> prev line's "after" state.
-            emit("line", prev["line"], prev["name"], prev["depth"], e["snap"], e["flags"], e["stdout"])
+            # `e` is the next snapshot of prev's frame -> prev line's "after" state (snap/flags/refs
+            # all describe that same successor snapshot).
+            emit("line", prev["line"], prev["name"], prev["depth"], e["snap"], e["flags"], e["refs"],
+                 e["stdout"])
         if e["kind"] == "line":
             pending[e["fid"]] = e
         elif e["name"] != "<module>":  # a call / return on a real function frame
-            emit(e["kind"], e["line"], e["name"], e["depth"], e["snap"], e["flags"], e["stdout"],
-                 ret=e.get("ret"))
+            emit(e["kind"], e["line"], e["name"], e["depth"], e["snap"], e["flags"], e["refs"],
+                 e["stdout"], ret=e.get("ret"))
     return steps

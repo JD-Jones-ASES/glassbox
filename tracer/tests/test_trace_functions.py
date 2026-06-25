@@ -96,6 +96,25 @@ def test_falling_off_the_end_returns_none():
     assert steps[-1]["state"]["r"] is None
 
 
+RETURN_SET = (
+    "def make():\n"
+    "    return {2, 1}\n"
+    "\n"
+    "s = make()\n"
+)
+
+
+def test_return_value_coercion_reason_is_captured():
+    # A non-JSON-native return value renders as a placeholder AND records WHY (previously the return
+    # value's coercion flags were dropped on the floor).
+    steps = trace(RETURN_SET)
+    ret = [s for s in steps if s["event"] == "return"][0]
+    assert ret["return_value"]["__unserializable__"] is True
+    assert ret["return_value"]["__repr__"] == "{1, 2}"  # deterministic, sorted
+    assert ret["value_flags"]["return_value"] == "repr-coerced"
+
+
 def test_function_traces_are_deterministic():
     assert trace(FIND_MAX) == trace(FIND_MAX)
     assert trace(RECUR) == trace(RECUR)
+    assert trace(RETURN_SET) == trace(RETURN_SET)

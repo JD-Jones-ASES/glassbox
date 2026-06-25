@@ -4,6 +4,9 @@ register = "procedural"
 problem = "Send a packet across a small network from A to D, one hop at a time, and record the path it took."
 author = "GlassBox"
 created = "2026-06-25"
+# The trace is real CPython execution, but this little graph is a hand-built MODEL of a real network —
+# running it perfectly proves nothing about real routing. Mark the model as author-asserted.
+domain_model = "author-asserted-simulation"
 
 # A network is just a graph of who-connects-to-whom. A packet hops along a path, node by node.
 source = """

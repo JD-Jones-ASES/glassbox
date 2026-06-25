@@ -8,7 +8,7 @@
     "dev:preview": "set LOCAL_ROOT=1&& astro dev --port 4321",
     "build": "astro build",
     "preview": "astro preview",
-    "trace": "uv --project tracer run trace-lessons",
+    "trace": "set PYTHONHASHSEED=0&& uv --project tracer run trace-lessons",
     "validate:traces": "node scripts/validate/validate-traces.mjs",
     "validate:scan": "node scripts/validate/scan-text.mjs",
     "prepare:traces": "npm run trace && npm run validate:traces && npm run validate:scan"

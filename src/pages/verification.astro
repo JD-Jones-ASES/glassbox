@@ -19,8 +19,9 @@ import { withBase } from "../lib/withBase.js";
       Each lesson is a real Python program. At build time it runs under CPython's
       own <code>sys.settrace</code>, and the variable state shown at every line is exactly what the
       interpreter held at that moment. It is not a mock-up, an animation, or a teacher's recollection — it
-      is execution output. A hand-drawn slide can lie about what a variable holds; a real execution trace
-      cannot. Traces of this kind are marked:
+      is execution output. Every displayed execution claim is derived from CPython; where a value had to be
+      coerced to fit JSON, or a process is only a model of the real world, that is marked explicitly rather
+      than hidden. Traces produced this way are marked:
     </p>
     <p><span class="badge derived"><span class="led"></span>execution-derived · CPython</span></p>
   </section>
@@ -31,11 +32,28 @@ import { withBase } from "../lib/withBase.js";
       The metaphors (two cups), the problem statements, and the step notes are <em>human pedagogy</em> laid
       on top of the trace. A note like “the spare cup saved the day” is a claim about meaning, not a fact
       the interpreter produced. The player always shows notes in a distinct register so prose can never
-      masquerade as execution output. Where a whole lesson models a process by hand rather than tracing
-      real code, it is marked:
+      masquerade as execution output. And running a program perfectly proves nothing about whether the
+      program faithfully models the world — so a lesson that simulates a real process (a packet routing
+      across a toy network) carries a second mark:
     </p>
-    <p><span class="badge asserted"><span class="led"></span>author-asserted</span></p>
-    <p class="muted">Every lesson in this portal is currently execution-derived.</p>
+    <p><span class="badge asserted"><span class="led"></span>model: author-asserted</span></p>
+  </section>
+
+  <section class="card">
+    <h2>Two honest questions, kept separate</h2>
+    <p>Every lesson answers two questions, and we never let one borrow the other's authority:</p>
+    <ul class="axes">
+      <li><strong>Did CPython really produce this state?</strong> — <em>derivation</em>. A real
+        <code>sys.settrace</code> run is <span class="badge derived"><span class="led"></span>execution-derived</span>.</li>
+      <li><strong>Does the program faithfully model its real-world subject?</strong> — <em>domain model</em>.
+        A swap simply <em>is</em> a swap (execution-derived); a routing sim is a real run of a hand-built
+        model, so its model is <span class="badge asserted"><span class="led"></span>author-asserted</span>
+        even though its trace is execution-derived.</li>
+    </ul>
+    <p class="muted">
+      Most lessons are execution-derived on both axes. The network lessons are execution-derived traces of
+      author-asserted models — the animation is real; the claim that it mirrors the internet is ours.
+    </p>
   </section>
 
   <section class="card">
@@ -60,5 +78,7 @@ import { withBase } from "../lib/withBase.js";
   .card { margin-bottom: 1rem; }
   .card h2 { margin-top: 0; font-size: 1.15rem; }
   .muted { color: var(--ink-faint); font-size: 0.9rem; }
+  .axes { margin: 0.6rem 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .axes li { line-height: 1.5; }
   .back { margin-top: 1.4rem; }
 </style>

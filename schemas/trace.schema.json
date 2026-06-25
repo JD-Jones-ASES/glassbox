@@ -5,14 +5,15 @@
   "description": "The single schema for everything the player eats. A traced Python program is 'execution-derived'; a hand-authored process model is 'author-asserted'. validate-traces.mjs additionally cross-checks derivation_source against provenance.trace_source and the per-step provenance.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "title", "problem", "register", "language", "derivation_source", "provenance", "source", "trace"],
+  "required": ["id", "title", "problem", "register", "language", "derivation_source", "domain_model", "provenance", "source", "trace"],
   "properties": {
     "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
     "title": { "type": "string", "minLength": 1 },
     "problem": { "type": "string", "minLength": 1 },
     "register": { "enum": ["naive", "procedural", "idiomatic", "clever"] },
     "language": { "enum": ["python", "process"] },
-    "derivation_source": { "enum": ["execution-derived", "author-asserted", "hybrid"] },
+    "derivation_source": { "enum": ["execution-derived", "author-asserted", "hybrid"], "description": "How the STATE was produced: did CPython actually run it? (`execution-derived` = sys.settrace; `author-asserted` = hand-authored; `hybrid` = mixed)." },
+    "domain_model": { "enum": ["execution-derived", "author-asserted-simulation", "real-world-data"], "description": "Orthogonal to derivation_source: the program's relationship to its real-world subject. `execution-derived` = the program IS the subject (a swap is a swap; place-value is place-value — no metaphorical gap). `author-asserted-simulation` = a real-but-toy model standing in for a larger real system (a routing sim: the trace is real, the claim that it models real routing is the author's). `real-world-data` = the trace replays captured external data. A trace can be execution-derived AND an author-asserted-simulation at once — running a model perfectly does not validate the model." },
     "provenance": {
       "type": "object",
       "additionalProperties": false,
@@ -49,13 +50,18 @@
         "properties": {
           "step": { "type": "integer", "minimum": 0 },
           "line": { "type": "integer", "minimum": 1 },
-          "event": { "enum": ["line", "call", "return", "print", "exception"] },
+          "event": { "enum": ["line", "call", "return", "print", "exception"], "description": "`line`, `call`, and `return` are emitted today; `print` and `exception` are reserved for future tracer events (forward-compatible, like `checkpoint`)." },
           "frame": { "type": "string", "description": "Name of the function whose locals `state` shows. Present only inside a function (depth > 0) or on a call/return event; absent at module level." },
           "depth": { "type": "integer", "minimum": 0, "description": "Call depth: 0 = module level, 1 = inside a called function, etc." },
           "return_value": { "description": "The value handed back to the caller. Present on `return` events; any JSON value, or a tagged {__repr__} placeholder." },
           "state": {
             "type": "object",
-            "description": "Full snapshot of the current frame's in-scope variables. Values are JSON primitives/arrays/objects, or a tagged {__repr__, __unserializable__} placeholder for non-JSON-native values."
+            "description": "Full snapshot of the current frame's in-scope variables. Values are JSON primitives/arrays/objects, a tagged {__repr__, __unserializable__} placeholder for non-JSON-native values, a {__ref__: <id>} back-edge for a cyclic container, or a {__map__: true, entries: [[key, value], …]} list for a dict with non-string keys."
+          },
+          "refs": {
+            "type": "object",
+            "additionalProperties": { "type": "integer" },
+            "description": "Maps a variable path to a small object id, present only where identity carries information: a mutable container shared by two names in THIS step (aliasing) or the target of a {__ref__} cycle back-edge. Equal ids in one step mean the SAME object, not merely equal values."
           },
           "stdout": { "type": "string" },
           "note": { "type": "string", "description": "Author-asserted meaning for this step (a claim, not an execution fact)." },

@@ -5,6 +5,7 @@
   "register": "naive",
   "language": "python",
   "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
   "provenance": {
     "language": "python",
     "trace_source": "sys.settrace",
@@ -53,6 +54,10 @@
         "odds": []
       },
       "stdout": "",
+      "refs": {
+        "evens": 2,
+        "odds": 2
+      },
       "note": "evens = odds = [] looks like two empty piles — but it makes evens and odds the SAME list. One pile wearing two name tags."
     },
     {
@@ -70,7 +75,11 @@
         "odds": [],
         "n": 3
       },
-      "stdout": ""
+      "stdout": "",
+      "refs": {
+        "evens": 2,
+        "odds": 2
+      }
     },
     {
       "step": 3,
@@ -87,7 +96,11 @@
         "odds": [],
         "n": 3
       },
-      "stdout": ""
+      "stdout": "",
+      "refs": {
+        "evens": 2,
+        "odds": 2
+      }
     },
     {
       "step": 4,
@@ -109,6 +122,10 @@
         "n": 3
       },
       "stdout": "",
+      "refs": {
+        "evens": 2,
+        "odds": 2
+      },
       "note": "3 is odd, so we drop it on the odds pile. But watch: 3 lands on BOTH piles, because they are the same list. CPython shows the trap; we don't have to claim it."
     },
     {
@@ -130,7 +147,11 @@
         ],
         "n": 8
       },
-      "stdout": ""
+      "stdout": "",
+      "refs": {
+        "evens": 2,
+        "odds": 2
+      }
     },
     {
       "step": 6,
@@ -151,7 +172,11 @@
         ],
         "n": 8
       },
-      "stdout": ""
+      "stdout": "",
+      "refs": {
+        "evens": 2,
+        "odds": 2
+      }
     },
     {
       "step": 7,
@@ -175,6 +200,10 @@
         "n": 8
       },
       "stdout": "",
+      "refs": {
+        "evens": 2,
+        "odds": 2
+      },
       "note": "8 is even, onto evens — and again both piles change together. Every append hits the one shared list."
     },
     {
@@ -198,7 +227,11 @@
         ],
         "n": 5
       },
-      "stdout": ""
+      "stdout": "",
+      "refs": {
+        "evens": 2,
+        "odds": 2
+      }
     },
     {
       "step": 9,
@@ -221,7 +254,11 @@
         ],
         "n": 5
       },
-      "stdout": ""
+      "stdout": "",
+      "refs": {
+        "evens": 2,
+        "odds": 2
+      }
     },
     {
       "step": 10,
@@ -246,7 +283,11 @@
         ],
         "n": 5
       },
-      "stdout": ""
+      "stdout": "",
+      "refs": {
+        "evens": 2,
+        "odds": 2
+      }
     },
     {
       "step": 11,
@@ -271,7 +312,11 @@
         ],
         "n": 2
       },
-      "stdout": ""
+      "stdout": "",
+      "refs": {
+        "evens": 2,
+        "odds": 2
+      }
     },
     {
       "step": 12,
@@ -296,7 +341,11 @@
         ],
         "n": 2
       },
-      "stdout": ""
+      "stdout": "",
+      "refs": {
+        "evens": 2,
+        "odds": 2
+      }
     },
     {
       "step": 13,
@@ -323,7 +372,11 @@
         ],
         "n": 2
       },
-      "stdout": ""
+      "stdout": "",
+      "refs": {
+        "evens": 2,
+        "odds": 2
+      }
     },
     {
       "step": 14,
@@ -351,6 +404,10 @@
         "n": 2
       },
       "stdout": "",
+      "refs": {
+        "evens": 2,
+        "odds": 2
+      },
       "note": "Both piles hold every number. The partition failed: there was only ever one pile."
     }
   ]

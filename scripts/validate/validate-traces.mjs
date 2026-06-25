@@ -80,6 +80,23 @@ for (const file of files.sort()) {
       fail(`${rel}: hybrid trace must mark at least one step step_provenance 'author-asserted'`);
   }
 
+  // domain_model cross-checks: keep a real-execution-of-a-model from over-claiming as the subject.
+  // A "real-world-process" abstraction (a network/gantt/dns metaphor) must consciously assert it is a
+  // model, not silently inherit the interpreter's authority for the real-world claim.
+  const REAL_WORLD_ABSTRACTIONS = new Set(["network", "gantt", "dns"]);
+  if (data.domain_model === "author-asserted-simulation") {
+    if (!(data.derivation_source === "execution-derived" || data.derivation_source === "hybrid"))
+      fail(`${rel}: author-asserted-simulation must be execution-derived or hybrid (a sim is a real run of a model)`);
+    if (data.provenance.trace_source !== "sys.settrace")
+      fail(`${rel}: author-asserted-simulation must be traced (provenance.trace_source 'sys.settrace')`);
+  } else if (data.domain_model === "real-world-data") {
+    if (!data.provenance.data_source)
+      fail(`${rel}: real-world-data requires provenance.data_source naming the capture`);
+  }
+  if (data.abstraction && REAL_WORLD_ABSTRACTIONS.has(data.abstraction.type)
+      && data.domain_model === "execution-derived")
+    fail(`${rel}: abstraction '${data.abstraction.type}' models a real-world process — set domain_model to 'author-asserted-simulation' (the trace is real; that it models the real world is your claim)`);
+
   // sequential step indices
   data.trace.forEach((s, i) => {
     if (s.step !== i) fail(`${rel}: trace[${i}].step is ${s.step}, expected ${i}`);
