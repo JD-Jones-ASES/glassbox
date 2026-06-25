@@ -133,13 +133,18 @@ straight-line code, loops, lists, and **multi-frame functions** (call/return, de
 recursion, defaults; ADR-0008), now with **object identity** (`refs` make aliasing visible — the
 `partition-buggy` repair), a **two-axis provenance** model (`derivation_source` + `domain_model`; routing is
 a real trace of an author-asserted model), and serialization hardening (typed dict keys, cycle back-edges,
-deterministic set reprs, captured return-value flags). Five lessons (11 registers) across three pillars,
-browsable from `/lessons/`:
+deterministic set reprs, captured return-value flags). Ten lessons across three pillars, browsable from
+`/lessons/`:
 
-- **Programs & State** — `swap` (cups), `partition` (piles; loops + aliasing bug, now shown via `refs`),
-  `functions` (call stack; four registers incl. the forgot-`return` bug).
-- **Data** — `binary` (place-value columns).
+- **Programs & State** — `swap` (cups), `partition` (piles; aliasing bug via `refs`), `accumulate`
+  (=vs+= running total), `search` (linear search; index-vs-value bug), `filter` (build-new-list vs the
+  delete-while-looping skip), `functions` (call stack; forgot-`return` bug).
+- **Data** — `binary` (decimal→binary place-value columns), `rle` (run-length encoding; the compression
+  bridge; lost-last-run bug), `bindecimal` (binary→decimal; ×2-vs-×10 base confusion).
 - **Systems & Networks** — `routing` (node-link graph; a traced packet sim, ADR-0006).
+
+Newer lessons ride the **generic state view** (no bespoke renderer); existing renderers: cups, piles,
+binary, network, call-stack.
 
 **Phase 2 (DONE) — the prediction–evidence–revision loop (the pedagogical product; ADR-0011).** A
 `checkpoint` step gates forward motion and asks the learner to predict the next step's state; the real
@@ -150,10 +155,14 @@ produced the state, adjudicated vs `steps[k].line`). The third mode, construct-t
 mapping, adjudicate vs `abstractionModel()`), is **deferred** — highest effort, most in need of live UX
 iteration.
 
-**Next, in rough priority** (the roadmap is now sequenced: engine/honesty → interaction → content):
-- *Phase 3 — content to rigorous, exam-relevant coverage (P0+P1, all execution-derived, each with a buggy
-  register):* fault tolerance (kill a node mid-trace, reuse `network.js`), multi-packet + reassembly +
-  internet-vs-web, run-length encoding (the compression bridge), accumulate / running total; then overflow
-  vs. roundoff, linear search, build/filter, binary→decimal, sequential-vs-parallel speedup (new Gantt
-  renderer). Granular pedagogical lessons and weak-guarantee "reveals" are deferred.
-- *Deferred features:* Pages go-live; a transfer-measurement rubric riding the exercise modes.
+**Phase 3 in progress — content to rigorous, exam-relevant coverage (P0+P1, all execution-derived, each
+with a buggy register).** Done: accumulate, search, filter, rle, bindecimal (all generic-view, fully
+build/SSR/data-verified). **Remaining, and why each waits:**
+- *Needs new/extended renderers (visual verification needed — the preview can't hydrate islands, so these
+  want live eyes):* fault tolerance (kill a node mid-trace — `network.js` + a downed-node state),
+  multi-packet + reassembly + internet-vs-web (`network.js` + multiple packets), sequential-vs-parallel
+  speedup (a **new Gantt renderer**).
+- *Buildable on the generic view, but the register model fits awkwardly (design call):* overflow
+  (8-bit `%256` wrap) vs roundoff (`0.1 + 0.2`) — two *models*, not a bug/fix pair.
+- *Deferred:* the construct-the-viz exercise mode; granular pedagogical lessons; weak-guarantee
+  "reveals"; Pages go-live; a transfer-measurement rubric riding the exercise modes.
