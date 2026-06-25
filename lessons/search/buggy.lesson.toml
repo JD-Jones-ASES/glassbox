@@ -1,0 +1,34 @@
+id = "search-buggy"
+title = "Linear search — value where the index belongs"
+register = "naive"
+problem = "Find WHERE a target value sits in the list, and report its index (or -1 if it is not there)."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The index-vs-value confusion: `found = nums[i]` stores the value that matched (which you already
+# knew — it's the target) instead of `found = i`, the position you were actually searching for.
+source = """
+nums = [4, 8, 15, 16, 23]
+target = 15
+found = -1
+for i in range(len(nums)):
+    if nums[i] == target:
+        found = nums[i]
+"""
+
+# Search reports WHERE the target is. Predict what this version records — then see what it actually is.
+[[checkpoints]]
+step = 8
+ask = "i is 2 and nums[2] is 15 — a match. Linear search is supposed to report WHERE the target is. After `found = nums[i]` runs, what will found be?"
+
+[[notes]]
+step = 2
+text = "found starts at -1 ('not found yet'), same as the correct version."
+
+[[notes]]
+step = 9
+text = "i = 2: nums[2] is 15, a match. But `found = nums[i]` stores the VALUE (15) — not the position (2)."
+
+[[notes]]
+step = 14
+text = "found = 15. But 15 is the value we searched for, not WHERE it is — we already knew it was 15. Linear search should hand back the index 2. The bug: `found = nums[i]` should be `found = i`. CPython shows it; we don't have to claim it."

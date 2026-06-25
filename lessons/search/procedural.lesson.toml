@@ -1,0 +1,37 @@
+id = "search-procedural"
+title = "Linear search — walk the row, check each"
+register = "procedural"
+problem = "Find WHERE a target value sits in the list, and report its index (or -1 if it is not there)."
+author = "GlassBox"
+created = "2026-06-25"
+
+# Linear search: check each element in turn; when one matches the target, remember its index.
+source = """
+nums = [4, 8, 15, 16, 23]
+target = 15
+found = -1
+for i in range(len(nums)):
+    if nums[i] == target:
+        found = i
+"""
+
+# i is at the matching element — predict the index it records.
+[[checkpoints]]
+step = 8
+ask = "i is 2 and nums[2] is 15 — that matches the target. After `found = i` runs, what will found be?"
+
+[[notes]]
+step = 2
+text = "found starts at -1, a sentinel meaning 'not found yet'. No real index is negative, so -1 can't be mistaken for an answer."
+
+[[notes]]
+step = 3
+text = "i = 0: check the first number. nums[0] is 4, not 15 — keep walking."
+
+[[notes]]
+step = 9
+text = "i = 2: nums[2] is 15, a match. We record the POSITION: found = i = 2."
+
+[[notes]]
+step = 14
+text = "The loop finished. found = 2 — the target 15 lives at index 2. (We kept scanning after the match; harmless here, though it would record the LAST match if there were duplicates.)"

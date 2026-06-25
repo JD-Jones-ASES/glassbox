@@ -1,0 +1,54 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import buggy from "../../../derived/rle/buggy.trace.json";
+import procedural from "../../../derived/rle/procedural.trace.json";
+
+// Buggy first: watch the last run vanish, then watch the flush save it.
+const registers = [buggy, procedural];
+---
+
+<Base
+  title="Run-length encoding — GlassBox"
+  description="Compress a row of pixels into (length, colour) pairs — a lossless compression that is also a program you can trace."
+>
+  <h1>Run-length encoding</h1>
+  <p class="lede">
+    Run-length encoding is the bridge between the two halves of this course: it is <em>lossless
+    compression</em> and a <em>traceable program</em> in one artifact. Walk a row of pixels, count each
+    run of one colour, and store it as a <code>(length, colour)</code> pair. Watch <code>out</code> fill
+    up — and watch the most common bug quietly drop the last run.
+  </p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>
+      Six pixels — <code>W W W B B W</code> — should compress to three pairs:
+      <code>[3, W] [2, B] [1, W]</code>. The encoder only saves a run when the colour <em>changes</em>,
+      so the very last run needs one extra save after the loop.
+    </p>
+    <ul>
+      <li>
+        <strong>Buggy</strong> — saves a run only on a colour change, and the loop ends on a colour that
+        never changes again. The final <code>[1, W]</code> is never saved; <code>out</code> ends with two
+        pairs instead of three. Decode it and the image comes back wrong.
+      </li>
+      <li>
+        <strong>Procedural</strong> — the same loop plus one <code>out.append</code> after it, to flush
+        the last run. Now <code>out</code> holds all three pairs and round-trips back to the original row.
+      </li>
+    </ul>
+    <p class="fineprint">
+      Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>

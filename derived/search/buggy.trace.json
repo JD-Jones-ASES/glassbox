@@ -1,0 +1,288 @@
+{
+  "id": "search-buggy",
+  "title": "Linear search — value where the index belongs",
+  "problem": "Find WHERE a target value sits in the list, and report its index (or -1 if it is not there).",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "source": "nums = [4, 8, 15, 16, 23]\ntarget = 15\nfound = -1\nfor i in range(len(nums)):\n    if nums[i] == target:\n        found = nums[i]\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15
+      },
+      "stdout": ""
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": -1
+      },
+      "stdout": "",
+      "note": "found starts at -1 ('not found yet'), same as the correct version."
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": -1,
+        "i": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 4,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": -1,
+        "i": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": -1,
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": -1,
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": -1,
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": -1,
+        "i": 2
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "i is 2 and nums[2] is 15 — a match. Linear search is supposed to report WHERE the target is. After `found = nums[i]` runs, what will found be?"
+    },
+    {
+      "step": 9,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": 15,
+        "i": 2
+      },
+      "stdout": "",
+      "note": "i = 2: nums[2] is 15, a match. But `found = nums[i]` stores the VALUE (15) — not the position (2)."
+    },
+    {
+      "step": 10,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": 15,
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 11,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": 15,
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 12,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": 15,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 13,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": 15,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 14,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": 15,
+        "i": 4
+      },
+      "stdout": "",
+      "note": "found = 15. But 15 is the value we searched for, not WHERE it is — we already knew it was 15. Linear search should hand back the index 2. The bug: `found = nums[i]` should be `found = i`. CPython shows it; we don't have to claim it."
+    }
+  ]
+}

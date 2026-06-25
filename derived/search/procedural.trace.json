@@ -1,0 +1,289 @@
+{
+  "id": "search-procedural",
+  "title": "Linear search — walk the row, check each",
+  "problem": "Find WHERE a target value sits in the list, and report its index (or -1 if it is not there).",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "source": "nums = [4, 8, 15, 16, 23]\ntarget = 15\nfound = -1\nfor i in range(len(nums)):\n    if nums[i] == target:\n        found = i\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15
+      },
+      "stdout": ""
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": -1
+      },
+      "stdout": "",
+      "note": "found starts at -1, a sentinel meaning 'not found yet'. No real index is negative, so -1 can't be mistaken for an answer."
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": -1,
+        "i": 0
+      },
+      "stdout": "",
+      "note": "i = 0: check the first number. nums[0] is 4, not 15 — keep walking."
+    },
+    {
+      "step": 4,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": -1,
+        "i": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": -1,
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": -1,
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": -1,
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": -1,
+        "i": 2
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "i is 2 and nums[2] is 15 — that matches the target. After `found = i` runs, what will found be?"
+    },
+    {
+      "step": 9,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": 2,
+        "i": 2
+      },
+      "stdout": "",
+      "note": "i = 2: nums[2] is 15, a match. We record the POSITION: found = i = 2."
+    },
+    {
+      "step": 10,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": 2,
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 11,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": 2,
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 12,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": 2,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 13,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": 2,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 14,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          8,
+          15,
+          16,
+          23
+        ],
+        "target": 15,
+        "found": 2,
+        "i": 4
+      },
+      "stdout": "",
+      "note": "The loop finished. found = 2 — the target 15 lives at index 2. (We kept scanning after the match; harmless here, though it would record the LAST match if there were duplicates.)"
+    }
+  ]
+}

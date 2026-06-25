@@ -1,0 +1,50 @@
+id = "rle-procedural"
+title = "Run-length encoding — squeezing a row of pixels"
+register = "procedural"
+problem = "Compress a row of pixels by replacing each run of the same colour with a (length, colour) pair."
+author = "GlassBox"
+created = "2026-06-25"
+
+# Run-length encoding: walk the row, count the current run, and save a (length, colour) pair every
+# time the colour changes — plus one final save for the last run. This is lossless compression AND a
+# traceable program in one artifact.
+source = """
+pixels = ["W", "W", "W", "B", "B", "W"]
+out = []
+run_char = pixels[0]
+run_len = 1
+for p in pixels[1:]:
+    if p == run_char:
+        run_len = run_len + 1
+    else:
+        out.append([run_len, run_char])
+        run_char = p
+        run_len = 1
+out.append([run_len, run_char])
+"""
+
+# The flush after the loop is the part beginners forget. Predict it: the last run (one W) must still
+# be saved. (The buggy register omits exactly this line.)
+[[checkpoints]]
+step = 23
+ask = "The loop just ended, but the last run — a single W — has not been saved yet. After the final `out.append([run_len, run_char])` runs, what will out be?"
+
+[[notes]]
+step = 1
+text = "out starts empty — it will collect (length, colour) pairs, one per run."
+
+[[notes]]
+step = 3
+text = "run_len = 1: we have seen one W so far. run_char is the colour we are currently counting."
+
+[[notes]]
+step = 9
+text = "Three W's in a row now — run_len climbed to 3 as each matching pixel extended the run."
+
+[[notes]]
+step = 12
+text = "A B appeared, different from W. So we save the finished run [3, W] to out, then start counting the new B run."
+
+[[notes]]
+step = 24
+text = "The loop ended with a one-W run still uncounted. The final out.append saves it as [1, W]. out is now the whole row encoded: three W, two B, one W — six pixels stored as three pairs."

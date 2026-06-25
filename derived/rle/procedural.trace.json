@@ -1,0 +1,605 @@
+{
+  "id": "rle-procedural",
+  "title": "Run-length encoding — squeezing a row of pixels",
+  "problem": "Compress a row of pixels by replacing each run of the same colour with a (length, colour) pair.",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "source": "pixels = [\"W\", \"W\", \"W\", \"B\", \"B\", \"W\"]\nout = []\nrun_char = pixels[0]\nrun_len = 1\nfor p in pixels[1:]:\n    if p == run_char:\n        run_len = run_len + 1\n    else:\n        out.append([run_len, run_char])\n        run_char = p\n        run_len = 1\nout.append([run_len, run_char])\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": []
+      },
+      "stdout": "",
+      "note": "out starts empty — it will collect (length, colour) pairs, one per run."
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 1
+      },
+      "stdout": "",
+      "note": "run_len = 1: we have seen one W so far. run_char is the colour we are currently counting."
+    },
+    {
+      "step": 4,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 1,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 1,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 2,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 2,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 2,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 9,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 3,
+        "p": "W"
+      },
+      "stdout": "",
+      "note": "Three W's in a row now — run_len climbed to 3 as each matching pixel extended the run."
+    },
+    {
+      "step": 10,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 3,
+        "p": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 11,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 3,
+        "p": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 12,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "W",
+        "run_len": 3,
+        "p": "B"
+      },
+      "stdout": "",
+      "note": "A B appeared, different from W. So we save the finished run [3, W] to out, then start counting the new B run."
+    },
+    {
+      "step": 13,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 3,
+        "p": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 14,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 1,
+        "p": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 15,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 1,
+        "p": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 16,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 1,
+        "p": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 17,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 2,
+        "p": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 18,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 2,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 19,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 2,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 20,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ],
+          [
+            2,
+            "B"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 2,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 21,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ],
+          [
+            2,
+            "B"
+          ]
+        ],
+        "run_char": "W",
+        "run_len": 2,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 22,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ],
+          [
+            2,
+            "B"
+          ]
+        ],
+        "run_char": "W",
+        "run_len": 1,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 23,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ],
+          [
+            2,
+            "B"
+          ]
+        ],
+        "run_char": "W",
+        "run_len": 1,
+        "p": "W"
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "The loop just ended, but the last run — a single W — has not been saved yet. After the final `out.append([run_len, run_char])` runs, what will out be?"
+    },
+    {
+      "step": 24,
+      "line": 12,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ],
+          [
+            2,
+            "B"
+          ],
+          [
+            1,
+            "W"
+          ]
+        ],
+        "run_char": "W",
+        "run_len": 1,
+        "p": "W"
+      },
+      "stdout": "",
+      "note": "The loop ended with a one-W run still uncounted. The final out.append saves it as [1, W]. out is now the whole row encoded: three W, two B, one W — six pixels stored as three pairs."
+    }
+  ]
+}

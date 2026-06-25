@@ -1,0 +1,43 @@
+id = "rle-buggy"
+title = "Run-length encoding — the forgotten last run"
+register = "naive"
+problem = "Compress a row of pixels by replacing each run of the same colour with a (length, colour) pair."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The classic RLE bug: a run is only saved when the colour CHANGES, so the very last run — which has
+# no colour change after it — is never saved. Decode this and you get the wrong image back.
+source = """
+pixels = ["W", "W", "W", "B", "B", "W"]
+out = []
+run_char = pixels[0]
+run_len = 1
+for p in pixels[1:]:
+    if p == run_char:
+        run_len = run_len + 1
+    else:
+        out.append([run_len, run_char])
+        run_char = p
+        run_len = 1
+"""
+
+# Predict the FIRST save (when W changes to B) — this much works. The bug is what is missing at the end.
+[[checkpoints]]
+step = 11
+ask = "A B just appeared, ending the run of W's. After `out.append([run_len, run_char])` runs, what will out hold?"
+
+[[notes]]
+step = 1
+text = "out starts empty — it will collect (length, colour) pairs, one per run."
+
+[[notes]]
+step = 9
+text = "Three W's counted: run_len is 3. So far this matches the correct version exactly."
+
+[[notes]]
+step = 12
+text = "The colour changed to B, so the W run [3, W] is saved. Saving only happens on a colour CHANGE — remember that."
+
+[[notes]]
+step = 23
+text = "The loop ended — and nothing saved the final run. The last W (run_len 1) is never appended: out has only [3, W] and [2, B]. The closing W is LOST, because there was no colour change after it. The fix is one out.append after the loop. CPython shows the gap; we don't have to claim it."

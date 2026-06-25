@@ -1,0 +1,571 @@
+{
+  "id": "rle-buggy",
+  "title": "Run-length encoding — the forgotten last run",
+  "problem": "Compress a row of pixels by replacing each run of the same colour with a (length, colour) pair.",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "source": "pixels = [\"W\", \"W\", \"W\", \"B\", \"B\", \"W\"]\nout = []\nrun_char = pixels[0]\nrun_len = 1\nfor p in pixels[1:]:\n    if p == run_char:\n        run_len = run_len + 1\n    else:\n        out.append([run_len, run_char])\n        run_char = p\n        run_len = 1\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": []
+      },
+      "stdout": "",
+      "note": "out starts empty — it will collect (length, colour) pairs, one per run."
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 4,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 1,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 1,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 2,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 2,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 2,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 9,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 3,
+        "p": "W"
+      },
+      "stdout": "",
+      "note": "Three W's counted: run_len is 3. So far this matches the correct version exactly."
+    },
+    {
+      "step": 10,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 3,
+        "p": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 11,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [],
+        "run_char": "W",
+        "run_len": 3,
+        "p": "B"
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "A B just appeared, ending the run of W's. After `out.append([run_len, run_char])` runs, what will out hold?"
+    },
+    {
+      "step": 12,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "W",
+        "run_len": 3,
+        "p": "B"
+      },
+      "stdout": "",
+      "note": "The colour changed to B, so the W run [3, W] is saved. Saving only happens on a colour CHANGE — remember that."
+    },
+    {
+      "step": 13,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 3,
+        "p": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 14,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 1,
+        "p": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 15,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 1,
+        "p": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 16,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 1,
+        "p": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 17,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 2,
+        "p": "B"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 18,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 2,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 19,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 2,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 20,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ],
+          [
+            2,
+            "B"
+          ]
+        ],
+        "run_char": "B",
+        "run_len": 2,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 21,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ],
+          [
+            2,
+            "B"
+          ]
+        ],
+        "run_char": "W",
+        "run_len": 2,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 22,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ],
+          [
+            2,
+            "B"
+          ]
+        ],
+        "run_char": "W",
+        "run_len": 1,
+        "p": "W"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 23,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "pixels": [
+          "W",
+          "W",
+          "W",
+          "B",
+          "B",
+          "W"
+        ],
+        "out": [
+          [
+            3,
+            "W"
+          ],
+          [
+            2,
+            "B"
+          ]
+        ],
+        "run_char": "W",
+        "run_len": 1,
+        "p": "W"
+      },
+      "stdout": "",
+      "note": "The loop ended — and nothing saved the final run. The last W (run_len 1) is never appended: out has only [3, W] and [2, B]. The closing W is LOST, because there was no colour change after it. The fix is one out.append after the loop. CPython shows the gap; we don't have to claim it."
+    }
+  ]
+}
