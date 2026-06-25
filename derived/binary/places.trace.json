@@ -1,0 +1,393 @@
+{
+  "id": "binary-places",
+  "title": "Decimal to binary — filling the place-value columns",
+  "problem": "Write the number 13 in binary by filling the powers-of-two columns: 8, 4, 2, 1.",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "abstraction": {
+    "type": "binary",
+    "bind": {
+      "n": "remainder",
+      "p": "current",
+      "bits": "output",
+      "places": "columns"
+    }
+  },
+  "source": "n = 13\nplaces = [8, 4, 2, 1]\nbits = []\nfor p in places:\n    if n >= p:\n        bits.append(1)\n        n = n - p\n    else:\n        bits.append(0)\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "n": 13
+      },
+      "stdout": "",
+      "note": "We want to write 13 in binary. Binary columns are powers of two: 8, 4, 2, 1 — each one is twice the next."
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "n": 13,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "n": 13,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": []
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "n": 13,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [],
+        "p": 8
+      },
+      "stdout": "",
+      "note": "Start with the biggest column, 8. Does 8 fit in 13? 13 >= 8, so yes."
+    },
+    {
+      "step": 4,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "n": 13,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [],
+        "p": 8
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "n": 13,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [
+          1
+        ],
+        "p": 8
+      },
+      "stdout": "",
+      "note": "It fits — put a 1 in the 8s column."
+    },
+    {
+      "step": 6,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "n": 5,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [
+          1
+        ],
+        "p": 8
+      },
+      "stdout": "",
+      "note": "Subtract what we used: 13 - 8 = 5 left to place."
+    },
+    {
+      "step": 7,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "n": 5,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [
+          1
+        ],
+        "p": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "n": 5,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [
+          1
+        ],
+        "p": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 9,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "n": 5,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [
+          1,
+          1
+        ],
+        "p": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 10,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "n": 1,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [
+          1,
+          1
+        ],
+        "p": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 11,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "n": 1,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [
+          1,
+          1
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 12,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "n": 1,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [
+          1,
+          1
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 13,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "n": 1,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [
+          1,
+          1,
+          0
+        ],
+        "p": 2
+      },
+      "stdout": "",
+      "note": "Now the 2s column. Does 2 fit in what's left (1)? No — so the 2s column gets a 0."
+    },
+    {
+      "step": 14,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "n": 1,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [
+          1,
+          1,
+          0
+        ],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 15,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "n": 1,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [
+          1,
+          1,
+          0
+        ],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 16,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "n": 1,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [
+          1,
+          1,
+          0,
+          1
+        ],
+        "p": 1
+      },
+      "stdout": "",
+      "note": "1 fits in the 1s column, so a final 1 goes there."
+    },
+    {
+      "step": 17,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "n": 0,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [
+          1,
+          1,
+          0,
+          1
+        ],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 18,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "n": 0,
+        "places": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "bits": [
+          1,
+          1,
+          0,
+          1
+        ],
+        "p": 1
+      },
+      "stdout": "",
+      "note": "Nothing left to place. 13 in binary is 1101 — which is exactly 8 + 4 + 1."
+    }
+  ]
+}

@@ -175,6 +175,19 @@
               {/each}
             </div>
           </div>
+        {:else if view === "abstraction" && model && model.kind === "binary"}
+          <div class="binary">
+            <div class="bin-remainder">remaining: <span class="chip cur">{fmtChip(model.remainder)}</span></div>
+            <div class="bin-columns">
+              {#each model.columns as col}
+                <div class="bin-col" class:active={col.active} class:on={col.bit === 1}>
+                  <div class="bin-place">{col.place}</div>
+                  <div class="bin-bit">{col.decided ? col.bit : "·"}</div>
+                </div>
+              {/each}
+            </div>
+            <div class="bin-result">= <code>{model.value || "—"}</code><span class="bin-base">binary</span></div>
+          </div>
         {:else}
           <table class="vars">
             <thead><tr><th>variable</th><th>value</th></tr></thead>
@@ -333,6 +346,18 @@
   .pile.a .pile-items .chip { border-color: var(--live); }
   .pile.b .pile-items .chip { border-color: var(--asserted); }
   .empty-pile { color: var(--ink-faint); font-size: 0.78rem; font-style: italic; }
+
+  .binary { padding: 1.2rem 0.8rem; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+  .bin-remainder { font-family: var(--font-mono); font-size: 0.85rem; color: var(--ink-soft); }
+  .bin-columns { display: flex; gap: 0.5rem; }
+  .bin-col { width: 3rem; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); overflow: hidden; text-align: center; background: var(--surface); }
+  .bin-col.active { border-color: var(--live); box-shadow: 0 0 0 2px var(--live-wash); }
+  .bin-place { font-family: var(--font-mono); font-size: 0.76rem; padding: 0.25rem 0; background: var(--surface-2); color: var(--ink-faint); border-bottom: 1px solid var(--border); }
+  .bin-bit { font-family: var(--font-mono); font-size: 1.35rem; font-weight: 700; padding: 0.5rem 0; color: var(--ink-faint); }
+  .bin-col.on .bin-bit { color: var(--live-ink); background: var(--live-wash); }
+  .bin-result { font-family: var(--font-mono); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem; }
+  .bin-result code { font-size: 1.15rem; letter-spacing: 0.1em; color: var(--ink); }
+  .bin-base { font-size: 0.68rem; color: var(--ink-faint); }
 
   @media (prefers-reduced-motion: no-preference) {
     .fill { transition: d 0.25s ease, fill 0.25s ease; }

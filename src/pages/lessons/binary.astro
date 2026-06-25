@@ -1,0 +1,41 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import places from "../../../derived/binary/places.trace.json";
+
+const registers = [places];
+---
+
+<Base
+  title="Binary — GlassBox"
+  description="Binary is just place value with powers of two. Watch a number fill the columns, traced as real Python."
+>
+  <h1>Decimal to binary</h1>
+  <p class="lede">
+    Binary looks mysterious, but it is just place value with a different base. In decimal the columns are
+    1, 10, 100…; in binary they are powers of two: 1, 2, 4, 8…. To write a number, walk the columns from
+    biggest to smallest and take each one that fits, subtracting as you go.
+  </p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>
+      The number 13 and four columns — 8, 4, 2, 1. The loop tries each column in turn: if the value
+      still <em>to place</em> is at least that column's power, it puts a <code>1</code> there and subtracts;
+      otherwise it puts a <code>0</code>. Eight fits in 13 (5 left), four fits in 5 (1 left), two does not
+      fit in 1, and one fits in 1 — so 13 is <code>1101</code>, which is exactly 8 + 4 + 1.
+    </p>
+    <p class="fineprint">
+      There is no separate "binary visualizer" here: this is a real Python program, traced line by line like
+      every other lesson. That is the whole idea — data is just more programs to trace.
+      See <a href="../../verification/">how GlassBox stays honest</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>

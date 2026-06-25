@@ -2,10 +2,12 @@
 // when there is no renderer for the type (the player then falls back to the generic state view).
 import { cupsModel } from "./cups.js";
 import { pilesModel } from "./piles.js";
+import { binaryModel } from "./binary.js";
 
 const REGISTRY = {
   cups: cupsModel,
   piles: pilesModel,
+  binary: binaryModel,
 };
 
 export function abstractionModel(abstraction, state) {

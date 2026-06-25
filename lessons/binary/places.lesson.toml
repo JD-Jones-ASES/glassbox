@@ -1,0 +1,56 @@
+id = "binary-places"
+title = "Decimal to binary — filling the place-value columns"
+register = "procedural"
+problem = "Write the number 13 in binary by filling the powers-of-two columns: 8, 4, 2, 1."
+author = "GlassBox"
+created = "2026-06-25"
+
+# Binary is just place value with powers of two. Walk the columns big-to-small; take each that fits.
+source = """
+n = 13
+places = [8, 4, 2, 1]
+bits = []
+for p in places:
+    if n >= p:
+        bits.append(1)
+        n = n - p
+    else:
+        bits.append(0)
+"""
+
+[abstraction]
+type = "binary"
+
+[abstraction.bind]
+n = "remainder"
+p = "current"
+bits = "output"
+places = "columns"
+
+[[notes]]
+step = 0
+text = "We want to write 13 in binary. Binary columns are powers of two: 8, 4, 2, 1 — each one is twice the next."
+
+[[notes]]
+step = 3
+text = "Start with the biggest column, 8. Does 8 fit in 13? 13 >= 8, so yes."
+
+[[notes]]
+step = 5
+text = "It fits — put a 1 in the 8s column."
+
+[[notes]]
+step = 6
+text = "Subtract what we used: 13 - 8 = 5 left to place."
+
+[[notes]]
+step = 13
+text = "Now the 2s column. Does 2 fit in what's left (1)? No — so the 2s column gets a 0."
+
+[[notes]]
+step = 16
+text = "1 fits in the 1s column, so a final 1 goes there."
+
+[[notes]]
+step = 18
+text = "Nothing left to place. 13 in binary is 1101 — which is exactly 8 + 4 + 1."
