@@ -55,6 +55,9 @@ def _validate_lesson(path: Path, lesson: dict) -> None:
     for note in lesson.get("notes", []):
         if "step" not in note or "text" not in note:
             raise BuildError(f"{path}: every [[notes]] entry needs 'step' and 'text'")
+    for cp in lesson.get("checkpoints", []):
+        if "step" not in cp:
+            raise BuildError(f"{path}: every [[checkpoints]] entry needs a 'step'")
     abstraction = lesson.get("abstraction")
     if abstraction is not None and "type" not in abstraction:
         raise BuildError(f"{path}: [abstraction] needs a 'type'")
@@ -84,6 +87,23 @@ def build_lesson(path: Path) -> dict:
     for step in steps:
         if step["step"] in notes:
             step["note"] = notes[step["step"]]
+
+    # Merge checkpoints (gate the reveal of the NEXT step; the learner predicts step+1's state). A
+    # checkpoint can't sit on the last step — there'd be nothing to predict. Authors pose the question
+    # only; the real next state adjudicates, so no answer is stored here.
+    checkpoints = {int(c["step"]): c for c in lesson.get("checkpoints", [])}
+    bad_cp = sorted(s for s in checkpoints if s < 0 or s >= len(steps) - 1)
+    if bad_cp:
+        raise BuildError(
+            f"{path}: checkpoint step index {bad_cp} out of range; must be in [0, {len(steps) - 2}] "
+            f"(a checkpoint gates the reveal of step+1, so it cannot be the last step)"
+        )
+    for step in steps:
+        if step["step"] in checkpoints:
+            step["checkpoint"] = True
+            ask = checkpoints[step["step"]].get("ask")
+            if ask:
+                step["checkpoint_prompt"] = str(ask)
 
     # An abstraction may only bind variables the trace actually surfaces at some point.
     abstraction = lesson.get("abstraction")

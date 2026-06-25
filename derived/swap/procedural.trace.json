@@ -67,7 +67,9 @@
         "temp": "juice"
       },
       "stdout": "",
-      "note": "Pour cup b into cup a. Cup a is now milk. For a moment both a and b hold milk — but the juice is safe in the spare."
+      "note": "Pour cup b into cup a. Cup a is now milk. For a moment both a and b hold milk — but the juice is safe in the spare.",
+      "checkpoint": true,
+      "checkpoint_prompt": "Before you step: after `b = temp` runs, what will cup b hold? (Where did the juice go?)"
     },
     {
       "step": 4,

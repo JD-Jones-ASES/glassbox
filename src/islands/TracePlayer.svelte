@@ -13,6 +13,17 @@
   let step = $state(0);
   let view = $state("abstraction"); // "abstraction" | "generic"
 
+  // Prediction–evidence–revision: at a `checkpoint` step we gate forward motion and ask the learner to
+  // predict the NEXT step's state. The ACTUAL next state is the only adjudicator — never a hidden answer.
+  let predicting = $state(false);     // is the prediction panel open?
+  let predictStep = $state(-1);       // the step the panel opened on (close if we navigate away)
+  let answeredKeys = $state(new Set()); // "regIdx:step" keys already predicted/revealed
+  let predDraft = $state({});         // {varName: rawString} the learner is editing
+  let predNewName = $state("");       // an introduced variable (e.g. temp)
+  let predNewValue = $state("");
+  let predResult = $state(null);      // {rows, firstBad, allCorrect} | {invalid: name}
+  let correction = $state("");        // free-text "fix your model" — recorded, NEVER graded
+
   const current = $derived(registers[regIdx] ?? null);
   const steps = $derived(current ? current.trace : []);
   const stepCount = $derived(steps.length);
@@ -22,6 +33,11 @@
   const model = $derived(current && cur ? abstractionModel(current.abstraction, cur.state) : null);
   const stateEntries = $derived(cur ? Object.entries(cur.state) : []);
   const isFinal = $derived(safeStep === stepCount - 1);
+  // A checkpoint gates the reveal of the NEXT step (so there must be a next step to predict).
+  const isCheckpoint = $derived(!!(cur && cur.checkpoint === true && !isFinal));
+  const checkpointKey = $derived(regIdx + ":" + safeStep);
+  const answered = $derived(answeredKeys.has(checkpointKey));
+  const nextState = $derived(!isFinal && steps[safeStep + 1] ? steps[safeStep + 1].state : null);
   // When the current line runs more than once (a loop), say which occurrence we're on so a click-walk
   // or scrub doesn't silently wrap. null when the line maps to a single step.
   const lineOccurrence = $derived.by(() => {
@@ -50,9 +66,15 @@
     regIdx = i;
     const max = registers[i].trace.length - 1;
     if (step > max) step = max;
+    closePrediction();
   }
   function go(delta) {
     step = Math.max(0, Math.min(stepCount - 1, safeStep + delta));
+  }
+  // Forward motion is the only thing a checkpoint gates; Prev / Home / scrubber stay free for review.
+  function forward() {
+    if (isCheckpoint && !answered) { openPrediction(); return; }
+    go(1);
   }
   // Jump to the step that highlights a clicked line. If that line runs more than once (e.g. a loop),
   // clicking it again while already there walks to its next execution, wrapping around.
@@ -68,7 +90,8 @@
     }
   }
   function onKey(e) {
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") { go(1); e.preventDefault(); }
+    if (e.key === "Escape" && predicting) { closePrediction(); e.preventDefault(); return; }
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") { forward(); e.preventDefault(); }
     else if (e.key === "ArrowLeft" || e.key === "ArrowUp") { go(-1); e.preventDefault(); }
     else if (e.key === "Home") { step = 0; e.preventDefault(); }
     else if (e.key === "End") { step = stepCount - 1; e.preventDefault(); }
@@ -87,6 +110,95 @@
     if (v && typeof v === "object" && v.__map__) return fmtValue(v);
     return typeof v === "string" ? v : JSON.stringify(v);
   }
+
+  // ---- prediction–evidence–revision ----
+  function valueKind(v) {
+    if (v === null) return "null";
+    if (typeof v === "boolean") return "boolean";
+    if (typeof v === "number") return "number";
+    if (typeof v === "string") return "string";
+    return "json"; // arrays, objects, tagged placeholders — edited as JSON text
+  }
+  // What to pre-fill the editor with: the current value, in a form the learner would type.
+  function inputSeed(v) {
+    const k = valueKind(v);
+    if (k === "null") return "None";
+    if (k === "boolean") return v ? "True" : "False";
+    if (k === "json") return JSON.stringify(v);
+    return String(v);
+  }
+  // Parse a typed value back, given the kind we expect from the current value.
+  function parseTyped(kind, raw) {
+    raw = (raw ?? "").trim();
+    if (kind === "number") { const n = Number(raw); return raw !== "" && !Number.isNaN(n) ? { ok: true, value: n } : { ok: false }; }
+    if (kind === "boolean") { const t = raw.toLowerCase(); if (["true", "1", "yes"].includes(t)) return { ok: true, value: true }; if (["false", "0", "no"].includes(t)) return { ok: true, value: false }; return { ok: false }; }
+    if (kind === "null") return { ok: true, value: null };
+    if (kind === "string") return { ok: true, value: raw };
+    try { return { ok: true, value: JSON.parse(raw) }; } catch { return { ok: false }; }
+  }
+  // For an introduced variable, infer the type from what the learner typed.
+  function smartParse(raw) {
+    raw = (raw ?? "").trim();
+    if (raw === "") return { ok: false };
+    if (raw === "None") return { ok: true, value: null };
+    if (raw === "True") return { ok: true, value: true };
+    if (raw === "False") return { ok: true, value: false };
+    if (/^-?\d+(\.\d+)?$/.test(raw)) return { ok: true, value: Number(raw) };
+    if (/^[[{]/.test(raw)) { try { return { ok: true, value: JSON.parse(raw) }; } catch { return { ok: false }; } }
+    return { ok: true, value: raw }; // string fallback
+  }
+  const eq = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+  function openPrediction() {
+    predDraft = {};
+    for (const [k, v] of stateEntries) predDraft[k] = inputSeed(v);
+    predNewName = ""; predNewValue = ""; predResult = null; correction = "";
+    predictStep = safeStep;
+    predicting = true;
+  }
+  function closePrediction() { predicting = false; predResult = null; predictStep = -1; }
+
+  function commitPrediction() {
+    const predicted = {};
+    for (const [k, v] of stateEntries) {
+      const r = parseTyped(valueKind(v), predDraft[k]);
+      if (!r.ok) { predResult = { invalid: k }; return; }
+      predicted[k] = r.value;
+    }
+    if (predNewName.trim()) {
+      const r = smartParse(predNewValue);
+      if (!r.ok) { predResult = { invalid: predNewName.trim() }; return; }
+      predicted[predNewName.trim()] = r.value;
+    }
+    predResult = buildDiff(predicted, nextState ?? {});
+    answeredKeys = new Set(answeredKeys).add(checkpointKey);
+  }
+  function buildDiff(predicted, actual) {
+    const keys = [];
+    for (const k of Object.keys(actual)) keys.push(k);
+    for (const k of Object.keys(predicted)) if (!keys.includes(k)) keys.push(k);
+    const rows = keys.map((k) => {
+      const inA = k in actual, inP = k in predicted;
+      let status;
+      if (inA && inP) status = eq(predicted[k], actual[k]) ? "correct" : "wrong";
+      else if (inA) status = "missed";   // it changed/appeared; learner didn't predict it
+      else status = "phantom";           // learner predicted a variable that isn't there
+      return { k, predicted: inP ? predicted[k] : undefined, actual: inA ? actual[k] : undefined, status };
+    });
+    const firstBad = rows.find((r) => r.status !== "correct") ?? null;
+    return { rows, firstBad, allCorrect: !firstBad };
+  }
+  function revealWithoutPredicting() {
+    answeredKeys = new Set(answeredKeys).add(checkpointKey);
+    closePrediction();
+    go(1);
+  }
+  function continueAfterCheckpoint() { closePrediction(); go(1); }
+
+  // Close the panel if the learner navigates away from the checkpoint by scrubbing or clicking a line.
+  $effect(() => {
+    if (predicting && safeStep !== predictStep) closePrediction();
+  });
 </script>
 
 {#if current}
@@ -252,6 +364,78 @@
       <p class="note"><span class="note-tag">note</span>{cur.note}</p>
     {/if}
 
+    <!-- checkpoint: predict the next state, then meet the evidence (the real next state adjudicates) -->
+    {#if isCheckpoint && !answered && !predicting}
+      <div class="cp-prompt">
+        <span class="cp-tag">checkpoint</span>
+        <span>{cur.checkpoint_prompt ?? "Before you step: what will the state be after the next line runs?"}</span>
+        <button class="cp-open" onclick={openPrediction}>Predict →</button>
+      </div>
+    {/if}
+
+    {#if predicting}
+      <div class="cp-panel">
+        <div class="cp-head"><span class="cp-tag">predict</span>{cur.checkpoint_prompt ?? "What will the state be after the next line runs?"}</div>
+
+        {#if !predResult || predResult.invalid}
+          <table class="cp-form">
+            <thead><tr><th>variable</th><th>your prediction</th></tr></thead>
+            <tbody>
+              {#each stateEntries as [k, v]}
+                <tr class:bad={predResult && predResult.invalid === k}>
+                  <td><code>{k}</code></td>
+                  <td><input class="cp-input" bind:value={predDraft[k]} aria-label={`predicted ${k}`} /></td>
+                </tr>
+              {/each}
+              <tr class="cp-newrow" class:bad={predResult && predResult.invalid === predNewName.trim()}>
+                <td><input class="cp-name" placeholder="new var…" bind:value={predNewName} aria-label="new variable name" /></td>
+                <td><input class="cp-input" placeholder="value" bind:value={predNewValue} aria-label="new variable value" /></td>
+              </tr>
+            </tbody>
+          </table>
+          {#if predResult && predResult.invalid}
+            <p class="cp-err">Couldn't read your value for <code>{predResult.invalid}</code> — check the format.</p>
+          {/if}
+          <div class="cp-actions">
+            <button class="cp-commit" onclick={commitPrediction}>Reveal &amp; check</button>
+            <button class="cp-skip" onclick={revealWithoutPredicting}>Reveal without predicting</button>
+          </div>
+        {:else}
+          <div class="cp-verdict {predResult.allCorrect ? 'ok' : 'off'}">
+            {#if predResult.allCorrect}
+              ✓ Every variable matched what CPython produced.
+            {:else}
+              {@const fb = predResult.firstBad}
+              First gap at <code>{fb.k}</code>:
+              {#if fb.status === "wrong"}you predicted <code>{fmtValue(fb.predicted)}</code>, CPython produced <code>{fmtValue(fb.actual)}</code>.
+              {:else if fb.status === "missed"}you didn't predict it; CPython produced <code>{fmtValue(fb.actual)}</code>.
+              {:else}you predicted <code>{fmtValue(fb.predicted)}</code>, but there is no such variable.
+              {/if}
+            {/if}
+          </div>
+          <table class="cp-diff">
+            <thead><tr><th>variable</th><th>you predicted</th><th>CPython</th></tr></thead>
+            <tbody>
+              {#each predResult.rows as r}
+                <tr class="cp-row-{r.status}">
+                  <td><code>{r.k}</code></td>
+                  <td><code>{r.predicted === undefined ? "—" : fmtValue(r.predicted)}</code></td>
+                  <td><code>{r.actual === undefined ? "—" : fmtValue(r.actual)}</code></td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+          <label class="cp-correct">In one sentence, fix your model <span class="cp-muted">(optional, never graded)</span>
+            <textarea bind:value={correction} rows="2" placeholder="e.g. assigning a = b copies b into a — it doesn't swap them."></textarea>
+          </label>
+          {#if correction.trim()}<p class="cp-yours"><span class="note-tag">your note</span>{correction}</p>{/if}
+          <div class="cp-actions">
+            <button class="cp-commit" onclick={continueAfterCheckpoint}>Continue →</button>
+          </div>
+        {/if}
+      </div>
+    {/if}
+
     <!-- controls -->
     <div class="controls">
       <button class="nav" onclick={() => go(-1)} disabled={safeStep === 0} aria-label="Previous step">‹</button>
@@ -263,7 +447,7 @@
         bind:value={step}
         aria-label="Step"
       />
-      <button class="nav" onclick={() => go(1)} disabled={isFinal} aria-label="Next step">›</button>
+      <button class="nav" class:armed={isCheckpoint && !answered} onclick={forward} disabled={isFinal} aria-label={isCheckpoint && !answered ? "Predict the next step" : "Next step"}>›</button>
       <span class="counter">step {safeStep + 1} / {stepCount}</span>
     </div>
     <p class="hint">Click a line, drag the slider, or use the <kbd>←</kbd> <kbd>→</kbd> keys.</p>
@@ -451,6 +635,69 @@
   .note-tag {
     font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em;
     color: var(--asserted); margin-right: 0.55rem; vertical-align: 0.06em;
+  }
+
+  /* prediction–evidence–revision checkpoint */
+  .nav.armed {
+    border-color: var(--live); background: var(--live); color: #fff;
+    animation: cp-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes cp-pulse { 0%,100% { box-shadow: 0 0 0 0 var(--live-wash); } 50% { box-shadow: 0 0 0 5px transparent; } }
+  @media (prefers-reduced-motion: reduce) { .nav.armed { animation: none; } }
+
+  .cp-tag {
+    font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--live-ink); margin-right: 0.55rem; vertical-align: 0.06em;
+  }
+  .cp-prompt {
+    margin: 0.85rem 0 0; padding: 0.6rem 0.8rem; background: var(--live-wash);
+    border-left: 3px solid var(--live); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; font-size: 0.95rem;
+  }
+  .cp-open, .cp-commit, .cp-skip {
+    font-family: var(--font-display); font-weight: 600; font-size: 0.82rem; cursor: pointer;
+    padding: 0.3rem 0.8rem; border-radius: 999px; border: 1px solid var(--live);
+    background: var(--live); color: #fff;
+  }
+  .cp-open { margin-left: auto; }
+  .cp-skip { background: transparent; color: var(--ink-soft); border-color: var(--border-strong); }
+  .cp-panel {
+    margin: 0.85rem 0 0; padding: 0.8rem 0.9rem; border: 1px solid var(--live);
+    border-radius: var(--radius-sm); background: var(--surface-2);
+  }
+  .cp-head { font-size: 0.95rem; margin-bottom: 0.7rem; }
+  .cp-form, .cp-diff { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.88rem; }
+  .cp-form th, .cp-diff th { text-align: left; font-weight: 500; color: var(--ink-faint); font-size: 0.72rem; padding: 0.3rem 0.5rem; }
+  .cp-form td, .cp-diff td { padding: 0.28rem 0.5rem; border-top: 1px solid var(--border); }
+  .cp-input, .cp-name {
+    font-family: var(--font-mono); font-size: 0.88rem; width: 100%; box-sizing: border-box;
+    padding: 0.22rem 0.45rem; border: 1px solid var(--border-strong); border-radius: 6px;
+    background: var(--surface); color: var(--ink);
+  }
+  .cp-input:focus, .cp-name:focus { outline: 2px solid var(--live); outline-offset: -1px; }
+  .cp-form tr.bad .cp-input, .cp-form tr.bad .cp-name { border-color: var(--asserted); }
+  .cp-newrow td { border-top: 1px dashed var(--border-strong); }
+  .cp-err { color: var(--asserted); font-size: 0.82rem; margin: 0.4rem 0 0; }
+  .cp-actions { display: flex; gap: 0.5rem; margin-top: 0.8rem; flex-wrap: wrap; }
+
+  .cp-verdict { font-size: 0.92rem; padding: 0.5rem 0.7rem; border-radius: var(--radius-sm); margin-bottom: 0.7rem; }
+  .cp-verdict.ok { background: var(--live-wash); color: var(--live-ink); }
+  .cp-verdict.off { background: var(--asserted-wash); color: var(--asserted); }
+  .cp-verdict code { font-weight: 700; }
+  .cp-row-correct td:first-child { color: var(--live-ink); }
+  .cp-row-wrong, .cp-row-missed, .cp-row-phantom { background: var(--asserted-wash); }
+  .cp-row-wrong td:last-child, .cp-row-missed td:last-child { color: var(--live-ink); font-weight: 700; }
+  .cp-correct { display: block; font-size: 0.86rem; color: var(--ink-soft); margin-top: 0.8rem; }
+  .cp-muted { color: var(--ink-faint); font-size: 0.78rem; }
+  .cp-correct textarea {
+    display: block; width: 100%; box-sizing: border-box; margin-top: 0.35rem; resize: vertical;
+    font-family: var(--font-sans, inherit); font-size: 0.9rem; padding: 0.4rem 0.5rem;
+    border: 1px solid var(--border-strong); border-radius: 6px; background: var(--surface); color: var(--ink);
+  }
+  .cp-yours {
+    margin: 0.6rem 0 0; padding: 0.5rem 0.7rem; background: var(--surface);
+    border-left: 3px solid var(--ink-faint); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 0.92rem;
   }
 
   .controls { display: flex; align-items: center; gap: 0.7rem; margin-top: 1rem; }

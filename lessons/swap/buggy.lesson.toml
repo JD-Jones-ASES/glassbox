@@ -21,6 +21,12 @@ label = "Two cups"
 a = "left_cup"
 b = "right_cup"
 
+# Predict the effect of `a = b` BEFORE seeing it. The tempting wrong answer is "they swap"
+# (a=milk, b=juice). CPython will show b never changed and the juice is already gone.
+[[checkpoints]]
+step = 1
+ask = "Before you step: after `a = b` runs, what will cup a and cup b hold? (Does this one line swap them?)"
+
 [[notes]]
 step = 0
 text = "Cup a (the left cup) now holds juice."

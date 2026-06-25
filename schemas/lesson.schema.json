@@ -39,6 +39,19 @@
           "text": { "type": "string", "minLength": 1 }
         }
       }
+    },
+    "checkpoints": {
+      "type": "array",
+      "description": "Steps at which the player gates forward motion and asks the learner to predict the NEXT step's state. The real next state adjudicates — authors pose the question (`ask`), never the answer. `step` must have a successor (it cannot be the last step).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["step"],
+        "properties": {
+          "step": { "type": "integer", "minimum": 0 },
+          "ask": { "type": "string", "minLength": 1 }
+        }
+      }
     }
   }
 }

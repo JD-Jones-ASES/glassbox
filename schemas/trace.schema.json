@@ -71,7 +71,8 @@
             "additionalProperties": { "type": "string" },
             "description": "Maps a variable path to the reason its value was coerced (e.g. repr-coerced, non-finite-float, tuple-as-array)."
           },
-          "checkpoint": { "type": "boolean", "description": "Reserved for the future quiz primitive: hide the next state and ask the learner to predict it. No UI in v1." }
+          "checkpoint": { "type": "boolean", "description": "Gate forward motion here and ask the learner to predict the NEXT step's state before revealing it. The real next state is the sole adjudicator." },
+          "checkpoint_prompt": { "type": "string", "description": "Optional author-posed question shown at a checkpoint — the question only, never the answer." }
         }
       }
     }

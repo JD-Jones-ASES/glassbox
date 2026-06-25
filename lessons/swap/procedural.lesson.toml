@@ -23,6 +23,11 @@ a = "left_cup"
 b = "right_cup"
 temp = "counter_cup"
 
+# The same prediction as the buggy register — but here the spare saved the juice, so it comes out right.
+[[checkpoints]]
+step = 3
+ask = "Before you step: after `b = temp` runs, what will cup b hold? (Where did the juice go?)"
+
 [[notes]]
 step = 0
 text = "Cup a (the left cup) holds juice."

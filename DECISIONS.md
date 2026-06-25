@@ -175,3 +175,27 @@ claim is derived from CPython; coercions, omissions, and modeled interpretations
 **Consequences.** Amends ADR-0003 and ADR-0006. The honesty claim is now defensible for sims: the animation
 is real, the world-fidelity is an author's claim, and the two are visibly separate. Future Systems/Networks
 lessons inherit `author-asserted-simulation`.
+
+## ADR-0011 — The prediction loop adjudicates against the trace; authors pose the question, never the answer (2026-06-25)
+
+**Context.** Phase 2 makes the pedagogical product the prediction–evidence–revision loop, not just the
+trace. A checkpoint asks the learner to predict the next step's state before revealing it. The trap to avoid:
+storing an author's "correct answer" and grading against it — that reintroduces exactly the hand-authored
+claim the whole project exists to eliminate (a note can lie about what a variable holds; the loop must not).
+
+**Decision.** A `checkpoint: true` step gates *forward* motion only (Prev/Home/scrubber stay free for
+review) and asks the learner to predict the **next** step's state. The **sole adjudicator is
+`trace[safeStep + 1].state`** — the real execution output already in the shipped JSON. The player diffs the
+learner's structured prediction against it and reports only mechanical facts ("you predicted `b = juice`;
+CPython produced `b = milk`"); interpretation stays in the visually-distinct author note. Authors may pose
+the *question* via a `[[checkpoints]]` table (`step` + optional `ask`), merged in `build.py` like notes, and
+a checkpoint may not sit on the last step (nothing to predict). No answer is ever authored or stored. The
+prediction input is structured (typed value per visible variable + an "introduce a variable" row) so it is
+machine-checkable with no NLP and no backend; the one free-text field (the "fix your model" sentence) is
+recorded and shown back but **never graded**. Reserved-but-unused since ADR-0003, the `checkpoint` flag now
+has a UI; `checkpoint_prompt` is added to the trace schema.
+
+**Consequences.** Quiz/checkpoint behavior needs no separate system — it is a thin, static layer over the
+existing step data, and the "trace is the product" guarantee extends cleanly to "the trace is also the answer
+key." The "hide one corner of the triangle" exercise modes (Phase 2.2) follow the same rule: identify-the-line
+adjudicates against `steps[k].line`, construct-the-viz against the pure `abstractionModel()` output.

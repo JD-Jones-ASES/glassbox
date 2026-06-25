@@ -42,7 +42,9 @@
         "b": "milk"
       },
       "stdout": "",
-      "note": "Cup b (the right cup) now holds milk. Now we want to swap them — the obvious idea is to copy one cup into the other."
+      "note": "Cup b (the right cup) now holds milk. Now we want to swap them — the obvious idea is to copy one cup into the other.",
+      "checkpoint": true,
+      "checkpoint_prompt": "Before you step: after `a = b` runs, what will cup a and cup b hold? (Does this one line swap them?)"
     },
     {
       "step": 2,
