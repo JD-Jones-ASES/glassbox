@@ -1,0 +1,69 @@
+{
+  "id": "swap-buggy",
+  "title": "Swapping two cups — the tempting wrong way",
+  "problem": "Cup a holds juice and cup b holds milk. Swap them, so cup a ends with milk and cup b ends with juice.",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "abstraction": {
+    "type": "cups",
+    "label": "Two cups",
+    "bind": {
+      "a": "left_cup",
+      "b": "right_cup"
+    }
+  },
+  "source": "a = \"juice\"\nb = \"milk\"\na = b\nb = a\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "a": "juice"
+      },
+      "stdout": "",
+      "note": "Cup a (the left cup) now holds juice."
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "a": "juice",
+        "b": "milk"
+      },
+      "stdout": "",
+      "note": "Cup b (the right cup) now holds milk. Now we want to swap them — the obvious idea is to copy one cup into the other."
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "a": "milk",
+        "b": "milk"
+      },
+      "stdout": "",
+      "note": "We pour cup b into cup a. But look: cup a's juice is gone, overwritten by milk. Both cups now hold milk — and we never saved the juice anywhere."
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "a": "milk",
+        "b": "milk"
+      },
+      "stdout": "",
+      "note": "We pour cup a into cup b, but cup a is already milk. Both cups end up holding milk; the juice is lost for good. CPython — not the teacher — shows the swap failed."
+    }
+  ]
+}

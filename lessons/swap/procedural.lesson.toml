@@ -1,0 +1,44 @@
+id = "swap-procedural"
+title = "Swapping two cups — with a spare"
+register = "procedural"
+problem = "Cup a holds juice and cup b holds milk. Swap them, so cup a ends with milk and cup b ends with juice."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The training-wheels swap: save one cup in a spare before overwriting it.
+source = """
+a = "juice"
+b = "milk"
+temp = a
+a = b
+b = temp
+"""
+
+[abstraction]
+type = "cups"
+label = "Two cups and a spare"
+
+[abstraction.bind]
+a = "left_cup"
+b = "right_cup"
+temp = "counter_cup"
+
+[[notes]]
+step = 0
+text = "Cup a (the left cup) holds juice."
+
+[[notes]]
+step = 1
+text = "Cup b (the right cup) holds milk."
+
+[[notes]]
+step = 2
+text = "First, pour cup a's juice into a spare counter cup (temp). Now the juice is safe before we overwrite anything."
+
+[[notes]]
+step = 3
+text = "Pour cup b into cup a. Cup a is now milk. For a moment both a and b hold milk — but the juice is safe in the spare."
+
+[[notes]]
+step = 4
+text = "Pour the spare cup (temp) into cup b. Cup b now holds juice. The swap worked: a has milk, b has juice. The spare cup saved the day."

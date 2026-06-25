@@ -1,0 +1,38 @@
+id = "swap-buggy"
+title = "Swapping two cups — the tempting wrong way"
+register = "naive"
+problem = "Cup a holds juice and cup b holds milk. Swap them, so cup a ends with milk and cup b ends with juice."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The swap a real beginner writes first. Trace it and watch a value get destroyed.
+source = """
+a = "juice"
+b = "milk"
+a = b
+b = a
+"""
+
+[abstraction]
+type = "cups"
+label = "Two cups"
+
+[abstraction.bind]
+a = "left_cup"
+b = "right_cup"
+
+[[notes]]
+step = 0
+text = "Cup a (the left cup) now holds juice."
+
+[[notes]]
+step = 1
+text = "Cup b (the right cup) now holds milk. Now we want to swap them — the obvious idea is to copy one cup into the other."
+
+[[notes]]
+step = 2
+text = "We pour cup b into cup a. But look: cup a's juice is gone, overwritten by milk. Both cups now hold milk — and we never saved the juice anywhere."
+
+[[notes]]
+step = 3
+text = "We pour cup a into cup b, but cup a is already milk. Both cups end up holding milk; the juice is lost for good. CPython — not the teacher — shows the swap failed."

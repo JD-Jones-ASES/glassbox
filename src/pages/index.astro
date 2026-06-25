@@ -1,0 +1,56 @@
+---
+import Base from "../layouts/Base.astro";
+import { withBase } from "../lib/withBase.js";
+---
+
+<Base title="GlassBox — watch code actually run">
+  <section class="hero">
+    <h1>Turn the black box of running code into a glass box you can watch.</h1>
+    <p class="lede">
+      GlassBox is a from-first-principles look at how computers actually work. Every lesson is a small
+      program; we run it under CPython's tracer and let you step through it line by line, watching the
+      variables change. The catch that makes it honest: the state you see at each line
+      is <strong>real execution output</strong>, captured at build time — never a hand-drawn slide that
+      could quietly lie about what a variable holds.
+    </p>
+  </section>
+
+  <section class="how">
+    <div class="card">
+      <h2>Stepping <em>is</em> the lesson</h2>
+      <p>
+        An abstraction and a running program are the same object at two zoom levels. Watching the state
+        fill in, one line at a time, is what builds the abstraction in front of you. And if your mental
+        model is wrong, the state fills in wrong — and the interpreter, not a teacher, delivers the verdict.
+      </p>
+    </div>
+    <div class="card">
+      <h2>See it fail, on purpose</h2>
+      <p>
+        Each problem ships in several registers — including the buggy one a real beginner writes. You get
+        to trace the bug and <em>watch</em> it fail in the state, instead of being told it is wrong.
+      </p>
+    </div>
+  </section>
+
+  <section class="start card">
+    <h2>Start here</h2>
+    <p>
+      The <a href={withBase("/lessons/swap/")}>swap lesson</a> proves the whole idea: three ways to swap
+      two cups, one of which destroys a value before your eyes.
+    </p>
+    <p class="aside">
+      Curious how we keep it honest? See <a href={withBase("/verification/")}>what the tracer proves</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .hero { margin: 1.2rem 0 1.8rem; }
+  .hero h1 { font-size: 2.3rem; max-width: 20ch; }
+  .how { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.4rem; }
+  @media (max-width: 720px) { .how { grid-template-columns: 1fr; } .hero h1 { font-size: 1.9rem; } }
+  .how h2 { margin-top: 0; font-size: 1.15rem; }
+  .start p { margin: 0.4rem 0; }
+  .aside { color: var(--ink-faint); font-size: 0.9rem; }
+</style>

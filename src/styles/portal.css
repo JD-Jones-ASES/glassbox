@@ -1,0 +1,148 @@
+/* GlassBox design tokens + page chrome. "Glass box": cool, calm surfaces; a live-execution accent;
+   the current line lit like a probe. Island components scope their own styles; this file owns the
+   tokens (CSS custom properties) and the page shell. No CSS framework. */
+
+:root {
+  /* palette — light (default) */
+  --bg: #eef1f5;
+  --bg-grid: #e4e8ee;
+  --surface: #ffffff;
+  --surface-2: #f7f9fc;
+  --ink: #16202e;
+  --ink-soft: #4b5a6e;
+  --ink-faint: #8492a6;
+  --border: #d4dbe5;
+  --border-strong: #b7c1ce;
+
+  /* execution accent (the "live trace" colour) */
+  --live: #0e9aa7;
+  --live-ink: #07535a;
+  --live-wash: #e2f4f5;
+
+  /* the lit current line */
+  --line-hl: #fff6d6;
+  --line-hl-edge: #f4c948;
+
+  /* provenance */
+  --derived: #0e9aa7;     /* execution-derived */
+  --asserted: #b5761c;    /* author-asserted   */
+  --asserted-wash: #fbf1dd;
+
+  /* abstraction liquids */
+  --liquid-milk: #f3efe2;
+  --liquid-juice: #f1922e;
+  --liquid-unknown: #c8d2df;
+
+  /* type */
+  --font-display: "Space Grotesk Variable", system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", monospace;
+
+  /* shape */
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 2px rgba(22, 32, 46, 0.06), 0 6px 20px rgba(22, 32, 46, 0.08);
+  --maxw: 980px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1620;
+    --bg-grid: #16202c;
+    --surface: #182230;
+    --surface-2: #131c27;
+    --ink: #e7edf5;
+    --ink-soft: #aebbcb;
+    --ink-faint: #6f8093;
+    --border: #2a3848;
+    --border-strong: #3a4b5e;
+    --live: #34c5d1;
+    --live-ink: #bdeef2;
+    --live-wash: #103138;
+    --line-hl: #3a3413;
+    --line-hl-edge: #c7a430;
+    --derived: #34c5d1;
+    --asserted: #e0a64a;
+    --asserted-wash: #2e2410;
+    --liquid-milk: #d8d2bf;
+    --liquid-juice: #e8902f;
+    --liquid-unknown: #36465a;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 26px rgba(0, 0, 0, 0.4);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { color-scheme: light dark; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--bg-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--live-ink); text-underline-offset: 2px; }
+a:hover { color: var(--live); }
+
+code, kbd { font-family: var(--font-mono); }
+
+.shell { max-width: var(--maxw); margin: 0 auto; padding: 0 1.25rem 4rem; }
+
+.site-header {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 1.4rem 1.25rem 1rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+.brand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.brand .dot { color: var(--live); }
+.site-nav { margin-left: auto; display: flex; gap: 1.1rem; font-size: 0.92rem; }
+.site-nav a { color: var(--ink-soft); text-decoration: none; }
+.site-nav a:hover { color: var(--live); }
+.tagline { color: var(--ink-faint); font-size: 0.92rem; }
+
+h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.015em; line-height: 1.2; }
+h1 { font-size: 2rem; margin: 1.2rem 0 0.4rem; }
+h2 { font-size: 1.3rem; margin: 2rem 0 0.6rem; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.1rem 1.2rem;
+}
+
+.lede { font-size: 1.08rem; color: var(--ink-soft); max-width: 64ch; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-family: var(--font-mono); font-size: 0.74rem; font-weight: 500;
+  padding: 0.2rem 0.55rem; border-radius: 999px; border: 1px solid;
+}
+.badge.derived { color: var(--derived); border-color: var(--derived); background: var(--live-wash); }
+.badge.asserted { color: var(--asserted); border-color: var(--asserted); background: var(--asserted-wash); }
+.badge .led { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+.site-footer {
+  max-width: var(--maxw); margin: 2rem auto 0; padding: 1.4rem 1.25rem 2.5rem;
+  border-top: 1px solid var(--border); color: var(--ink-faint); font-size: 0.85rem;
+}
+.site-footer a { color: var(--ink-soft); }

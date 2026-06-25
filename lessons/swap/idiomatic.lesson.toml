@@ -1,0 +1,33 @@
+id = "swap-idiomatic"
+title = "Swapping two cups — the Python way"
+register = "idiomatic"
+problem = "Cup a holds juice and cup b holds milk. Swap them, so cup a ends with milk and cup b ends with juice."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The idiomatic swap: tuple pack/unpack does it in one line, no spare cup.
+source = """
+a = "juice"
+b = "milk"
+a, b = b, a
+"""
+
+[abstraction]
+type = "cups"
+label = "Two cups"
+
+[abstraction.bind]
+a = "left_cup"
+b = "right_cup"
+
+[[notes]]
+step = 0
+text = "Cup a (the left cup) holds juice."
+
+[[notes]]
+step = 1
+text = "Cup b (the right cup) holds milk."
+
+[[notes]]
+step = 2
+text = "Python picks up both cups at once, swaps them in the air, and sets them back down. One line, no spare cup: cup a now holds milk, cup b holds juice. (Under the hood, the right side b, a is packed into a pair, then unpacked into a and b.)"

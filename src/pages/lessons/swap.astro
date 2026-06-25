@@ -1,0 +1,59 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import buggy from "../../../derived/swap/buggy.trace.json";
+import procedural from "../../../derived/swap/procedural.trace.json";
+import idiomatic from "../../../derived/swap/idiomatic.trace.json";
+
+// Order is the lesson: see the obvious idea fail, then watch a spare cup fix it, then the Python way.
+const registers = [buggy, procedural, idiomatic];
+---
+
+<Base
+  title="Swap — GlassBox"
+  description="Three ways to swap two values — including the one a real beginner writes, watched failing."
+>
+  <h1>Swapping two values</h1>
+  <p class="lede">
+    Swapping two variables looks trivial until you try the obvious thing and a value vanishes. Step
+    through each version below and watch the state change, line by line. Toggle between the two cups and
+    the raw variables — they are the same thing at two zoom levels.
+  </p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>
+      Two cups: cup <code>a</code> holds juice, cup <code>b</code> holds milk. We want them swapped. The
+      hard part is that pouring one cup into the other <em>overwrites</em> what was already there.
+    </p>
+    <ul>
+      <li>
+        <strong>Buggy</strong> — the swap a beginner writes first: <code>a = b</code> then <code>b = a</code>.
+        Step it: the first line overwrites cup <code>a</code>'s juice before it is ever saved, so both cups
+        end up holding milk. The failure is shown by CPython, not asserted by us.
+      </li>
+      <li>
+        <strong>Procedural</strong> — save cup <code>a</code> in a spare cup first (<code>temp = a</code>),
+        then it is safe to overwrite. Watch the spare cup appear and rescue the juice.
+      </li>
+      <li>
+        <strong>Idiomatic</strong> — Python swaps both at once with <code>a, b = b, a</code>: it packs the
+        right-hand side into a pair and unpacks it back, so neither value is lost. One line, no spare.
+      </li>
+    </ul>
+    <p class="fineprint">
+      Every state you see came from running the program under CPython's tracer at build time. The cups
+      and the wording are human pedagogy laid on top — see <a href="../../verification/">how GlassBox
+      stays honest</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>

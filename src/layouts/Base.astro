@@ -1,0 +1,40 @@
+---
+import "@fontsource-variable/space-grotesk";
+import "@fontsource/ibm-plex-mono";
+import "../styles/portal.css";
+import { withBase } from "../lib/withBase.js";
+
+const { title = "GlassBox", description = "Watch code actually run." } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={withBase("favicon.svg")} />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href={withBase("/")}>Glass<span class="dot">▸</span>Box</a>
+      <span class="tagline">watch code actually run</span>
+      <nav class="site-nav">
+        <a href={withBase("/lessons/swap/")}>Swap</a>
+        <a href={withBase("/verification/")}>Verification</a>
+      </nav>
+    </header>
+    <main class="shell">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p>
+        GlassBox — a from-first-principles look at how computers actually work.
+        Code <a href="https://opensource.org/license/mit">MIT</a>;
+        content <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. AI-authored
+        under an owner-designed verification system.
+      </p>
+    </footer>
+  </body>
+</html>
