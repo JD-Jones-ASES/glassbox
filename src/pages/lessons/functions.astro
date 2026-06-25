@@ -1,0 +1,62 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import procedural from "../../../derived/functions/procedural.trace.json";
+import idiomatic from "../../../derived/functions/idiomatic.trace.json";
+import naive from "../../../derived/functions/naive.trace.json";
+import clever from "../../../derived/functions/clever.trace.json";
+
+// Inline first (baseline), then the same work as a function, then the forgot-return bug, then the built-in.
+const registers = [procedural, idiomatic, naive, clever];
+---
+
+<Base
+  title="Functions — GlassBox"
+  description="The same job four ways — and what a function actually adds: its own scope and a value handed back."
+>
+  <h1>Functions: package an idea you can call</h1>
+  <p class="lede">
+    A function is a named recipe with its own scratch space. When you call it, a fresh scope opens (watch
+    the call stack appear), it does its work on the arguments you pass, and it hands a value back
+    with <code>return</code>. Here is the same job — find the largest number — done four ways.
+  </p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <ul>
+      <li>
+        <strong>Procedural</strong> — the work written straight, in the main program. It runs, but it lives
+        in one scope, it is tied to this one list, and there is no call stack: nothing is "called".
+      </li>
+      <li>
+        <strong>Idiomatic</strong> — the same work as a function. Step into the call and watch the call
+        stack grow to <code>find_max()</code>: it gets its own scope, the parameter <code>nums</code> holds
+        the argument, and <code>return best</code> hands 9 back to the caller,
+        where <code>answer</code> catches it. That hand-off is the entire point of a function.
+      </li>
+      <li>
+        <strong>Buggy</strong> — the same function, but with the <code>return</code> line missing. It
+        computes the right answer, then falls off the end and hands back <code>None</code>.
+        Watch <code>answer</code> end up <code>None</code> — the work was done, but nothing came back. This is the
+        single most common function bug.
+      </li>
+      <li>
+        <strong>Clever</strong> — Python already ships <code>max()</code>. We call it and get 9, but it is
+        built into the language, not Python we can trace, so there is nothing to step into.
+      </li>
+    </ul>
+    <p class="fineprint">
+      Every value you see came from running each program under CPython's tracer —
+      see <a href="../../verification/">how GlassBox stays honest</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>

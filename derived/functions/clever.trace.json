@@ -1,0 +1,28 @@
+{
+  "id": "functions-clever",
+  "title": "Functions — Python already has one",
+  "problem": "Find the largest number in a list — using the function Python ships with.",
+  "register": "clever",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "source": "answer = max([3, 9, 4])\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "answer": 9
+      },
+      "stdout": "",
+      "note": "Python already ships with max(). We call it and get 9 — but max is built into the language (not Python we can trace), so there is nothing to step into. Knowing what already exists is its own skill."
+    }
+  ]
+}

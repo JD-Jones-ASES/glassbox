@@ -1,0 +1,28 @@
+id = "functions-procedural"
+title = "Functions — the same work, inline"
+register = "procedural"
+problem = "Find the largest number in a list — written straight, with no function."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The same algorithm with no function: everything stays in one scope. Nothing is "called".
+source = """
+nums = [3, 9, 4]
+best = nums[0]
+for n in nums:
+    if n > best:
+        best = n
+answer = best
+"""
+
+[[notes]]
+step = 0
+text = "No function here — just the numbers, in the main program's own scope."
+
+[[notes]]
+step = 1
+text = "best starts as the first number, 3."
+
+[[notes]]
+step = 10
+text = "answer is the largest, 9. It works — but this code only ever does this one list, right here. Nothing is named or reusable, and there is no call stack."

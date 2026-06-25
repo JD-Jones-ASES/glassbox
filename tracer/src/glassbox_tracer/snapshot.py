@@ -10,6 +10,11 @@ valid JSON. Tuples render as arrays (flagged, since the tuple-ness is lost). Dun
 from __future__ import annotations
 
 import math
+import re
+
+# CPython object reprs embed a heap address (`<function f at 0x...>`) that varies per run. Strip it so
+# traces stay deterministic (and don't churn in git). The name/kind is what's pedagogically useful.
+_ADDR = re.compile(r" at 0x[0-9A-Fa-f]+")
 
 
 def _is_dunder(name: str) -> bool:
@@ -43,9 +48,15 @@ def _coerce(value, path: str, flags: dict[str, str]):
                 flags[path] = "dict-key-coerced"
             out[key] = _coerce(v, f"{path}.{key}", flags)
         return out
-    # Anything else (set, object, function, …) -> tagged repr placeholder.
+    # Anything else (set, object, function, …) -> tagged, address-free repr placeholder.
     flags[path] = "repr-coerced"
-    return {"__repr__": repr(value), "__unserializable__": True}
+    return {"__repr__": _ADDR.sub("", repr(value)), "__unserializable__": True}
+
+
+def safe_value(value) -> tuple[object, dict]:
+    """JSON-safe a single value (e.g. a function's return value). Returns ``(value, value_flags)``."""
+    flags: dict = {}
+    return _coerce(value, "<value>", flags), flags
 
 
 def snapshot_locals(local_vars: dict) -> tuple[dict, dict]:

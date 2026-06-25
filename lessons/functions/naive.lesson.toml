@@ -1,0 +1,33 @@
+id = "functions-naive"
+title = "Functions — forgetting to return"
+register = "naive"
+problem = "Write a function that finds the largest number in a list, then use its answer."
+author = "GlassBox"
+created = "2026-06-25"
+
+# The classic beginner bug: compute the answer inside the function, but forget to hand it back.
+source = """
+def find_max(nums):
+    best = nums[0]
+    for n in nums:
+        if n > best:
+            best = n
+
+answer = find_max([3, 9, 4])
+"""
+
+[[notes]]
+step = 0
+text = "We define find_max — a recipe for the largest number. Defining it does not run it yet."
+
+[[notes]]
+step = 1
+text = "We call find_max([3, 9, 4]). A fresh scope opens and the parameter nums holds the list — watch the call stack above."
+
+[[notes]]
+step = 11
+text = "The loop is done and the function reaches its end. With no `return`, it hands back None — the best we computed is simply discarded."
+
+[[notes]]
+step = 12
+text = "Back in the main program, answer is None. The work happened inside, but nothing came back. Forgetting to return is the most common function bug."

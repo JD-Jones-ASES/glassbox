@@ -1,0 +1,42 @@
+id = "functions-idiomatic"
+title = "Functions — package it and return"
+register = "idiomatic"
+problem = "Find the largest number in a list, wrapped in a function you can call."
+author = "GlassBox"
+created = "2026-06-25"
+
+# A function: its own scope, called with an argument, handing an answer back with return.
+source = """
+def find_max(nums):
+    best = nums[0]
+    for n in nums:
+        if n > best:
+            best = n
+    return best
+
+answer = find_max([3, 9, 4])
+"""
+
+[[notes]]
+step = 0
+text = "find_max is defined: a reusable recipe, not yet run."
+
+[[notes]]
+step = 1
+text = "We call find_max([3, 9, 4]). A fresh scope opens with nums bound to the list — see the call stack grow."
+
+[[notes]]
+step = 2
+text = "Inside its own scope, best starts as the first number, 3."
+
+[[notes]]
+step = 11
+text = "After scanning every number, we hand best back with `return best`."
+
+[[notes]]
+step = 12
+text = "find_max returns 9 to whoever called it."
+
+[[notes]]
+step = 13
+text = "Back outside, answer catches the 9. That is what a function adds: its own scope, and a value handed back that you can use anywhere."

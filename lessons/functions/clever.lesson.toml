@@ -1,0 +1,15 @@
+id = "functions-clever"
+title = "Functions — Python already has one"
+register = "clever"
+problem = "Find the largest number in a list — using the function Python ships with."
+author = "GlassBox"
+created = "2026-06-25"
+
+# max() is built in. We can call it, but we can't step inside it — it isn't Python we can trace.
+source = """
+answer = max([3, 9, 4])
+"""
+
+[[notes]]
+step = 0
+text = "Python already ships with max(). We call it and get 9 — but max is built into the language (not Python we can trace), so there is nothing to step into. Knowing what already exists is its own skill."

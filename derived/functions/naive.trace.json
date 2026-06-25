@@ -1,0 +1,238 @@
+{
+  "id": "functions-naive",
+  "title": "Functions — forgetting to return",
+  "problem": "Write a function that finds the largest number in a list, then use its answer.",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-25"
+  },
+  "source": "def find_max(nums):\n    best = nums[0]\n    for n in nums:\n        if n > best:\n            best = n\n\nanswer = find_max([3, 9, 4])\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "find_max": {
+          "__repr__": "<function find_max>",
+          "__unserializable__": true
+        }
+      },
+      "stdout": "",
+      "value_flags": {
+        "find_max": "repr-coerced"
+      },
+      "note": "We define find_max — a recipe for the largest number. Defining it does not run it yet."
+    },
+    {
+      "step": 1,
+      "line": 1,
+      "event": "call",
+      "frame": "find_max",
+      "depth": 1,
+      "state": {
+        "nums": [
+          3,
+          9,
+          4
+        ]
+      },
+      "stdout": "",
+      "note": "We call find_max([3, 9, 4]). A fresh scope opens and the parameter nums holds the list — watch the call stack above."
+    },
+    {
+      "step": 2,
+      "line": 2,
+      "event": "line",
+      "frame": "find_max",
+      "depth": 1,
+      "state": {
+        "nums": [
+          3,
+          9,
+          4
+        ],
+        "best": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 3,
+      "event": "line",
+      "frame": "find_max",
+      "depth": 1,
+      "state": {
+        "nums": [
+          3,
+          9,
+          4
+        ],
+        "best": 3,
+        "n": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 4,
+      "line": 4,
+      "event": "line",
+      "frame": "find_max",
+      "depth": 1,
+      "state": {
+        "nums": [
+          3,
+          9,
+          4
+        ],
+        "best": 3,
+        "n": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 3,
+      "event": "line",
+      "frame": "find_max",
+      "depth": 1,
+      "state": {
+        "nums": [
+          3,
+          9,
+          4
+        ],
+        "best": 3,
+        "n": 9
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 4,
+      "event": "line",
+      "frame": "find_max",
+      "depth": 1,
+      "state": {
+        "nums": [
+          3,
+          9,
+          4
+        ],
+        "best": 3,
+        "n": 9
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 5,
+      "event": "line",
+      "frame": "find_max",
+      "depth": 1,
+      "state": {
+        "nums": [
+          3,
+          9,
+          4
+        ],
+        "best": 9,
+        "n": 9
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 3,
+      "event": "line",
+      "frame": "find_max",
+      "depth": 1,
+      "state": {
+        "nums": [
+          3,
+          9,
+          4
+        ],
+        "best": 9,
+        "n": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 9,
+      "line": 4,
+      "event": "line",
+      "frame": "find_max",
+      "depth": 1,
+      "state": {
+        "nums": [
+          3,
+          9,
+          4
+        ],
+        "best": 9,
+        "n": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 10,
+      "line": 3,
+      "event": "line",
+      "frame": "find_max",
+      "depth": 1,
+      "state": {
+        "nums": [
+          3,
+          9,
+          4
+        ],
+        "best": 9,
+        "n": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 11,
+      "line": 3,
+      "event": "return",
+      "frame": "find_max",
+      "depth": 1,
+      "state": {
+        "nums": [
+          3,
+          9,
+          4
+        ],
+        "best": 9,
+        "n": 4
+      },
+      "stdout": "",
+      "return_value": null,
+      "note": "The loop is done and the function reaches its end. With no `return`, it hands back None — the best we computed is simply discarded."
+    },
+    {
+      "step": 12,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "find_max": {
+          "__repr__": "<function find_max>",
+          "__unserializable__": true
+        },
+        "answer": null
+      },
+      "stdout": "",
+      "value_flags": {
+        "find_max": "repr-coerced"
+      },
+      "note": "Back in the main program, answer is None. The work happened inside, but nothing came back. Forgetting to return is the most common function bug."
+    }
+  ]
+}

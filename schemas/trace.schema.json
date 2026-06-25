@@ -50,9 +50,12 @@
           "step": { "type": "integer", "minimum": 0 },
           "line": { "type": "integer", "minimum": 1 },
           "event": { "enum": ["line", "call", "return", "print", "exception"] },
+          "frame": { "type": "string", "description": "Name of the function whose locals `state` shows. Present only inside a function (depth > 0) or on a call/return event; absent at module level." },
+          "depth": { "type": "integer", "minimum": 0, "description": "Call depth: 0 = module level, 1 = inside a called function, etc." },
+          "return_value": { "description": "The value handed back to the caller. Present on `return` events; any JSON value, or a tagged {__repr__} placeholder." },
           "state": {
             "type": "object",
-            "description": "Full snapshot of in-scope variables. Values are JSON primitives/arrays/objects, or a tagged {__repr__, __unserializable__} placeholder for non-JSON-native values."
+            "description": "Full snapshot of the current frame's in-scope variables. Values are JSON primitives/arrays/objects, or a tagged {__repr__, __unserializable__} placeholder for non-JSON-native values."
           },
           "stdout": { "type": "string" },
           "note": { "type": "string", "description": "Author-asserted meaning for this step (a claim, not an execution fact)." },

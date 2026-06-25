@@ -22,6 +22,18 @@
   const isFinal = $derived(safeStep === stepCount - 1);
   // Source lines that correspond to at least one step are clickable (blank/comment lines are not).
   const linesWithSteps = $derived(new Set(steps.map((s) => s.line)));
+  const hasAbstraction = $derived(!!(current && current.abstraction));
+  // Reconstruct the call stack at the current step (so it's correct after a jump/scrub). The current
+  // step's own call still counts (we're in the new frame); a return only pops once we've stepped past it.
+  const callStack = $derived.by(() => {
+    const stack = ["module"];
+    for (let i = 0; i <= safeStep && i < steps.length; i++) {
+      const s = steps[i];
+      if (s.event === "call") stack.push(s.frame);
+      else if (s.event === "return" && i < safeStep && stack.length > 1) stack.pop();
+    }
+    return stack;
+  });
 
   function selectRegister(i) {
     regIdx = i;
@@ -80,6 +92,12 @@
 
     <p class="problem">{current.problem}</p>
 
+    {#if callStack.length > 1}
+      <div class="callstack" aria-label="Call stack">
+        {#each callStack as fr, i}<span class="frame-chip" class:top={i === callStack.length - 1}>{fr === "module" ? "module" : fr + "()"}</span>{#if i < callStack.length - 1}<span class="sep">›</span>{/if}{/each}
+      </div>
+    {/if}
+
     <div class="grid">
       <!-- code pane -->
       <div class="pane code-pane">
@@ -98,12 +116,22 @@
       <!-- state / abstraction pane -->
       <div class="pane state-pane">
         <div class="pane-head">
-          <div class="toggle" role="tablist" aria-label="State view">
-            <button role="tab" aria-selected={view === "abstraction"} class:active={view === "abstraction"} onclick={() => (view = "abstraction")}>Abstraction</button>
-            <button role="tab" aria-selected={view === "generic"} class:active={view === "generic"} onclick={() => (view = "generic")}>Variables</button>
-          </div>
-          <span class="same-thing">same data, two zoom levels</span>
+          {#if hasAbstraction}
+            <div class="toggle" role="tablist" aria-label="State view">
+              <button role="tab" aria-selected={view === "abstraction"} class:active={view === "abstraction"} onclick={() => (view = "abstraction")}>Abstraction</button>
+              <button role="tab" aria-selected={view === "generic"} class:active={view === "generic"} onclick={() => (view = "generic")}>Variables</button>
+            </div>
+            <span class="same-thing">same data, two zoom levels</span>
+          {:else}
+            <span class="state-label">{cur && cur.frame ? cur.frame + "() locals" : "variables"}</span>
+          {/if}
         </div>
+
+        {#if cur && cur.event === "call"}
+          <div class="frame-event call">→ entering <code>{cur.frame}()</code></div>
+        {:else if cur && cur.event === "return"}
+          <div class="frame-event return">← <code>{cur.frame}()</code> returns <span class="retval">{fmtValue(cur.return_value)}</span></div>
+        {/if}
 
         {#if view === "abstraction" && model && model.kind === "cups"}
           <div class="cups">
@@ -254,6 +282,18 @@
   }
   .toggle button.active { background: var(--live); color: #fff; }
   .same-thing { font-size: 0.72rem; color: var(--ink-faint); font-style: italic; }
+  .state-label { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-faint); }
+
+  .callstack { display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap; margin: -0.2rem 0 0.9rem; font-family: var(--font-mono); font-size: 0.78rem; }
+  .frame-chip { padding: 0.1rem 0.5rem; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--border); color: var(--ink-soft); }
+  .frame-chip.top { background: var(--live-wash); border-color: var(--live); color: var(--live-ink); font-weight: 600; }
+  .callstack .sep { color: var(--ink-faint); }
+
+  .frame-event { margin: 0.55rem 0.7rem 0; padding: 0.4rem 0.6rem; border-radius: var(--radius-sm); font-size: 0.88rem; font-family: var(--font-mono); }
+  .frame-event code { font-size: 0.86rem; }
+  .frame-event.call { background: var(--live-wash); color: var(--live-ink); }
+  .frame-event.return { background: var(--surface-2); color: var(--ink); border: 1px solid var(--live); }
+  .frame-event.return .retval { color: var(--live-ink); font-weight: 700; }
 
   .cups { display: flex; gap: 1rem; justify-content: center; align-items: flex-end; padding: 1.4rem 0.6rem; flex-wrap: wrap; }
   .cup { margin: 0; text-align: center; width: 84px; }
