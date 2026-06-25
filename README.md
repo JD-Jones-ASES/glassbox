@@ -41,8 +41,11 @@ for the decision log.
 
 ## Status
 
-**Early.** Two anchors are live — `swap` and `partition` — proving the instrument (loops, lists, multiple
-registers, two abstractions, a buggy register that fails in front of you). The rest of the curriculum follows.
+**The spine is built.** The tracer handles straight-line code, loops, lists, and multi-frame functions
+(calls, returns, recursion). Six lessons span three pillars — Programs & State (`swap`, `partition`,
+`functions`), Data (`binary`), and Systems & Networks (`routing`) — each with its own abstraction and a
+buggy register that fails in front of you. The rest of the curriculum is more of the same: more traces. See
+[`AGENTS.md`](./AGENTS.md) for the architecture, the "how to add a lesson" recipe, and the roadmap.
 
 ## License
 

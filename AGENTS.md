@@ -94,12 +94,50 @@ src/               Astro app: pages/, components/, islands/ (Svelte), lib/ (vani
 ## Deploy
 
 Push to `main` → GitHub Actions runs `astro build` → GitHub Pages. Project base path is `/glassbox` (see
-`astro.config.mjs`). Pages is **disabled until Phase 0 is reviewed**; enable it in repo Settings → Pages
-(Source: GitHub Actions) when ready.
+`astro.config.mjs`). The repo is private and Pages is **not yet enabled**; turn it on in repo Settings →
+Pages (Source: GitHub Actions) when the owner is ready to go public.
 
-## Status
+## Extending GlassBox (how to add the next lesson)
 
-**Two anchors shipped** — `swap` (cups abstraction; three registers) and `partition` (piles abstraction;
-loops + the list-aliasing bug), browsable from `/lessons/`. The instrument is proven end to end. More
-anchors and the data / systems-&-networks topics come next — network processes will be **traced Python
-sims** (ADR-0006), not hand-authored. See `DECISIONS.md` for the full decision log.
+Adding a lesson is the common task; it touches data, never the engine:
+
+1. **Author** `lessons/<topic>/<register>.lesson.toml` — `id`, `title`, `register`
+   (`naive|procedural|idiomatic|clever`), `problem`, `author`, `created`, a `source` (TOML multi-line
+   string of real Python), an optional `[abstraction]` (`type` + a `bind` mapping variables to that
+   abstraction's slots), and `[[notes]]` keyed by step index.
+2. **Generate, reading the steps off the trace.** Run the tracer over your source first to read the real
+   step indices before writing notes — the trace is the ground truth, never guess indices. `npm run trace`
+   writes `derived/<topic>/<register>.trace.json`; `npm run prepare:traces` then runs the schema + scan gates.
+3. **Page + catalog.** Add `src/pages/lessons/<topic>.astro` (import the trace JSON, mount
+   `<TracePlayer registers={[...]} client:visible />`, write a short worked explanation) and a line in the
+   `pillars` list in `src/pages/lessons/index.astro`. (Watch Astro's whitespace: keep an inline `<code>`/
+   `<a>` on the same line as the word before it, or the space is dropped.)
+4. **New abstraction?** Only if the generic state view / call-stack chrome isn't enough. Add
+   `src/lib/abstractions/<type>.js` (a pure `(abstraction, state) → viewModel`), register it in
+   `src/lib/abstractions/index.js`, and add one `{:else if … model.kind === "<type>"}` branch + scoped
+   styles in `src/islands/TracePlayer.svelte`. Existing renderers: `cups`, `piles`, `binary`, `network`
+   (functions use the built-in call-stack chrome — no renderer).
+
+The engine (`tracer/`) should rarely change. If it must, keep `swap`/`partition` traces byte-identical and
+add a golden test in `tracer/tests/`; `uv --project tracer run pytest` must stay green.
+
+## Status & roadmap
+
+**The spine is built.** The tracer handles straight-line code, loops, lists, and **multi-frame functions**
+(call/return, depth, return values, recursion, defaults; ADR-0008). Six lessons across three pillars,
+browsable from `/lessons/`:
+
+- **Programs & State** — `swap` (cups), `partition` (piles; loops + aliasing bug), `functions` (call stack;
+  four registers incl. the forgot-`return` bug).
+- **Data** — `binary` (place-value columns).
+- **Systems & Networks** — `routing` (node-link graph; a traced packet sim, ADR-0006).
+
+**Next, in rough priority** (all are "more traces", not new engine work):
+- *Granular, now unblocked by the spine — pedagogical, not mechanical:* data types & truthiness (`a == b` is
+  a Bool even when unbound), modular arithmetic, the `if / if-else / if-elif / if-elif-else` ladder, and
+  function variants (params or not, return or not, default args, when to use `None`).
+- *More anchors:* accumulate / running total, linear search, conditional counting, build/filter a list.
+- *Data:* binary→decimal, run-length encoding (the compression bridge), overflow vs. roundoff.
+- *Networks:* fault tolerance (kill a node mid-trace, watch the packet reroute — reuse `network.js`),
+  multi-packet + reassembly, DNS resolution, sequential-vs-parallel speedup (a Gantt abstraction).
+- *Deferred features:* the quiz primitive (the `checkpoint` schema flag exists; no UI yet); Pages go-live.

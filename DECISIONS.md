@@ -104,3 +104,23 @@ clickable. Keyboard stepping and the scrubber are unchanged.
 
 **Consequences.** Generic across all lessons (it reads `trace[].line`); no per-lesson authoring. The loop
 behavior is forward-looking — the swap anchors are straight-line, so each line maps to one step today.
+
+## ADR-0008 — Multi-frame tracing: per-frame "state after line" + call/return (2026-06-25)
+
+**Context.** Functions are the spine of everything above the basics, and they were the hardest mechanical
+problem: a call pushes a new frame with its own locals, and the existing tracer only modelled one frame.
+Getting this right makes functions, conditionals, and the granular function-variant lessons pure layering.
+
+**Decision.** The tracer follows every frame whose code is the lesson's own (filename-scoped), tracking a
+call stack. It emits `call` and `return` steps (with the bound arguments and the returned value) plus a
+`depth`, and carries `frame`/`depth`/`return_value` in the schema. The "state after the line" rule is made
+**per frame**: a line's displayed state is the next snapshot of *its own* frame, so a line is emitted only
+when that snapshot arrives — which means a caller line that invokes a function is shown *after* the call has
+expanded and returned (`def → call → compute → return → the caller's assignment lands`). The `<module>`
+frame's own call/return are suppressed (interpreter bookkeeping), so single-frame lessons (swap, partition)
+produce byte-identical traces. Object reprs are stripped of heap addresses (`<function f at 0x..>` →
+`<function f>`) to stay deterministic. Recursion, default arguments, and fall-off-the-end `None` all work.
+
+**Consequences.** The player renders a call-stack breadcrumb and call/return callouts. The call stack *is*
+the abstraction for function lessons (no bespoke renderer needed). A richer "all frames' locals at once"
+view is possible later but deliberately deferred.
