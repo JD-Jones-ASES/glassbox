@@ -24,19 +24,14 @@ const registers = [procedural, idiomatic];
   <section class="explain card">
     <h2>What you are looking at</h2>
     <p>
-      An 8-bit register holds whole numbers from <code>0</code> to <code>255</code> — that is all
-      <code>8 bits</code> can encode. We start at <code>254</code> and tick upward.
+      An 8-bit register holds whole numbers from <code>0</code> to <code>255</code> — that is all <code>8 bits</code> can encode. We start at <code>254</code> and tick upward.
     </p>
     <ul>
       <li>
-        <strong>Procedural</strong> — a simulated 8-bit register (<code>(count + 1) % 256</code>). At
-        <code>255</code> every bit is already a 1; one more tick wraps it to <code>0</code>. That wrap is
-        overflow — the odometer rolling <code>999 → 000</code>.
+        <strong>Procedural</strong> — a simulated 8-bit register (<code>(count + 1) % 256</code>). At <code>255</code> every bit is already a 1; one more tick wraps it to <code>0</code>. That wrap is overflow — the odometer rolling <code>999 → 000</code>.
       </li>
       <li>
-        <strong>Idiomatic</strong> — plain Python. Its integers have no fixed width, so <code>255</code>
-        becomes <code>256</code>, <code>257</code>, on and on. No wrap, because there is no register to
-        overrun. Useful, but it can lull you into forgetting that real hardware <em>does</em> overflow.
+        <strong>Idiomatic</strong> — plain Python. Its integers have no fixed width, so <code>255</code> becomes <code>256</code>, <code>257</code>, on and on. No wrap, because there is no register to overrun. Useful, but it can lull you into forgetting that real hardware <em>does</em> overflow.
       </li>
     </ul>
     <p class="fineprint">

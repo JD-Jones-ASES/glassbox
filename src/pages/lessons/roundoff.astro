@@ -14,10 +14,7 @@ const registers = [buggy, procedural];
 >
   <h1>Roundoff</h1>
   <p class="lede">
-    Decimals like <code>0.1</code> have no exact representation in binary, the same way <code>1/3</code> has
-    no exact decimal. So <code>0.1 + 0.2</code> lands a hair off <code>0.3</code>, and asking
-    <code>== 0.3</code> returns <code>False</code>. This is roundoff — a representation error — and it is a
-    different beast from <a href="../overflow/">overflow</a>, which is a fixed-width wrap.
+    Decimals like <code>0.1</code> have no exact representation in binary, the same way <code>1/3</code> has no exact decimal. So <code>0.1 + 0.2</code> lands a hair off <code>0.3</code>, and asking <code>== 0.3</code> returns <code>False</code>. This is roundoff — a representation error — and it is a different beast from <a href="../overflow/">overflow</a>, which is a fixed-width wrap.
   </p>
 
   <TracePlayer registers={registers} client:visible />
@@ -30,9 +27,7 @@ const registers = [buggy, procedural];
     </p>
     <ul>
       <li>
-        <strong>Buggy</strong> — asks <code>total == 0.3</code>. The tiny tail means total is not exactly
-        <code>0.3</code>, so the answer is <code>False</code> and the program decides they are "off by a
-        hair". Comparing floats with <code>==</code> is the classic mistake.
+        <strong>Buggy</strong> — asks <code>total == 0.3</code>. The tiny tail means total is not exactly <code>0.3</code>, so the answer is <code>False</code> and the program decides they are "off by a hair". Comparing floats with <code>==</code> is the classic mistake.
       </li>
       <li>
         <strong>Procedural</strong> — asks whether <code>total</code> is <em>close</em> to <code>0.3</code>

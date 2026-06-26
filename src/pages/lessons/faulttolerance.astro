@@ -30,20 +30,14 @@ const registers = [buggy, procedural];
     </p>
     <ul>
       <li>
-        <strong>Buggy</strong> — a straight line <code>A–B–D</code>. <code>A</code>'s only link is to
-        <code>B</code>, so when <code>B</code> dies the packet is stranded at <code>A</code> and never
-        reaches <code>D</code>. <code>B</code> is a single point of failure.
+        <strong>Buggy</strong> — a straight line <code>A–B–D</code>. <code>A</code>'s only link is to <code>B</code>, so when <code>B</code> dies the packet is stranded at <code>A</code> and never reaches <code>D</code>. <code>B</code> is a single point of failure.
       </li>
       <li>
-        <strong>Procedural</strong> — a redundant network where <code>A</code> also connects to
-        <code>C</code>. The router skips the dead <code>B</code> and reroutes <code>A → C → D</code>. Same
-        failure, but the extra path saves the delivery — that redundancy is exactly what "fault tolerant"
-        means.
+        <strong>Procedural</strong> — a redundant network where <code>A</code> also connects to <code>C</code>. The router skips the dead <code>B</code> and reroutes <code>A → C → D</code>. Same failure, but the extra path saves the delivery — that redundancy is exactly what "fault tolerant" means.
       </li>
     </ul>
     <p class="fineprint">
-      The packet's path is real execution output; the little network is a hand-built model (marked
-      <em>model: author-asserted</em>) — see <a href="../../verification/">how GlassBox stays honest</a>.
+      The packet's path is real execution output; the little network is a hand-built model (marked <em>model: author-asserted</em>) — see <a href="../../verification/">how GlassBox stays honest</a>.
     </p>
   </section>
 </Base>

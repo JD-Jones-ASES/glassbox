@@ -30,9 +30,7 @@ const registers = [buggy, procedural];
     <ul>
       <li>
         <strong>Buggy</strong> — deletes each small number from <code>nums</code> while looping over it.
-        Removing <code>4</code> shifts <code>3</code> into a slot the loop has already passed, so
-        <code>3</code> is skipped and survives. <code>nums</code> ends as <code>[3, 22, 18, 15]</code> —
-        a small number leaked through, and the original list is destroyed.
+        Removing <code>4</code> shifts <code>3</code> into a slot the loop has already passed, so <code>3</code> is skipped and survives. <code>nums</code> ends as <code>[3, 22, 18, 15]</code> — a small number leaked through, and the original list is destroyed.
       </li>
       <li>
         <strong>Procedural</strong> — copies the passing numbers into a fresh list <code>big</code> and

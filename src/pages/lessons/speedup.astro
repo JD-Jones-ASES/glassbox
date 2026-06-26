@@ -14,11 +14,9 @@ const registers = [procedural, buggy];
 >
   <h1>Parallel speedup</h1>
   <p class="lede">
-    Throwing more workers at a job only helps if the work can actually be split.
-    <strong>Speedup</strong> measures it: <code>sequential time / parallel time</code>. Independent tasks
-    divide cleanly and you get real speedup; a chain where each step waits for the last cannot be
-    parallelized at all, no matter how many workers you add. Switch on the Gantt chart and watch the
-    difference — and try <strong>Predict</strong> mode to call the parallel time before it's revealed.
+    Throwing more workers at a job only helps if the work can actually be split. <strong>Speedup</strong> measures it: <code>sequential time / parallel time</code>. Independent tasks divide cleanly and you get
+    real speedup; a chain where each step waits for the last cannot be parallelized at all, no matter how
+    many workers you add. Switch on the Gantt chart and watch the difference — and try <strong>Predict</strong> mode to call the parallel time before it's revealed.
   </p>
 
   <TracePlayer registers={registers} client:visible />
