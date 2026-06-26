@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import procedural from "../../../derived/overflow/procedural.trace.json";
 import idiomatic from "../../../derived/overflow/idiomatic.trace.json";
 
@@ -17,7 +18,7 @@ const registers = [procedural, idiomatic];
 
   <h1>Overflow</h1>
   <p class="lede">
-    A real computer stores a number in a fixed number of bits. Count past the largest value those bits can
+    A real computer stores a number in a fixed number of <Term s="bit">bits</Term>. Count past the largest <Term s="value">value</Term> those bits can
     hold and there is nowhere for the carry to go — so it wraps around to zero. Python hides this from you,
     which is exactly why it catches people out. (This is <em>not</em> the same as <a href="../roundoff/">roundoff</a> — keep the two straight.)
   </p>
@@ -31,10 +32,10 @@ const registers = [procedural, idiomatic];
     </p>
     <ul>
       <li>
-        <strong>Procedural</strong> — a simulated 8-bit register (<code>(count + 1) % 256</code>). At <code>255</code> every bit is already a 1; one more tick wraps it to <code>0</code>. That wrap is overflow — the odometer rolling <code>999 → 000</code>.
+        <strong>Procedural</strong> — a simulated 8-bit register (<code>(count + 1) % 256</code>). At <code>255</code> every bit is already a 1; one more tick wraps it to <code>0</code>. That wrap is <Term s="overflow">overflow</Term> — the odometer rolling <code>999 → 000</code>.
       </li>
       <li>
-        <strong>Idiomatic</strong> — plain Python. Its integers have no fixed width, so <code>255</code> becomes <code>256</code>, <code>257</code>, on and on. No wrap, because there is no register to overrun. Useful, but it can lull you into forgetting that real hardware <em>does</em> overflow.
+        <strong>Idiomatic</strong> — plain Python. Its <Term s="integer">integers</Term> have no fixed width, so <code>255</code> becomes <code>256</code>, <code>257</code>, on and on. No wrap, because there is no register to overrun. Useful, but it can lull you into forgetting that real hardware <em>does</em> overflow.
       </li>
     </ul>
     <p class="fineprint">

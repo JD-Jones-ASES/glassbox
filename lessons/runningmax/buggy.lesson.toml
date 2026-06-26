@@ -1,0 +1,34 @@
+id = "runningmax-buggy"
+title = "Running maximum — seeded at zero"
+register = "naive"
+problem = "Track the largest number seen so far as you walk the list."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+nums = [-5, -2, -8, -1]
+max_so_far = 0
+for n in nums:
+    if n > max_so_far:
+        max_so_far = n
+"""
+
+[abstraction]
+type = "piles"
+
+[abstraction.bind]
+nums = "source"
+n = "cursor"
+
+
+[[checkpoints]]
+step = 3
+ask = "n is -5 and max_so_far is 0. Is -5 greater than 0? After the if runs, what will max_so_far be?"
+
+[[notes]]
+step = 1
+text = "max_so_far is seeded at 0 — which secretly assumes the answer can't be negative."
+
+[[notes]]
+step = 10
+text = "Every number was negative, so none beat 0: max_so_far ends at 0, but the real maximum is -1. Seed the accumulator with the first element, not 0."

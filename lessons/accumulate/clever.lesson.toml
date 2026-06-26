@@ -1,0 +1,19 @@
+id = "accumulate-clever"
+title = "Adding up a list — the built-in"
+register = "clever"
+problem = "Add up all the numbers in the list and report the total."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+nums = [3, 8, 5, 2]
+total = sum(nums)
+"""
+
+[[checkpoints]]
+step = 0
+ask = "`sum(nums)` does the whole accumulation in one built-in call. After it runs, what will total be?"
+
+[[notes]]
+step = 1
+text = "sum(nums) = 18 in a single built-in call. There's nothing to step through inside it — it's C code — so the Compact register trades the watchable loop for one line. Same answer the accumulator reaches."

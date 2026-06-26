@@ -1,0 +1,235 @@
+{
+  "id": "runningmax-procedural",
+  "title": "Running maximum — seeded at the first value",
+  "problem": "Track the largest number seen so far as you walk the list.",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "abstraction": {
+    "type": "piles",
+    "bind": {
+      "nums": "source",
+      "n": "cursor"
+    }
+  },
+  "source": "nums = [-5, -2, -8, -1]\nmax_so_far = nums[0]\nfor n in nums:\n    if n > max_so_far:\n        max_so_far = n\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "nums": [
+          -5,
+          -2,
+          -8,
+          -1
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "nums": [
+          -5,
+          -2,
+          -8,
+          -1
+        ],
+        "max_so_far": -5
+      },
+      "stdout": "",
+      "note": "Seeded at the first element (-5), so a real value is always the baseline — even when everything is negative."
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          -5,
+          -2,
+          -8,
+          -1
+        ],
+        "max_so_far": -5,
+        "n": -5
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          -5,
+          -2,
+          -8,
+          -1
+        ],
+        "max_so_far": -5,
+        "n": -5
+      },
+      "stdout": ""
+    },
+    {
+      "step": 4,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          -5,
+          -2,
+          -8,
+          -1
+        ],
+        "max_so_far": -5,
+        "n": -2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          -5,
+          -2,
+          -8,
+          -1
+        ],
+        "max_so_far": -5,
+        "n": -2
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "n is -2 and max_so_far is -5. After the if checks n > max_so_far, what will max_so_far be?"
+    },
+    {
+      "step": 6,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "nums": [
+          -5,
+          -2,
+          -8,
+          -1
+        ],
+        "max_so_far": -2,
+        "n": -2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          -5,
+          -2,
+          -8,
+          -1
+        ],
+        "max_so_far": -2,
+        "n": -8
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          -5,
+          -2,
+          -8,
+          -1
+        ],
+        "max_so_far": -2,
+        "n": -8
+      },
+      "stdout": ""
+    },
+    {
+      "step": 9,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          -5,
+          -2,
+          -8,
+          -1
+        ],
+        "max_so_far": -2,
+        "n": -1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 10,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "nums": [
+          -5,
+          -2,
+          -8,
+          -1
+        ],
+        "max_so_far": -2,
+        "n": -1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 11,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "nums": [
+          -5,
+          -2,
+          -8,
+          -1
+        ],
+        "max_so_far": -1,
+        "n": -1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 12,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "nums": [
+          -5,
+          -2,
+          -8,
+          -1
+        ],
+        "max_so_far": -1,
+        "n": -1
+      },
+      "stdout": "",
+      "note": "max_so_far ends at -1, the true largest. Seeding from the data, not a guess, is what makes it robust."
+    }
+  ]
+}

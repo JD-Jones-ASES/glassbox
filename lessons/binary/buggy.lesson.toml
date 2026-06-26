@@ -1,0 +1,51 @@
+id = "binary-buggy"
+title = "Decimal to binary — columns the wrong way round"
+register = "naive"
+problem = "Write the number 13 in binary by filling the powers-of-two columns: 8, 4, 2, 1."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+n = 13
+places = [1, 2, 4, 8]
+bits = []
+for p in places:
+    if n >= p:
+        bits.append(1)
+        n = n - p
+    else:
+        bits.append(0)
+"""
+
+[abstraction]
+type = "binary"
+
+[abstraction.bind]
+n = "remainder"
+p = "current"
+bits = "output"
+places = "columns"
+
+[[checkpoints]]
+step = 16
+ask = "Only the biggest column (8) is left, and 6 is still unplaced. After `if n >= p` decides, does the 8s column get a 1 or a 0?"
+
+[[notes]]
+step = 1
+text = "The columns are built small-to-big: [1, 2, 4, 8]. Place value works big-to-small — this is already the wrong way round."
+
+[[notes]]
+step = 5
+text = "Greedy from the smallest: 13 >= 1, so a 1 goes in the 1s column and we subtract. We're spending the value on the small columns first."
+
+[[notes]]
+step = 16
+text = "Now the only column left is 8 — but just 6 remains, and the 13 we started with clearly needs an 8 (13 = 8 + 4 + 1)."
+
+[[notes]]
+step = 17
+text = "8 doesn't fit in 6, so the 8s column gets a 0. The biggest column is left empty."
+
+[[notes]]
+step = 18
+text = "Done — but bits = [1,1,1,0] on columns [1,2,4,8] is 1 + 2 + 4 = 7, and 6 was never placed (the remainder never reached 0). Walking small-to-big greedily breaks; the fix walks big-to-small (see Procedural)."

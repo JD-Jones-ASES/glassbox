@@ -1,0 +1,15 @@
+---
+// Inline glossary term: <Term s="dns">DNS</Term>.
+// Renders a link to the glossary entry; the site-wide popup script (in Base.astro) reads data-term to
+// show the short definition on hover/focus/tap. Manual tagging (not auto-scan) so code blocks and the
+// player never get false popups. Build-time guard: an unknown slug is a loud warning.
+import { withBase } from "../lib/withBase.js";
+import { termBySlug } from "../lib/glossary.js";
+
+const { s } = Astro.props;
+const term = termBySlug(s);
+if (!term) {
+  console.warn(`[Term] unknown glossary slug "${s}" — add it to src/lib/glossary.js or fix the tag.`);
+}
+---
+<a class="term" data-term={s} href={withBase(`/glossary/#term-${s}`)}><slot /></a>

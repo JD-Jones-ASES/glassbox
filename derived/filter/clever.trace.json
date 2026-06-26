@@ -1,0 +1,114 @@
+{
+  "id": "filter-clever",
+  "title": "Filtering a list — a comprehension",
+  "problem": "Keep only the numbers greater than 10, and leave the original list untouched.",
+  "register": "clever",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "nums = [4, 3, 22, 18, 7, 15]\nbig = [n for n in nums if n > 10]\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          3,
+          22,
+          18,
+          7,
+          15
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "n": 4
+      },
+      "stdout": "",
+      "note": "A comprehension is one expression, but Python runs it as a loop — watch n take each value in nums."
+    },
+    {
+      "step": 2,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "n": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "n": 22
+      },
+      "stdout": ""
+    },
+    {
+      "step": 4,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "n": 18
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "n": 7
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "n": 15
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "The comprehension has now seen every number. After the last pass, what will big be?"
+    },
+    {
+      "step": 7,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "nums": [
+          4,
+          3,
+          22,
+          18,
+          7,
+          15
+        ],
+        "big": [
+          22,
+          18,
+          15
+        ]
+      },
+      "stdout": "",
+      "note": "big = [22, 18, 15] — the same result as building a new list, in one line. (While the loop runs only n is visible; big is assembled internally and appears complete at the end.)"
+    }
+  ]
+}

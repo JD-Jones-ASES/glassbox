@@ -35,3 +35,10 @@ text = "i = 2: nums[2] is 15, a match. We record the POSITION: found = i = 2."
 [[notes]]
 step = 14
 text = "The loop finished. found = 2 — the target 15 lives at index 2. (We kept scanning after the match; harmless here, though it would record the LAST match if there were duplicates.)"
+
+[abstraction]
+type = "piles"
+
+[abstraction.bind]
+nums = "source"
+i = "cursor_index"

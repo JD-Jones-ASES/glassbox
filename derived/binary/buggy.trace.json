@@ -1,0 +1,393 @@
+{
+  "id": "binary-buggy",
+  "title": "Decimal to binary — columns the wrong way round",
+  "problem": "Write the number 13 in binary by filling the powers-of-two columns: 8, 4, 2, 1.",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "abstraction": {
+    "type": "binary",
+    "bind": {
+      "n": "remainder",
+      "p": "current",
+      "bits": "output",
+      "places": "columns"
+    }
+  },
+  "source": "n = 13\nplaces = [1, 2, 4, 8]\nbits = []\nfor p in places:\n    if n >= p:\n        bits.append(1)\n        n = n - p\n    else:\n        bits.append(0)\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "n": 13
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "n": 13,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ]
+      },
+      "stdout": "",
+      "note": "The columns are built small-to-big: [1, 2, 4, 8]. Place value works big-to-small — this is already the wrong way round."
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "n": 13,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": []
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "n": 13,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 4,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "n": 13,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "n": 13,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [
+          1
+        ],
+        "p": 1
+      },
+      "stdout": "",
+      "note": "Greedy from the smallest: 13 >= 1, so a 1 goes in the 1s column and we subtract. We're spending the value on the small columns first."
+    },
+    {
+      "step": 6,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "n": 12,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [
+          1
+        ],
+        "p": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "n": 12,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [
+          1
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "n": 12,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [
+          1
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 9,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "n": 12,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [
+          1,
+          1
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 10,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "n": 10,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [
+          1,
+          1
+        ],
+        "p": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 11,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "n": 10,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [
+          1,
+          1
+        ],
+        "p": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 12,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "n": 10,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [
+          1,
+          1
+        ],
+        "p": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 13,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "n": 10,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [
+          1,
+          1,
+          1
+        ],
+        "p": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 14,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "n": 6,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [
+          1,
+          1,
+          1
+        ],
+        "p": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 15,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "n": 6,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [
+          1,
+          1,
+          1
+        ],
+        "p": 8
+      },
+      "stdout": ""
+    },
+    {
+      "step": 16,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "n": 6,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [
+          1,
+          1,
+          1
+        ],
+        "p": 8
+      },
+      "stdout": "",
+      "note": "Now the only column left is 8 — but just 6 remains, and the 13 we started with clearly needs an 8 (13 = 8 + 4 + 1).",
+      "checkpoint": true,
+      "checkpoint_prompt": "Only the biggest column (8) is left, and 6 is still unplaced. After `if n >= p` decides, does the 8s column get a 1 or a 0?"
+    },
+    {
+      "step": 17,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "n": 6,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "p": 8
+      },
+      "stdout": "",
+      "note": "8 doesn't fit in 6, so the 8s column gets a 0. The biggest column is left empty."
+    },
+    {
+      "step": 18,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "n": 6,
+        "places": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "bits": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "p": 8
+      },
+      "stdout": "",
+      "note": "Done — but bits = [1,1,1,0] on columns [1,2,4,8] is 1 + 2 + 4 = 7, and 6 was never placed (the remainder never reached 0). Walking small-to-big greedily breaks; the fix walks big-to-small (see Procedural)."
+    }
+  ]
+}

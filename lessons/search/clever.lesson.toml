@@ -1,0 +1,20 @@
+id = "search-clever"
+title = "Linear search — the built-in"
+register = "clever"
+problem = "Find WHERE a target value sits in the list, and report its index (or -1 if it is not there)."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+nums = [4, 8, 15, 16, 23]
+target = 15
+found = nums.index(target)
+"""
+
+[[checkpoints]]
+step = 1
+ask = "`nums.index(target)` scans the list for you. After it runs, what will found be — the value, or the position?"
+
+[[notes]]
+step = 2
+text = "nums.index(15) returns 2 — the position — in one call. (It raises an error if the target is absent, so guard with `if target in nums` when that's possible.)"

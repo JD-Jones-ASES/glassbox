@@ -35,3 +35,10 @@ text = "But the for-loop kept its own counter and moved to slot 1 — which is n
 [[notes]]
 step = 11
 text = "Done — and nums is [3, 22, 18, 15]. The 3 leaked through: removing 4 shifted it into a slot the loop had already passed. Never delete from a list while looping over it — build a new list instead (see the Procedural version)."
+
+[abstraction]
+type = "piles"
+
+[abstraction.bind]
+nums = "source"
+n = "cursor"

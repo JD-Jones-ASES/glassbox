@@ -13,6 +13,13 @@
     "author": "GlassBox",
     "created": "2026-06-25"
   },
+  "abstraction": {
+    "type": "piles",
+    "bind": {
+      "nums": "source",
+      "i": "cursor_index"
+    }
+  },
   "source": "nums = [4, 8, 15, 16, 23]\ntarget = 15\nfound = -1\nfor i in range(len(nums)):\n    if nums[i] == target:\n        found = nums[i]\n",
   "trace": [
     {

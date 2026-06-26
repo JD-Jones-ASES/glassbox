@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/modulo/buggy.trace.json";
 import procedural from "../../../derived/modulo/procedural.trace.json";
 
@@ -13,7 +14,7 @@ const registers = [buggy, procedural];
   <LessonNav slug="modulo" position="top" />
 
   <h1>Modular arithmetic: wrapping around</h1>
-  <p class="lede">Clocks don't count to 15 — they wrap back to 3. That wrap-around is exactly what the remainder operator <code>%</code> does, and it's the same idea behind fixed-width numbers overflowing. Watch the clock with and without it.</p>
+  <p class="lede">Clocks don't count to 15 — they wrap back to 3. That wrap-around is exactly what the <Term s="modulo">remainder</Term> operator <code>%</code> does, and it's the same idea behind fixed-width numbers overflowing. Watch the clock with and without it.</p>
 
   <TracePlayer registers={registers} client:visible />
 
@@ -22,7 +23,7 @@ const registers = [buggy, procedural];
     <p>Watch <code>clock</code>: does it keep climbing, or wrap back around 12?</p>
     <ul>
       <li><strong>Buggy</strong> — <code>clock = start + 5</code> gives <code>15</code> — there's no 15 on a 12-hour clock. The code simply forgot to wrap.</li>
-      <li><strong>Procedural</strong> — <code>clock = (start + 5) % 12</code> gives <code>3</code>. <code>%</code> takes the remainder after dividing by 12, wrapping the value back into range.</li>
+      <li><strong>Procedural</strong> — <code>clock = (start + 5) % 12</code> gives <code>3</code>. <code>%</code> takes the remainder after dividing by 12, wrapping the <Term s="value">value</Term> back into range.</li>
     </ul>
     <p class="fineprint">Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.</p>
   </section>

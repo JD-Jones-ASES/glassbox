@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/faulttolerance/buggy.trace.json";
 import procedural from "../../../derived/faulttolerance/procedural.trace.json";
 
@@ -20,7 +21,7 @@ const registers = [buggy, procedural];
     The internet keeps working when pieces of it fail because there is usually more than one path between
     any two points. Fail a node on a <em>redundant</em> network and the traffic reroutes; fail the one node
     a <em>single-path</em> network depends on and everything past it goes dark. Switch the abstraction on
-    to watch a node die (the ✕) and the packet find — or fail to find — a way around.
+    to watch a node die (the ✕) and the <Term s="packet">packet</Term> find — or fail to find — a way around.
   </p>
 
   <TracePlayer registers={registers} client:visible />
@@ -28,7 +29,7 @@ const registers = [buggy, procedural];
   <section class="explain card">
     <h2>What you are looking at</h2>
     <p>
-      In both versions node <code>B</code> has failed, and the router walks the graph picking the first
+      In both versions node <code>B</code> has failed, and the <Term s="router">router</Term> walks the graph picking the first
       live neighbour toward <code>D</code>. The only difference is the shape of the network.
     </p>
     <ul>

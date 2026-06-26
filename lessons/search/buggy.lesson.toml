@@ -32,3 +32,10 @@ text = "i = 2: nums[2] is 15, a match. But `found = nums[i]` stores the VALUE (1
 [[notes]]
 step = 14
 text = "found = 15. But 15 is the value we searched for, not WHERE it is — we already knew it was 15. Linear search should hand back the index 2. The bug: `found = nums[i]` should be `found = i`. CPython shows it; we don't have to claim it."
+
+[abstraction]
+type = "piles"
+
+[abstraction.bind]
+nums = "source"
+i = "cursor_index"

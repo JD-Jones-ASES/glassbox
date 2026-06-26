@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/bindecimal/buggy.trace.json";
 import procedural from "../../../derived/bindecimal/procedural.trace.json";
 
@@ -17,7 +18,7 @@ const registers = [buggy, procedural];
 
   <h1>Binary to decimal</h1>
   <p class="lede">
-    Going from binary back to decimal is one loop: read the bits left to right, and at each step double
+    Going from <Term s="binary">binary</Term> back to decimal is one <Term s="loop">loop</Term>: read the <Term s="bit">bits</Term> left to right, and at each step double
     what you have and add the next bit. The whole lesson hides in one number — the base you multiply by.
     Get it wrong and <code>1101</code> comes out as eleven hundred and one instead of thirteen.
   </p>
@@ -32,7 +33,7 @@ const registers = [buggy, procedural];
     <ul>
       <li>
         <strong>Buggy</strong> — <code>value * 10 + b</code> multiplies by ten, treating the bits as
-        decimal digits. value climbs <code>1 → 11 → 110 → 1101</code> — it just reassembles the digits as
+        decimal digits. <Term s="value">value</Term> climbs <code>1 → 11 → 110 → 1101</code> — it just reassembles the digits as
         a base-ten number, not the value the binary actually represents.
       </li>
       <li>

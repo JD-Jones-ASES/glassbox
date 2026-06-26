@@ -1,0 +1,51 @@
+{
+  "id": "accumulate-clever",
+  "title": "Adding up a list — the built-in",
+  "problem": "Add up all the numbers in the list and report the total.",
+  "register": "clever",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "nums = [3, 8, 5, 2]\ntotal = sum(nums)\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ]
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "`sum(nums)` does the whole accumulation in one built-in call. After it runs, what will total be?"
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "nums": [
+          3,
+          8,
+          5,
+          2
+        ],
+        "total": 18
+      },
+      "stdout": "",
+      "note": "sum(nums) = 18 in a single built-in call. There's nothing to step through inside it — it's C code — so the Compact register trades the watchable loop for one line. Same answer the accumulator reaches."
+    }
+  ]
+}

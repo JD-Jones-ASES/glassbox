@@ -16,9 +16,14 @@ export function pilesModel(abstraction, state) {
   for (const [varName, slot] of Object.entries(bind)) slotToVar[slot] = varName;
 
   const sourceVar = slotToVar.source;
+  // Optional `cursor_index` slot: an integer loop variable (e.g. `i`) that points AT a position in the
+  // source, so index-walks (linear search) can highlight the scanned element without a value cursor.
+  const cursorIdxVar = slotToVar.cursor_index;
+  const activeIndex =
+    cursorIdxVar && typeof state[cursorIdxVar] === "number" ? state[cursorIdxVar] : null;
   const source =
     sourceVar && Array.isArray(state[sourceVar])
-      ? { name: sourceVar, items: state[sourceVar] }
+      ? { name: sourceVar, items: state[sourceVar], activeIndex }
       : null;
 
   const cursorVar = slotToVar.cursor;

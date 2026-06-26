@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/comparison/buggy.trace.json";
 import procedural from "../../../derived/comparison/procedural.trace.json";
 
@@ -13,7 +14,7 @@ const registers = [buggy, procedural];
   <LessonNav slug="comparison" position="top" />
 
   <h1>A comparison is a yes/no value</h1>
-  <p class="lede">When you compare two values, Python hands back a real <code>True</code> or <code>False</code> — a value you can store and reuse. Watch a comparison become a stored answer, and watch the boundary trip a common off-by-one.</p>
+  <p class="lede">When you compare two <Term s="value">values</Term>, Python hands back a real <code>True</code> or <code>False</code> — a value you can store and reuse. Watch a <Term s="comparison">comparison</Term> become a stored answer, and watch the boundary trip a common off-by-one.</p>
 
   <TracePlayer registers={registers} client:visible />
 
@@ -21,7 +22,7 @@ const registers = [buggy, procedural];
     <h2>What you are looking at</h2>
     <p>Watch <code>is_adult</code>: a comparison turns into a stored <code>bool</code>.</p>
     <ul>
-      <li><strong>Buggy</strong> — <code>is_adult = age > 18</code> with <code>age = 18</code> stores <code>False</code> — <code>&gt;</code> excludes 18 itself. The result is a real boolean; the boundary is just wrong.</li>
+      <li><strong>Buggy</strong> — <code>is_adult = age > 18</code> with <code>age = 18</code> stores <code>False</code> — <code>&gt;</code> excludes 18 itself. The result is a real <Term s="boolean">boolean</Term>; the boundary is just wrong.</li>
       <li><strong>Procedural</strong> — <code>is_adult = age >= 18</code> stores <code>True</code>. <code>&gt;=</code> includes the boundary. Either way, the comparison itself is a yes/no value you can keep.</li>
     </ul>
     <p class="fineprint">Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.</p>

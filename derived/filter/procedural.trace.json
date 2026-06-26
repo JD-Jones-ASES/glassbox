@@ -13,6 +13,14 @@
     "author": "GlassBox",
     "created": "2026-06-25"
   },
+  "abstraction": {
+    "type": "piles",
+    "bind": {
+      "nums": "source",
+      "n": "cursor",
+      "big": "pile_a"
+    }
+  },
   "source": "nums = [4, 3, 22, 18, 7, 15]\nbig = []\nfor n in nums:\n    if n > 10:\n        big.append(n)\n",
   "trace": [
     {

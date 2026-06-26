@@ -2,11 +2,13 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/search/buggy.trace.json";
 import procedural from "../../../derived/search/procedural.trace.json";
+import clever from "../../../derived/search/clever.trace.json";
 
-// Buggy first: watch it record the value, then watch the correct version record the index.
-const registers = [buggy, procedural];
+// Buggy first: watch it record the value, then the correct index, then the built-in .index().
+const registers = [buggy, procedural, clever];
 ---
 
 <Base
@@ -17,8 +19,8 @@ const registers = [buggy, procedural];
 
   <h1>Linear search</h1>
   <p class="lede">
-    To find something in an unsorted list, you check each element in turn until you spot it. The subtle
-    part is <em>what you report</em>: a search returns <strong>where</strong> the value is — its index —
+    To find something in an unsorted <Term s="list">list</Term>, you check each element in turn until you spot it. The subtle
+    part is <em>what you report</em>: a search returns <strong>where</strong> the <Term s="value">value</Term> is — its <Term s="index">index</Term> —
     not the value itself, which you already knew. Step through and watch <code>found</code>.
   </p>
 
@@ -28,7 +30,7 @@ const registers = [buggy, procedural];
     <h2>What you are looking at</h2>
     <p>
       The list is <code>[4, 8, 15, 16, 23]</code> and we are looking for <code>15</code>. The right answer
-      is its index, <code>2</code>. <code>found</code> starts at <code>-1</code>, a sentinel that means
+      is its index, <code>2</code>. <code>found</code> starts at <code>-1</code>, a <Term s="sentinel">sentinel</Term> that means
       "not found yet" — no real index is negative, so it can never be mistaken for an answer.
     </p>
     <ul>
@@ -37,6 +39,11 @@ const registers = [buggy, procedural];
       </li>
       <li>
         <strong>Procedural</strong> — <code>found = i</code> records the index, so it ends at <code>2</code>. One character apart, and only the state pane makes the difference undeniable.
+      </li>
+      <li>
+        <strong>Compact</strong> — <code>found = nums.index(target)</code> scans and returns the position
+        (<code>2</code>) in one call. Concise, but it raises an error if the target is absent — guard it
+        with <code>target in nums</code> when that can happen.
       </li>
     </ul>
     <p class="fineprint">

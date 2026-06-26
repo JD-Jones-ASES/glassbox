@@ -1,0 +1,35 @@
+id = "fizzbuzz-buggy"
+title = "FizzBuzz — the branch you can never reach"
+register = "naive"
+problem = "For 1 to 15, say Fizz for multiples of 3, Buzz for multiples of 5, FizzBuzz for both, else the number."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+result = []
+for i in range(1, 16):
+    if i % 3 == 0:
+        result.append("Fizz")
+    elif i % 5 == 0:
+        result.append("Buzz")
+    elif i % 3 == 0 and i % 5 == 0:
+        result.append("FizzBuzz")
+    else:
+        result.append(str(i))
+"""
+
+[[checkpoints]]
+step = 62
+ask = "15 is divisible by both 3 and 5, so it should be FizzBuzz. This ladder tests `i % 3 == 0` first. What will it append for 15?"
+
+[[notes]]
+step = 59
+text = "This branch — `elif i % 3 == 0 and i % 5 == 0` — can never run: any number divisible by both is already caught by the `i % 3 == 0` test above it."
+
+[[notes]]
+step = 63
+text = "15 is a multiple of 3 and of 5, but `i % 3 == 0` matched first, so it appended 'Fizz'. The both-divisible branch is unreachable."
+
+[[notes]]
+step = 64
+text = "Result ends with 'Fizz' at position 15, not 'FizzBuzz'. The order of the ladder, not the logic of each test, is the bug — test the strictest case first."

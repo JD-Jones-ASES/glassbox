@@ -1,0 +1,2279 @@
+{
+  "id": "rainwater-procedural",
+  "title": "Collecting rainwater — held by the lower wall",
+  "problem": "Heights are columns. How many cells of water are trapped between them after rain?",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "abstraction": {
+    "type": "water",
+    "bind": {
+      "heights": "heights",
+      "water": "water",
+      "i": "current_index",
+      "total": "total"
+    }
+  },
+  "source": "heights = [3, 0, 2, 0, 4]\nn = len(heights)\nleft = [0] * n\nright = [0] * n\nm = 0\nfor i in range(n):\n    if heights[i] > m:\n        m = heights[i]\n    left[i] = m\nm = 0\nfor i in range(n - 1, -1, -1):\n    if heights[i] > m:\n        m = heights[i]\n    right[i] = m\nwater = [0] * n\ntotal = 0\nfor i in range(n):\n    fill = min(left[i], right[i]) - heights[i]\n    if fill > 0:\n        water[i] = fill\n        total = total + fill\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5
+      },
+      "stdout": ""
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 4,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 0,
+        "i": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 0,
+        "i": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 3,
+        "i": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          0,
+          0,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 3,
+        "i": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 9,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          0,
+          0,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 3,
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 10,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          0,
+          0,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 3,
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 11,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          0,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 3,
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 12,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          0,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 3,
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 13,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          0,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 3,
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 14,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 3,
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 15,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 3,
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 16,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          0,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 3,
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 17,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 3,
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 18,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 3,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 19,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 3,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 20,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          0
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 4,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 21,
+      "line": 9,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 4,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 22,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 4,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 23,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 0,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 24,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 0,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 25,
+      "line": 12,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 0,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 26,
+      "line": 13,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m": 4,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 27,
+      "line": 14,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        "m": 4,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 28,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        "m": 4,
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 29,
+      "line": 12,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        "m": 4,
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 30,
+      "line": 14,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 31,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 32,
+      "line": 12,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          0,
+          0,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 33,
+      "line": 14,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          0,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 34,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          0,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 35,
+      "line": 12,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          0,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 36,
+      "line": 14,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 37,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 38,
+      "line": 12,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          0,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 39,
+      "line": 14,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 40,
+      "line": 11,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 41,
+      "line": 15,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 0,
+        "water": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 42,
+      "line": 16,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 0,
+        "water": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "total": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 43,
+      "line": 17,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 0,
+        "water": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "total": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 44,
+      "line": 18,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 0,
+        "water": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "total": 0,
+        "fill": 0
+      },
+      "stdout": "",
+      "note": "For each column, the water it holds is min(tallest-on-left, tallest-on-right) − its own height — the lower wall sets the limit."
+    },
+    {
+      "step": 45,
+      "line": 19,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 0,
+        "water": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "total": 0,
+        "fill": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 46,
+      "line": 17,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 1,
+        "water": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "total": 0,
+        "fill": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 47,
+      "line": 18,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 1,
+        "water": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "total": 0,
+        "fill": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 48,
+      "line": 19,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 1,
+        "water": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "total": 0,
+        "fill": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 49,
+      "line": 20,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 1,
+        "water": [
+          0,
+          3,
+          0,
+          0,
+          0
+        ],
+        "total": 0,
+        "fill": 3
+      },
+      "stdout": "",
+      "note": "Column 1 (height 0) sits between walls of 3 and 4, so it holds min(3, 4) − 0 = 3."
+    },
+    {
+      "step": 50,
+      "line": 21,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 1,
+        "water": [
+          0,
+          3,
+          0,
+          0,
+          0
+        ],
+        "total": 3,
+        "fill": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 51,
+      "line": 17,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 2,
+        "water": [
+          0,
+          3,
+          0,
+          0,
+          0
+        ],
+        "total": 3,
+        "fill": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 52,
+      "line": 18,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 2,
+        "water": [
+          0,
+          3,
+          0,
+          0,
+          0
+        ],
+        "total": 3,
+        "fill": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 53,
+      "line": 19,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 2,
+        "water": [
+          0,
+          3,
+          0,
+          0,
+          0
+        ],
+        "total": 3,
+        "fill": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 54,
+      "line": 20,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 2,
+        "water": [
+          0,
+          3,
+          1,
+          0,
+          0
+        ],
+        "total": 3,
+        "fill": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 55,
+      "line": 21,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 2,
+        "water": [
+          0,
+          3,
+          1,
+          0,
+          0
+        ],
+        "total": 4,
+        "fill": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 56,
+      "line": 17,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 3,
+        "water": [
+          0,
+          3,
+          1,
+          0,
+          0
+        ],
+        "total": 4,
+        "fill": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 57,
+      "line": 18,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 3,
+        "water": [
+          0,
+          3,
+          1,
+          0,
+          0
+        ],
+        "total": 4,
+        "fill": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 58,
+      "line": 19,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 3,
+        "water": [
+          0,
+          3,
+          1,
+          0,
+          0
+        ],
+        "total": 4,
+        "fill": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 59,
+      "line": 20,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 3,
+        "water": [
+          0,
+          3,
+          1,
+          3,
+          0
+        ],
+        "total": 4,
+        "fill": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 60,
+      "line": 21,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 3,
+        "water": [
+          0,
+          3,
+          1,
+          3,
+          0
+        ],
+        "total": 7,
+        "fill": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 61,
+      "line": 17,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 4,
+        "water": [
+          0,
+          3,
+          1,
+          3,
+          0
+        ],
+        "total": 7,
+        "fill": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 62,
+      "line": 18,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 4,
+        "water": [
+          0,
+          3,
+          1,
+          3,
+          0
+        ],
+        "total": 7,
+        "fill": 0
+      },
+      "stdout": "",
+      "note": "Column 4 is the right edge (height 4): min(4, 4) − 4 = 0, so it correctly holds nothing."
+    },
+    {
+      "step": 63,
+      "line": 19,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 4,
+        "water": [
+          0,
+          3,
+          1,
+          3,
+          0
+        ],
+        "total": 7,
+        "fill": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 64,
+      "line": 17,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "left": [
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        "right": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "m": 4,
+        "i": 4,
+        "water": [
+          0,
+          3,
+          1,
+          3,
+          0
+        ],
+        "total": 7,
+        "fill": 0
+      },
+      "stdout": "",
+      "note": "total = 7, water = [0, 3, 1, 3, 0]. Bounded by the lower wall on each side, the edges stay dry."
+    }
+  ]
+}

@@ -28,6 +28,9 @@ const courseIndexBySlug = Object.fromEntries(flatLessons().map((l) => [l.slug, l
             <a class="step-link" href={withBase(`/lessons/${l.slug}/`)}>
               <span class="step-head">
                 <span class="step-title">{l.title}</span>
+                {l.milestone && (
+                  <span class="badge milestone"><span class="led"></span>milestone</span>
+                )}
                 {l.kind === "author-asserted-simulation" && (
                   <span class="badge asserted"><span class="led"></span>simulation</span>
                 )}

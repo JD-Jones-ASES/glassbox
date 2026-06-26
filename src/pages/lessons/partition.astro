@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/partition/buggy.trace.json";
 import procedural from "../../../derived/partition/procedural.trace.json";
 
@@ -28,15 +29,15 @@ const registers = [buggy, procedural];
     <h2>What you are looking at</h2>
     <p>
       Four numbers — 3, 8, 5, 2 — and two piles. Each number is even or odd, so it belongs in exactly one
-      pile. The loop visits them one at a time (the current number is <code>n</code>) and appends it to the
+      pile. The <Term s="loop">loop</Term> visits them one at a time (the current number is <code>n</code>) and appends it to the
       right pile.
     </p>
     <ul>
       <li>
         <strong>Buggy</strong> — the setup is <code>evens = odds = []</code>. It looks like two empty piles,
-        but it creates <em>one</em> list with two names. Step it: the first append shows the number landing
+        but it creates <em>one</em> <Term s="list">list</Term> with two names. Step it: the first append shows the number landing
         on <em>both</em> piles, because they are the same object. By the end, both piles hold every number —
-        the partition never happened. CPython shows the aliasing; we don't have to claim it.
+        the partition never happened. CPython shows the <Term s="aliasing">aliasing</Term>; we don't have to claim it.
       </li>
       <li>
         <strong>Procedural</strong> — make two genuinely separate lists
@@ -45,7 +46,7 @@ const registers = [buggy, procedural];
       </li>
     </ul>
     <p class="fineprint">
-      Try clicking the <code>for</code> line repeatedly to walk one iteration at a time. Every pile you see
+      Try clicking the <code>for</code> line repeatedly to walk one <Term s="iteration">iteration</Term> at a time. Every pile you see
       came from running the program under CPython's tracer —
       see <a href="../../verification/">how GlassBox stays honest</a>.
     </p>

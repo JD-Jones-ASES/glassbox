@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/ifelse/buggy.trace.json";
 import procedural from "../../../derived/ifelse/procedural.trace.json";
 
@@ -13,7 +14,7 @@ const registers = [buggy, procedural];
   <LessonNav slug="ifelse" position="top" />
 
   <h1>Choosing one branch with if / else</h1>
-  <p class="lede">Two back-to-back <code>if</code> statements are two independent decisions — both can run. When you meant 'do one or the other', that's a bug, and the last branch silently wins. Watch <code>grade</code> get set, then overwritten.</p>
+  <p class="lede">Two back-to-back <code>if</code> statements are two independent decisions — both can run. When you meant 'do one or the other', that's a bug, and the last <Term s="branch">branch</Term> silently wins. Watch <code>grade</code> get set, then overwritten.</p>
 
   <TracePlayer registers={registers} client:visible />
 

@@ -1,0 +1,39 @@
+id = "rainwater-buggy"
+title = "Collecting rainwater — filled to the global peak"
+register = "naive"
+problem = "Heights are columns. How many cells of water are trapped between them after rain?"
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+heights = [3, 0, 2, 0, 4]
+n = len(heights)
+peak = max(heights)
+water = [0] * n
+total = 0
+for i in range(n):
+    water[i] = peak - heights[i]
+    total = total + water[i]
+"""
+
+[abstraction]
+type = "water"
+
+[abstraction.bind]
+heights = "heights"
+water = "water"
+i = "current_index"
+total = "total"
+
+
+[[notes]]
+step = 2
+text = "peak = 4 — the tallest column anywhere."
+
+[[notes]]
+step = 6
+text = "Column 0 has height 3 and is the LEFT edge — water there would just spill off, so the answer should be 0. But peak − height = 4 − 3 = 1 fills it anyway."
+
+[[notes]]
+step = 20
+text = "total = 11. Every column was filled up to the global peak, even the edges. Water can only rise as high as the LOWER of the tallest walls on its two sides — not the global maximum. See the Procedural version."

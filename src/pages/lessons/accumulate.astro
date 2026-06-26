@@ -2,11 +2,13 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/accumulate/buggy.trace.json";
 import procedural from "../../../derived/accumulate/procedural.trace.json";
+import clever from "../../../derived/accumulate/clever.trace.json";
 
-// Buggy first: watch `total = n` overwrite, then `total = total + n` accumulate.
-const registers = [buggy, procedural];
+// Buggy first: watch `total = n` overwrite, then `total = total + n` accumulate, then the sum() one-liner.
+const registers = [buggy, procedural, clever];
 ---
 
 <Base
@@ -17,7 +19,7 @@ const registers = [buggy, procedural];
 
   <h1>Adding up a list</h1>
   <p class="lede">
-    Adding up a list is the most common loop you will ever write: keep a running total, and add each
+    Adding up a <Term s="list">list</Term> is the most common <Term s="loop">loop</Term> you will ever write: keep a running total, and add each
     number onto it. The trap is one character — <code>=</code> where you meant <code>+=</code> — and the
     state pane shows exactly what it costs. Try <strong>Predict</strong> mode and call each total before
     you reveal it.
@@ -39,8 +41,13 @@ const registers = [buggy, procedural];
       </li>
       <li>
         <strong>Procedural</strong> — <code>total = total + n</code> <em>adds onto</em> what is already
-        there. Watch total climb 0 → 3 → 11 → 16 → 18. That is the accumulator pattern, and it underlies
+        there. Watch total climb 0 → 3 → 11 → 16 → 18. That is the <Term s="accumulator">accumulator</Term> pattern, and it underlies
         counting, averaging, and almost every loop that summarises a list.
+      </li>
+      <li>
+        <strong>Compact</strong> — <code>total = sum(nums)</code> does the whole job in one built-in call (18).
+        You can't step inside it — it is C code — so there is nothing to watch line by line. That is the
+        trade-off the Compact register names: concise, but the work happens off-screen.
       </li>
     </ul>
     <p class="fineprint">

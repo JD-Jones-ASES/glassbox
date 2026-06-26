@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/aliasing/buggy.trace.json";
 import procedural from "../../../derived/aliasing/procedural.trace.json";
 
@@ -13,7 +14,7 @@ const registers = [buggy, procedural];
   <LessonNav slug="aliasing" position="top" />
 
   <h1>Aliasing: two names, one list</h1>
-  <p class="lede">Assigning one list to another name does <em>not</em> make a copy — both names point at the same list object. Change it through one name and the 'other' changes too. The matching reference ids in the state pane make the shared identity literal. Watch the backup get corrupted.</p>
+  <p class="lede">Assigning one <Term s="list">list</Term> to another name does <em>not</em> make a copy — both names point at the same list object. Change it through one name and the 'other' changes too. The matching reference ids in the state pane make the shared identity literal. Watch the backup get corrupted.</p>
 
   <TracePlayer registers={registers} client:visible />
 
@@ -22,7 +23,7 @@ const registers = [buggy, procedural];
     <p>Watch <code>backup</code> when only <code>scores</code> is touched — and watch the ref ids.</p>
     <ul>
       <li><strong>Buggy</strong> — <code>backup = scores</code> binds a second name to the <em>same</em> list (equal ref ids prove it). Appending <code>30</code> to <code>scores</code> changes <code>backup</code> too — it was never a separate copy.</li>
-      <li><strong>Procedural</strong> — <code>backup = scores[:]</code> slices out a brand-new list, so the two are independent (no shared ref id). Now appending to <code>scores</code> leaves <code>backup</code> at <code>[10, 20]</code>.</li>
+      <li><strong>Procedural</strong> — <code>backup = scores[:]</code> <Term s="slice">slices</Term> out a brand-new list, so the two are independent (no shared ref id). Now appending to <code>scores</code> leaves <code>backup</code> at <code>[10, 20]</code>.</li>
     </ul>
     <p class="fineprint">Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.</p>
   </section>

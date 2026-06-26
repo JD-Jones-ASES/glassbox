@@ -1,0 +1,40 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
+import buggy from "../../../derived/fizzbuzz/buggy.trace.json";
+import procedural from "../../../derived/fizzbuzz/procedural.trace.json";
+
+// Buggy first: watch it fail in real state, then watch the fix.
+const registers = [buggy, procedural];
+---
+
+<Base title="FizzBuzz — GlassBox" description="Combine loops, conditionals and modulo — and watch an unreachable branch grade 15 wrong.">
+  <LessonNav slug="fizzbuzz" position="top" />
+
+  <h1>FizzBuzz</h1>
+  <p class="lede">FizzBuzz is the classic warm-up: count to 15, but say Fizz for multiples of 3, Buzz for multiples of 5, and FizzBuzz for both. It looks trivial — until the order of your tests quietly hides a whole case.</p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>Watch the <code>result</code> <Term s="list">list</Term> fill as <code>i</code> climbs from 1 to 15.</p>
+    <ul>
+      <li><strong>Buggy</strong> — tests <code>i % 3 == 0</code> first, so 15 (a multiple of both) is caught as 'Fizz' and the <code>elif ... and ...</code> <Term s="branch">branch</Term> for FizzBuzz can never run.</li>
+      <li><strong>Procedural</strong> — tests the both-divisible case first, so 15 correctly becomes 'FizzBuzz'. Same conditions, different order.</li>
+    </ul>
+    <p class="milestone-note">This is a <strong>milestone</strong> — it puts several earlier ideas together into one small program.</p>
+    <p class="fineprint">Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.</p>
+  </section>
+  <LessonNav slug="fizzbuzz" position="bottom" />
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .milestone-note { font-size: 0.92rem; color: var(--ink-soft); border-left: 3px solid var(--milestone); padding-left: 0.7rem; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>

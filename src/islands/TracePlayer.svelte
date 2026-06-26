@@ -337,7 +337,7 @@
               <div class="piles-source">
                 <code class="src-label">{model.source.name}</code>
                 <div class="chips">
-                  {#each model.source.items as it}<span class="chip src">{fmtChip(it)}</span>{/each}
+                  {#each model.source.items as it, ix}<span class="chip src" class:active={ix === model.source.activeIndex}>{fmtChip(it)}</span>{/each}
                 </div>
               </div>
             {/if}
@@ -408,6 +408,21 @@
             {#if model.speedup != null}
               <div class="g-speedup">speedup = {model.seqTime} / {model.parTime} = <strong>{model.speedup}×</strong></div>
             {/if}
+          </div>
+        {:else if view === "abstraction" && model && model.kind === "water"}
+          <div class="water">
+            <div class="water-bars">
+              {#each model.columns as c}
+                <div class="wcol" class:active={c.active}>
+                  <div class="wstack">
+                    <div class="wwater" style={`bottom:${(c.height / model.maxH) * 100}%; height:${(c.water / model.maxH) * 100}%`}></div>
+                    <div class="wbar" style={`height:${(c.height / model.maxH) * 100}%`}></div>
+                  </div>
+                  <div class="wlabel">{c.height}</div>
+                </div>
+              {/each}
+            </div>
+            {#if model.total != null}<div class="water-total">trapped water = <strong>{model.total}</strong></div>{/if}
           </div>
         {:else}
           <table class="vars">
@@ -644,6 +659,7 @@
     background: var(--surface); border: 1px solid var(--border-strong); color: var(--ink);
   }
   .chip.src { color: var(--ink-soft); }
+  .chip.src.active { background: var(--live); border-color: var(--live); color: #fff; }
   .chip.cur { background: var(--live); border-color: var(--live); color: #fff; }
   .piles-cursor { font-size: 0.85rem; color: var(--ink-soft); display: flex; align-items: center; gap: 0.4rem; }
   .piles-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
@@ -702,6 +718,18 @@
   .g-btext { font-family: var(--font-mono); font-size: 5px; fill: #fff; font-weight: 700; }
   .g-speedup { font-family: var(--font-mono); font-size: 0.95rem; color: var(--ink-soft); }
   .g-speedup strong { color: var(--live-ink); font-size: 1.1rem; }
+
+  .water { padding: 1rem 0.8rem; display: flex; flex-direction: column; gap: 0.7rem; align-items: center; }
+  .water-bars { display: flex; gap: 4px; align-items: flex-end; height: 150px; width: 100%; max-width: 22rem; }
+  .wcol { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; height: 100%; }
+  .wstack { position: relative; width: 100%; flex: 1; }
+  .wbar { position: absolute; bottom: 0; width: 100%; background: var(--border-strong); border-radius: 2px 2px 0 0; }
+  .wwater { position: absolute; width: 100%; background: var(--live); opacity: 0.4; border-top: 2px solid var(--live); }
+  .wcol.active .wbar { background: var(--ink-soft); }
+  .wcol.active .wstack { outline: 2px solid var(--live); outline-offset: 1px; border-radius: 3px; }
+  .wlabel { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); }
+  .water-total { font-family: var(--font-mono); font-size: 0.95rem; color: var(--ink-soft); }
+  .water-total strong { color: var(--live-ink); font-size: 1.1rem; }
 
   @media (prefers-reduced-motion: no-preference) {
     .fill { transition: d 0.25s ease, fill 0.25s ease; }

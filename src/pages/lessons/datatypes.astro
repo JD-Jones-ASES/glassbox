@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/datatypes/buggy.trace.json";
 import procedural from "../../../derived/datatypes/procedural.trace.json";
 
@@ -13,7 +14,7 @@ const registers = [buggy, procedural];
   <LessonNav slug="datatypes" position="top" />
 
   <h1>Numbers have types: int vs float</h1>
-  <p class="lede">Every value has a type, and the type decides what an operator does. Nowhere is that clearer than division: Python has two division operators, and they give you different numbers — and different types. Watch the average come out whole or fractional.</p>
+  <p class="lede">Every <Term s="value">value</Term> has a type, and the type decides what an operator does. Nowhere is that clearer than division: Python has two division operators, and they give you different numbers — and different types. Watch the average come out whole or fractional.</p>
 
   <TracePlayer registers={registers} client:visible />
 
@@ -21,8 +22,8 @@ const registers = [buggy, procedural];
     <h2>What you are looking at</h2>
     <p>Watch <code>avg</code>, and notice whether it lands as a whole <code>int</code> or a fractional <code>float</code>.</p>
     <ul>
-      <li><strong>Buggy</strong> — <code>avg = total // count</code> uses floor division: <code>7 // 2 = 3</code>, an <code>int</code>. The half is gone — wrong for an average.</li>
-      <li><strong>Procedural</strong> — <code>avg = total / count</code> uses true division: <code>7 / 2 = 3.5</code>, a <code>float</code>. A single slash keeps the fraction. Same numbers, different operator, different type.</li>
+      <li><strong>Buggy</strong> — <code>avg = total // count</code> uses <Term s="floor-division">floor division</Term>: <code>7 // 2 = 3</code>, an <code>int</code>. The half is gone — wrong for an average.</li>
+      <li><strong>Procedural</strong> — <code>avg = total / count</code> uses <Term s="true-division">true division</Term>: <code>7 / 2 = 3.5</code>, a <code>float</code>. A single slash keeps the fraction. Same numbers, different operator, different type.</li>
     </ul>
     <p class="fineprint">Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.</p>
   </section>

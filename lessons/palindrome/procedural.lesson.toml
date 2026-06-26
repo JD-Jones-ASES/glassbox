@@ -1,0 +1,26 @@
+id = "palindrome-procedural"
+title = "Palindrome — comparing mirror positions"
+register = "procedural"
+problem = "Decide whether a word reads the same forwards and backwards."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+s = "racecar"
+is_palindrome = True
+for i in range(len(s) // 2):
+    if s[i] != s[len(s) - 1 - i]:
+        is_palindrome = False
+"""
+
+[[checkpoints]]
+step = 3
+ask = "i is 0: this compares s[0]='r' with the mirror s[6]='r'. After the if, what will is_palindrome be?"
+
+[[notes]]
+step = 3
+text = "s[0]='r' equals its mirror s[6]='r', so nothing changes."
+
+[[notes]]
+step = 8
+text = "Every mirrored pair matched, so is_palindrome stays True. Comparing s[i] to s[len - 1 - i] is the whole fix."

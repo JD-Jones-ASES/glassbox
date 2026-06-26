@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import packet from "../../../derived/routing/packet.trace.json";
 
 const registers = [packet];
@@ -15,8 +16,8 @@ const registers = [packet];
 
   <h1>Packet switching: one hop at a time</h1>
   <p class="lede">
-    A network is just a graph: nodes (computers and routers) and the links between them. A message is
-    broken into packets, and each packet hops from node to node until it reaches its destination. Step
+    A network is just a graph: nodes (computers and <Term s="router">routers</Term>) and the links between them. A message is
+    broken into <Term s="packet">packets</Term>, and each packet hops from node to node until it reaches its destination. Step
     through one packet's journey from A to D and watch its path light up.
   </p>
 
@@ -31,11 +32,11 @@ const registers = [packet];
     </p>
     <p>
       Real routers decide each next hop on the fly. Crucially, different packets of the same message can
-      take different routes and still reassemble at the destination — that flexibility is what makes the
+      take different routes and still <Term s="reassembly">reassemble</Term> at the destination — that flexibility is what makes the
       internet robust when a link gets congested or fails.
     </p>
     <p class="fineprint">
-      This routing picture is not a hand-drawn diagram: it is a tiny Python simulation, traced like every
+      This <Term s="routing">routing</Term> picture is not a hand-drawn diagram: it is a tiny Python simulation, traced like every
       other lesson. Model the process as code, trace it, and the animation falls out for free —
       see <a href="../../verification/">how GlassBox stays honest</a>.
     </p>

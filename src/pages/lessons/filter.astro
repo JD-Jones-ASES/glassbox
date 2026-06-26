@@ -2,11 +2,13 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/filter/buggy.trace.json";
 import procedural from "../../../derived/filter/procedural.trace.json";
+import clever from "../../../derived/filter/clever.trace.json";
 
-// Buggy first: watch deleting-while-looping skip an element, then watch the safe build-a-new-list way.
-const registers = [buggy, procedural];
+// Buggy first: deleting-while-looping skips an element, then the safe build-a-new-list way, then a comprehension.
+const registers = [buggy, procedural, clever];
 ---
 
 <Base
@@ -18,7 +20,7 @@ const registers = [buggy, procedural];
   <h1>Filtering a list</h1>
   <p class="lede">
     Filtering — keeping only the items that pass some test — is the everyday move behind "find the data
-    that matters." The safe way is to build a <em>new</em> list. The tempting way is to delete the
+    that matters." The safe way is to build a <em>new</em> <Term s="list">list</Term>. The tempting way is to delete the
     unwanted items in place, and the state pane shows exactly why that backfires.
   </p>
 
@@ -33,11 +35,16 @@ const registers = [buggy, procedural];
     <ul>
       <li>
         <strong>Buggy</strong> — deletes each small number from <code>nums</code> while looping over it.
-        Removing <code>4</code> shifts <code>3</code> into a slot the loop has already passed, so <code>3</code> is skipped and survives. <code>nums</code> ends as <code>[3, 22, 18, 15]</code> — a small number leaked through, and the original list is destroyed.
+        Removing <code>4</code> shifts <code>3</code> into a slot the <Term s="loop">loop</Term> has already passed, so <code>3</code> is skipped and survives. <code>nums</code> ends as <code>[3, 22, 18, 15]</code> — a small number leaked through, and the original list is destroyed.
       </li>
       <li>
         <strong>Procedural</strong> — copies the passing numbers into a fresh list <code>big</code> and
         never touches <code>nums</code>. Nothing shifts under the loop, so nothing is skipped.
+      </li>
+      <li>
+        <strong>Compact</strong> — <code>[n for n in nums if n &gt; 10]</code> builds the new list in one
+        expression. Python still runs it as a loop — watch <code>n</code> take each <Term s="value">value</Term> — and
+        <code>big</code> appears complete at the end.
       </li>
     </ul>
     <p class="fineprint">

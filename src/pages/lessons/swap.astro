@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/swap/buggy.trace.json";
 import procedural from "../../../derived/swap/procedural.trace.json";
 import idiomatic from "../../../derived/swap/idiomatic.trace.json";
@@ -18,7 +19,7 @@ const registers = [buggy, procedural, idiomatic];
 
   <h1>Swapping two values</h1>
   <p class="lede">
-    Swapping two variables looks trivial until you try the obvious thing and a value vanishes. Step
+    Swapping two <Term s="variable">variables</Term> looks trivial until you try the obvious thing and a <Term s="value">value</Term> vanishes. Step
     through each version below and watch the state change, line by line. Toggle between the two cups and
     the raw variables — they are the same thing at two zoom levels.
   </p>

@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/elifladder/buggy.trace.json";
 import procedural from "../../../derived/elifladder/procedural.trace.json";
 
@@ -13,7 +14,7 @@ const registers = [buggy, procedural];
   <LessonNav slug="elifladder" position="top" />
 
   <h1>The elif ladder: order matters</h1>
-  <p class="lede">An <code>if/elif</code> ladder stops at the first branch that's true and skips the rest. So the order of the tests <em>is</em> the logic — put the loosest band first and the strict ones become unreachable. Watch a 95 get the wrong grade.</p>
+  <p class="lede">An <code>if/elif</code> ladder stops at the first <Term s="branch">branch</Term> that's true and skips the rest. So the order of the tests <em>is</em> the logic — put the loosest band first and the strict ones become unreachable. Watch a 95 get the wrong grade.</p>
 
   <TracePlayer registers={registers} client:visible />
 

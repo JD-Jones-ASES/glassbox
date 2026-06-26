@@ -1,0 +1,119 @@
+{
+  "id": "palindrome-procedural",
+  "title": "Palindrome — comparing mirror positions",
+  "problem": "Decide whether a word reads the same forwards and backwards.",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "s = \"racecar\"\nis_palindrome = True\nfor i in range(len(s) // 2):\n    if s[i] != s[len(s) - 1 - i]:\n        is_palindrome = False\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "s": "racecar"
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "s": "racecar",
+        "is_palindrome": true
+      },
+      "stdout": ""
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "s": "racecar",
+        "is_palindrome": true,
+        "i": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "s": "racecar",
+        "is_palindrome": true,
+        "i": 0
+      },
+      "stdout": "",
+      "note": "s[0]='r' equals its mirror s[6]='r', so nothing changes.",
+      "checkpoint": true,
+      "checkpoint_prompt": "i is 0: this compares s[0]='r' with the mirror s[6]='r'. After the if, what will is_palindrome be?"
+    },
+    {
+      "step": 4,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "s": "racecar",
+        "is_palindrome": true,
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "s": "racecar",
+        "is_palindrome": true,
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "s": "racecar",
+        "is_palindrome": true,
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "s": "racecar",
+        "is_palindrome": true,
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "s": "racecar",
+        "is_palindrome": true,
+        "i": 2
+      },
+      "stdout": "",
+      "note": "Every mirrored pair matched, so is_palindrome stays True. Comparing s[i] to s[len - 1 - i] is the whole fix."
+    }
+  ]
+}

@@ -2,9 +2,12 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
+import buggy from "../../../derived/binary/buggy.trace.json";
 import places from "../../../derived/binary/places.trace.json";
 
-const registers = [places];
+// Buggy first: watch columns the wrong way round land on 7, then the correct big-to-small walk give 1101.
+const registers = [buggy, places];
 ---
 
 <Base
@@ -15,7 +18,7 @@ const registers = [places];
 
   <h1>Decimal to binary</h1>
   <p class="lede">
-    Binary looks mysterious, but it is just place value with a different base. In decimal the columns are
+    <Term s="binary">Binary</Term> looks mysterious, but it is just <Term s="place-value">place value</Term> with a different base. In decimal the columns are
     1, 10, 100…; in binary they are powers of two: 1, 2, 4, 8…. To write a number, walk the columns from
     biggest to smallest and take each one that fits, subtracting as you go.
   </p>
@@ -25,11 +28,20 @@ const registers = [places];
   <section class="explain card">
     <h2>What you are looking at</h2>
     <p>
-      The number 13 and four columns — 8, 4, 2, 1. The loop tries each column in turn: if the value
-      still <em>to place</em> is at least that column's power, it puts a <code>1</code> there and subtracts;
-      otherwise it puts a <code>0</code>. Eight fits in 13 (5 left), four fits in 5 (1 left), two does not
-      fit in 1, and one fits in 1 — so 13 is <code>1101</code>, which is exactly 8 + 4 + 1.
+      The number 13 and four place-value columns. Binary is just place <Term s="value">value</Term> in base two: each column is a
+      power of two, and the order you walk them in is the whole trick.
     </p>
+    <ul>
+      <li>
+        <strong>Buggy</strong> — builds the columns small-to-big (<code>1, 2, 4, 8</code>) and greedily takes
+        the smallest that fits. It spends 13 on the little columns, leaves the 8s column empty, and the
+        <Term s="modulo">remainder</Term> never reaches 0 — so it lands on the wrong number.
+      </li>
+      <li>
+        <strong>Procedural</strong> — walks biggest to smallest: 8 fits in 13 (5 left), 4 fits in 5 (1 left),
+        2 does not fit, 1 fits — so 13 is <code>1101</code>, which is exactly 8 + 4 + 1.
+      </li>
+    </ul>
     <p class="fineprint">
       There is no separate "binary visualizer" here: this is a real Python program, traced line by line like
       every other lesson. That is the whole idea — data is just more programs to trace.

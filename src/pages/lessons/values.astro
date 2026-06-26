@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/values/buggy.trace.json";
 import procedural from "../../../derived/values/procedural.trace.json";
 
@@ -13,7 +14,7 @@ const registers = [buggy, procedural];
   <LessonNav slug="values" position="top" />
 
   <h1>Values and names</h1>
-  <p class="lede">A variable is a name pointing at a value, not a box that remembers everything you ever put in it. Rebind the name and the old value is gone — unless you saved it somewhere first. Step through both versions and watch the names move.</p>
+  <p class="lede">A <Term s="variable">variable</Term> is a name pointing at a <Term s="value">value</Term>, not a box that remembers everything you ever put in it. Rebind the name and the old value is gone — unless you saved it somewhere first. Step through both versions and watch the names move.</p>
 
   <TracePlayer registers={registers} client:visible />
 

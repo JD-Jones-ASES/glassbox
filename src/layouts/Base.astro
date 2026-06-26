@@ -22,6 +22,7 @@ const { title = "GlassBox", description = "Watch code actually run." } = Astro.p
       <span class="tagline">watch code actually run</span>
       <nav class="site-nav">
         <a href={withBase("/lessons/")}>Lessons</a>
+        <a href={withBase("/glossary/")}>Glossary</a>
         <a href={withBase("/verification/")}>Verification</a>
       </nav>
     </header>
@@ -36,5 +37,51 @@ const { title = "GlassBox", description = "Watch code actually run." } = Astro.p
         under an owner-designed verification system.
       </p>
     </footer>
+
+    <script>
+      // Site-wide glossary popup. Event-delegated on the document, so it covers static prose AND anything
+      // the Svelte player renders — any element with data-term gets a hover/focus quick definition.
+      import { termsMap } from "../lib/glossary.js";
+
+      let popup;
+      function ensurePopup() {
+        if (!popup) {
+          popup = document.createElement("div");
+          popup.className = "term-popup";
+          popup.setAttribute("role", "tooltip");
+          document.body.appendChild(popup);
+        }
+        return popup;
+      }
+      function show(el) {
+        const def = termsMap[el.dataset.term];
+        if (!def) return;
+        const p = ensurePopup();
+        p.innerHTML = "";
+        const h = document.createElement("strong");
+        h.textContent = def.term;
+        const d = document.createElement("span");
+        d.textContent = def.short;
+        p.append(h, d);
+        p.style.display = "block";
+        const r = el.getBoundingClientRect();
+        const vw = document.documentElement.clientWidth;
+        const vh = document.documentElement.clientHeight;
+        const pw = p.offsetWidth, ph = p.offsetHeight;
+        let left = Math.max(8, Math.min(r.left, vw - pw - 8)) + window.scrollX;
+        let top = r.bottom + 6;
+        if (top + ph > vh && r.top - 6 - ph > 0) top = r.top - ph - 6; // flip above if no room below
+        p.style.left = left + "px";
+        p.style.top = top + window.scrollY + "px";
+      }
+      function hide() { if (popup) popup.style.display = "none"; }
+
+      document.addEventListener("mouseover", (e) => { const el = e.target.closest("[data-term]"); if (el) show(el); });
+      document.addEventListener("mouseout", (e) => { const el = e.target.closest("[data-term]"); if (el && !el.contains(e.relatedTarget)) hide(); });
+      document.addEventListener("focusin", (e) => { const el = e.target.closest("[data-term]"); if (el) show(el); });
+      document.addEventListener("focusout", (e) => { const el = e.target.closest("[data-term]"); if (el) hide(); });
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") hide(); });
+      window.addEventListener("scroll", hide, true);
+    </script>
   </body>
 </html>

@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/parameters/buggy.trace.json";
 import procedural from "../../../derived/parameters/procedural.trace.json";
 
@@ -13,7 +14,7 @@ const registers = [buggy, procedural];
   <LessonNav slug="parameters" position="top" />
 
   <h1>Parameters: order matters</h1>
-  <p class="lede">When you call a function, the arguments fill its parameters by position, left to right. Get the order wrong and the function computes something else entirely — here, a negative amount of money 'left'. Watch the call stack bind the parameters.</p>
+  <p class="lede">When you call a <Term s="function">function</Term>, the <Term s="argument">arguments</Term> fill its <Term s="parameter">parameters</Term> by position, left to right. Get the order wrong and the function computes something else entirely — here, a negative amount of money 'left'. Watch the <Term s="call-stack">call stack</Term> bind the parameters.</p>
 
   <TracePlayer registers={registers} client:visible />
 

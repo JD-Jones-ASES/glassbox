@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/arithmetic/buggy.trace.json";
 import procedural from "../../../derived/arithmetic/procedural.trace.json";
 
@@ -19,7 +20,7 @@ const registers = [buggy, procedural];
 
   <section class="explain card">
     <h2>What you are looking at</h2>
-    <p>Watch <code>result</code>: the order the operators run in decides the answer.</p>
+    <p>Watch <code>result</code>: the order the <Term s="operator">operators</Term> run in decides the answer.</p>
     <ul>
       <li><strong>Buggy</strong> — <code>result = base + extra * 4</code> computes <code>3 * 4 = 12</code> first, then <code>+ 2</code>, giving <code>14</code> — not the <code>20</code> we wanted.</li>
       <li><strong>Procedural</strong> — <code>result = (base + extra) * 4</code> forces the addition first: <code>5 * 4 = 20</code>. Parentheses make the order explicit.</li>

@@ -1,0 +1,544 @@
+{
+  "id": "rainwater-buggy",
+  "title": "Collecting rainwater — filled to the global peak",
+  "problem": "Heights are columns. How many cells of water are trapped between them after rain?",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "abstraction": {
+    "type": "water",
+    "bind": {
+      "heights": "heights",
+      "water": "water",
+      "i": "current_index",
+      "total": "total"
+    }
+  },
+  "source": "heights = [3, 0, 2, 0, 4]\nn = len(heights)\npeak = max(heights)\nwater = [0] * n\ntotal = 0\nfor i in range(n):\n    water[i] = peak - heights[i]\n    total = total + water[i]\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5
+      },
+      "stdout": ""
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4
+      },
+      "stdout": "",
+      "note": "peak = 4 — the tallest column anywhere."
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 4,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "total": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "total": 0,
+        "i": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "total": 0,
+        "i": 0
+      },
+      "stdout": "",
+      "note": "Column 0 has height 3 and is the LEFT edge — water there would just spill off, so the answer should be 0. But peak − height = 4 − 3 = 1 fills it anyway."
+    },
+    {
+      "step": 7,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "total": 1,
+        "i": 0
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "total": 1,
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 9,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          1,
+          4,
+          0,
+          0,
+          0
+        ],
+        "total": 1,
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 10,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          1,
+          4,
+          0,
+          0,
+          0
+        ],
+        "total": 5,
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 11,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          1,
+          4,
+          0,
+          0,
+          0
+        ],
+        "total": 5,
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 12,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          1,
+          4,
+          2,
+          0,
+          0
+        ],
+        "total": 5,
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 13,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          1,
+          4,
+          2,
+          0,
+          0
+        ],
+        "total": 7,
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 14,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          1,
+          4,
+          2,
+          0,
+          0
+        ],
+        "total": 7,
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 15,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          1,
+          4,
+          2,
+          4,
+          0
+        ],
+        "total": 7,
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 16,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          1,
+          4,
+          2,
+          4,
+          0
+        ],
+        "total": 11,
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 17,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          1,
+          4,
+          2,
+          4,
+          0
+        ],
+        "total": 11,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 18,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          1,
+          4,
+          2,
+          4,
+          0
+        ],
+        "total": 11,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 19,
+      "line": 8,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          1,
+          4,
+          2,
+          4,
+          0
+        ],
+        "total": 11,
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 20,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "heights": [
+          3,
+          0,
+          2,
+          0,
+          4
+        ],
+        "n": 5,
+        "peak": 4,
+        "water": [
+          1,
+          4,
+          2,
+          4,
+          0
+        ],
+        "total": 11,
+        "i": 4
+      },
+      "stdout": "",
+      "note": "total = 11. Every column was filled up to the global peak, even the edges. Water can only rise as high as the LOWER of the tallest walls on its two sides — not the global maximum. See the Procedural version."
+    }
+  ]
+}

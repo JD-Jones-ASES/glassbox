@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/conversion/buggy.trace.json";
 import procedural from "../../../derived/conversion/procedural.trace.json";
 
@@ -13,7 +14,7 @@ const registers = [buggy, procedural];
   <LessonNav slug="conversion" position="top" />
 
   <h1>Converting a float to an int</h1>
-  <p class="lede">Turning a decimal into a whole number sounds like rounding — but Python's <code>int()</code> doesn't round. Watch <code>3.9</code> become two different whole numbers depending on which function you reach for.</p>
+  <p class="lede">Turning a decimal into a whole number sounds like rounding — but Python's <code>int()</code> doesn't round. Watch <code>3.9</code> become two different whole numbers depending on which <Term s="function">function</Term> you reach for.</p>
 
   <TracePlayer registers={registers} client:visible />
 

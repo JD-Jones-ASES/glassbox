@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/exponent/buggy.trace.json";
 import procedural from "../../../derived/exponent/procedural.trace.json";
 
@@ -19,7 +20,7 @@ const registers = [buggy, procedural];
 
   <section class="explain card">
     <h2>What you are looking at</h2>
-    <p>Watch <code>power</code> — the operator is doing something other than what it looks like.</p>
+    <p>Watch <code>power</code> — the <Term s="operator">operator</Term> is doing something other than what it looks like.</p>
     <ul>
       <li><strong>Buggy</strong> — <code>power = base ^ 3</code> gives <code>1</code>. <code>^</code> is XOR (bitwise), and <code>2 XOR 3</code> is <code>1</code>. The code runs fine and is silently wrong — the most dangerous kind of bug.</li>
       <li><strong>Procedural</strong> — <code>power = base ** 3</code> gives <code>8</code>. The double-star <code>**</code> is Python's power operator.</li>

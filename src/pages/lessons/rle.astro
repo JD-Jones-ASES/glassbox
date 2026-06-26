@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/rle/buggy.trace.json";
 import procedural from "../../../derived/rle/procedural.trace.json";
 
@@ -17,7 +18,7 @@ const registers = [buggy, procedural];
 
   <h1>Run-length encoding</h1>
   <p class="lede">
-    Run-length encoding is the bridge between the two halves of this course: it is <em>lossless
+    <Term s="run-length-encoding">Run-length encoding</Term> is the bridge between the two halves of this course: it is <em>lossless
     compression</em> and a <em>traceable program</em> in one artifact. Walk a row of pixels, count each
     run of one colour, and store it as a <code>(length, colour)</code> pair. Watch <code>out</code> fill
     up — and watch the most common bug quietly drop the last run.
@@ -28,9 +29,9 @@ const registers = [buggy, procedural];
   <section class="explain card">
     <h2>What you are looking at</h2>
     <p>
-      Six pixels — <code>W W W B B W</code> — should compress to three pairs:
+      Six pixels — <code>W W W B B W</code> — should <Term s="compression">compress</Term> to three pairs:
       <code>[3, W] [2, B] [1, W]</code>. The encoder only saves a run when the colour <em>changes</em>,
-      so the very last run needs one extra save after the loop.
+      so the very last run needs one extra save after the <Term s="loop">loop</Term>.
     </p>
     <ul>
       <li>

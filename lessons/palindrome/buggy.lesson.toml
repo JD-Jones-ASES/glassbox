@@ -1,0 +1,30 @@
+id = "palindrome-buggy"
+title = "Palindrome — comparing the wrong pair"
+register = "naive"
+problem = "Decide whether a word reads the same forwards and backwards."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+s = "racecar"
+is_palindrome = True
+for i in range(len(s) // 2):
+    if s[i] != s[i + 1]:
+        is_palindrome = False
+"""
+
+[[checkpoints]]
+step = 3
+ask = "racecar reads the same backwards, so it IS a palindrome. This compares s[0]='r' with its NEIGHBOUR s[1]='a'. After the if, what will is_palindrome be?"
+
+[[notes]]
+step = 1
+text = "Assume it's a palindrome until a mismatch proves otherwise."
+
+[[notes]]
+step = 4
+text = "'r' and 'a' differ, so is_palindrome flips to False — but those are neighbours, not mirror positions."
+
+[[notes]]
+step = 11
+text = "Ended False, yet racecar clearly is a palindrome. The bug compares s[i] with s[i + 1] (the next char) instead of s[len - 1 - i] (the mirror)."

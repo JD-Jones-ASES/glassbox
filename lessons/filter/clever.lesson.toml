@@ -1,0 +1,23 @@
+id = "filter-clever"
+title = "Filtering a list — a comprehension"
+register = "clever"
+problem = "Keep only the numbers greater than 10, and leave the original list untouched."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+nums = [4, 3, 22, 18, 7, 15]
+big = [n for n in nums if n > 10]
+"""
+
+[[checkpoints]]
+step = 6
+ask = "The comprehension has now seen every number. After the last pass, what will big be?"
+
+[[notes]]
+step = 1
+text = "A comprehension is one expression, but Python runs it as a loop — watch n take each value in nums."
+
+[[notes]]
+step = 7
+text = "big = [22, 18, 15] — the same result as building a new list, in one line. (While the loop runs only n is visible; big is assembled internally and appears complete at the end.)"

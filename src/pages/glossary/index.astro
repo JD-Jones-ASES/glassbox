@@ -1,0 +1,82 @@
+---
+import Base from "../../layouts/Base.astro";
+import { withBase } from "../../lib/withBase.js";
+import {
+  allCategories, CATEGORY_LABELS, termsByCategory, relatedTermsOf, lessonSlugsForTerm,
+} from "../../lib/glossary.js";
+import { lessonBySlug } from "../../lib/curriculum.js";
+
+const categories = allCategories();
+// Resolve a term's lesson slugs to {slug, title}, dropping any lesson that doesn't exist yet.
+const lessonsFor = (slug) =>
+  lessonSlugsForTerm(slug).map((s) => lessonBySlug(s)).filter(Boolean);
+---
+
+<Base title="Glossary — GlassBox" description="Plain-language definitions of programming, data, networking, and complexity terms — cross-linked to the lessons.">
+  <h1>Glossary</h1>
+  <p class="lede">
+    Every term the lessons lean on, in plain language — from the basics (variable, loop, boolean) through the
+    abstract (truthiness, mutable) to networks (HTTP, DNS, IP address) and the cost of algorithms (polynomial
+    vs exponential time). Hover or tab onto an underlined term anywhere on the site for a quick definition.
+  </p>
+
+  <nav class="cat-nav" aria-label="Jump to category">
+    {categories.map((c) => (
+      <a href={`#cat-${c}`}>{CATEGORY_LABELS[c]}</a>
+    ))}
+  </nav>
+
+  {categories.map((c) => (
+    <section class="cat" id={`cat-${c}`}>
+      <h2>{CATEGORY_LABELS[c]}</h2>
+      <div class="term-grid">
+        {termsByCategory(c).map((t) => (
+          <article class="term-card card" id={`term-${t.slug}`}>
+            <h3>{t.term}</h3>
+            <p class="short-def">{t.short}</p>
+            <p class="body-def">{t.body}</p>
+            {relatedTermsOf(t.slug).length > 0 && (
+              <p class="rel"><span class="rel-label">See also</span>
+                {relatedTermsOf(t.slug).map((r, i) => (
+                  <>{i > 0 && <span class="dot">·</span>}<a href={`#term-${r.slug}`}>{r.term}</a></>
+                ))}
+              </p>
+            )}
+            {lessonsFor(t.slug).length > 0 && (
+              <p class="rel"><span class="rel-label">Appears in</span>
+                {lessonsFor(t.slug).map((l, i) => (
+                  <>{i > 0 && <span class="dot">·</span>}<a href={withBase(`/lessons/${l.slug}/`)}>{l.title}</a></>
+                ))}
+              </p>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .cat-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.4rem 0 0.6rem; }
+  .cat-nav a {
+    font-family: var(--font-display); font-size: 0.85rem; text-decoration: none; color: var(--ink-soft);
+    border: 1px solid var(--border-strong); border-radius: 999px; padding: 0.25rem 0.8rem;
+  }
+  .cat-nav a:hover { border-color: var(--live); color: var(--live); }
+
+  .cat { margin-top: 1.8rem; }
+  .term-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 0.6rem; }
+  @media (max-width: 720px) { .term-grid { grid-template-columns: 1fr; } }
+  .term-card { padding: 0.85rem 1rem; scroll-margin-top: 1rem; }
+  .term-card h3 { margin: 0 0 0.3rem; font-size: 1.05rem; }
+  .short-def { margin: 0 0 0.4rem; font-weight: 600; color: var(--live-ink); font-size: 0.95rem; }
+  .body-def { margin: 0; color: var(--ink-soft); font-size: 0.92rem; }
+  .rel { margin: 0.6rem 0 0; font-size: 0.85rem; display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: baseline; }
+  .rel-label {
+    font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--ink-faint);
+  }
+  .rel a { color: var(--ink); }
+  .rel a:hover { color: var(--live); }
+  .dot { color: var(--ink-faint); }
+</style>

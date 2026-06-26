@@ -1,0 +1,1195 @@
+{
+  "id": "fizzbuzz-buggy",
+  "title": "FizzBuzz — the branch you can never reach",
+  "problem": "For 1 to 15, say Fizz for multiples of 3, Buzz for multiples of 5, FizzBuzz for both, else the number.",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "result = []\nfor i in range(1, 16):\n    if i % 3 == 0:\n        result.append(\"Fizz\")\n    elif i % 5 == 0:\n        result.append(\"Buzz\")\n    elif i % 3 == 0 and i % 5 == 0:\n        result.append(\"FizzBuzz\")\n    else:\n        result.append(str(i))\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "result": []
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [],
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "result": [],
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "result": [],
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 4,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "result": [],
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 5,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "result": [
+          "1"
+        ],
+        "i": 1
+      },
+      "stdout": ""
+    },
+    {
+      "step": 6,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [
+          "1"
+        ],
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 7,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "result": [
+          "1"
+        ],
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 8,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "result": [
+          "1"
+        ],
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 9,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "result": [
+          "1"
+        ],
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 10,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2"
+        ],
+        "i": 2
+      },
+      "stdout": ""
+    },
+    {
+      "step": 11,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2"
+        ],
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 12,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2"
+        ],
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 13,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz"
+        ],
+        "i": 3
+      },
+      "stdout": ""
+    },
+    {
+      "step": 14,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz"
+        ],
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 15,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz"
+        ],
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 16,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz"
+        ],
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 17,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz"
+        ],
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 18,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4"
+        ],
+        "i": 4
+      },
+      "stdout": ""
+    },
+    {
+      "step": 19,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4"
+        ],
+        "i": 5
+      },
+      "stdout": ""
+    },
+    {
+      "step": 20,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4"
+        ],
+        "i": 5
+      },
+      "stdout": ""
+    },
+    {
+      "step": 21,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4"
+        ],
+        "i": 5
+      },
+      "stdout": ""
+    },
+    {
+      "step": 22,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz"
+        ],
+        "i": 5
+      },
+      "stdout": ""
+    },
+    {
+      "step": 23,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz"
+        ],
+        "i": 6
+      },
+      "stdout": ""
+    },
+    {
+      "step": 24,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz"
+        ],
+        "i": 6
+      },
+      "stdout": ""
+    },
+    {
+      "step": 25,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz"
+        ],
+        "i": 6
+      },
+      "stdout": ""
+    },
+    {
+      "step": 26,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz"
+        ],
+        "i": 7
+      },
+      "stdout": ""
+    },
+    {
+      "step": 27,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz"
+        ],
+        "i": 7
+      },
+      "stdout": ""
+    },
+    {
+      "step": 28,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz"
+        ],
+        "i": 7
+      },
+      "stdout": ""
+    },
+    {
+      "step": 29,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz"
+        ],
+        "i": 7
+      },
+      "stdout": ""
+    },
+    {
+      "step": 30,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7"
+        ],
+        "i": 7
+      },
+      "stdout": ""
+    },
+    {
+      "step": 31,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7"
+        ],
+        "i": 8
+      },
+      "stdout": ""
+    },
+    {
+      "step": 32,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7"
+        ],
+        "i": 8
+      },
+      "stdout": ""
+    },
+    {
+      "step": 33,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7"
+        ],
+        "i": 8
+      },
+      "stdout": ""
+    },
+    {
+      "step": 34,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7"
+        ],
+        "i": 8
+      },
+      "stdout": ""
+    },
+    {
+      "step": 35,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8"
+        ],
+        "i": 8
+      },
+      "stdout": ""
+    },
+    {
+      "step": 36,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8"
+        ],
+        "i": 9
+      },
+      "stdout": ""
+    },
+    {
+      "step": 37,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8"
+        ],
+        "i": 9
+      },
+      "stdout": ""
+    },
+    {
+      "step": 38,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz"
+        ],
+        "i": 9
+      },
+      "stdout": ""
+    },
+    {
+      "step": 39,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz"
+        ],
+        "i": 10
+      },
+      "stdout": ""
+    },
+    {
+      "step": 40,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz"
+        ],
+        "i": 10
+      },
+      "stdout": ""
+    },
+    {
+      "step": 41,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz"
+        ],
+        "i": 10
+      },
+      "stdout": ""
+    },
+    {
+      "step": 42,
+      "line": 6,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz"
+        ],
+        "i": 10
+      },
+      "stdout": ""
+    },
+    {
+      "step": 43,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz"
+        ],
+        "i": 11
+      },
+      "stdout": ""
+    },
+    {
+      "step": 44,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz"
+        ],
+        "i": 11
+      },
+      "stdout": ""
+    },
+    {
+      "step": 45,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz"
+        ],
+        "i": 11
+      },
+      "stdout": ""
+    },
+    {
+      "step": 46,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz"
+        ],
+        "i": 11
+      },
+      "stdout": ""
+    },
+    {
+      "step": 47,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11"
+        ],
+        "i": 11
+      },
+      "stdout": ""
+    },
+    {
+      "step": 48,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11"
+        ],
+        "i": 12
+      },
+      "stdout": ""
+    },
+    {
+      "step": 49,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11"
+        ],
+        "i": 12
+      },
+      "stdout": ""
+    },
+    {
+      "step": 50,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11",
+          "Fizz"
+        ],
+        "i": 12
+      },
+      "stdout": ""
+    },
+    {
+      "step": 51,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11",
+          "Fizz"
+        ],
+        "i": 13
+      },
+      "stdout": ""
+    },
+    {
+      "step": 52,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11",
+          "Fizz"
+        ],
+        "i": 13
+      },
+      "stdout": ""
+    },
+    {
+      "step": 53,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11",
+          "Fizz"
+        ],
+        "i": 13
+      },
+      "stdout": ""
+    },
+    {
+      "step": 54,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11",
+          "Fizz"
+        ],
+        "i": 13
+      },
+      "stdout": ""
+    },
+    {
+      "step": 55,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11",
+          "Fizz",
+          "13"
+        ],
+        "i": 13
+      },
+      "stdout": ""
+    },
+    {
+      "step": 56,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11",
+          "Fizz",
+          "13"
+        ],
+        "i": 14
+      },
+      "stdout": ""
+    },
+    {
+      "step": 57,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11",
+          "Fizz",
+          "13"
+        ],
+        "i": 14
+      },
+      "stdout": ""
+    },
+    {
+      "step": 58,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11",
+          "Fizz",
+          "13"
+        ],
+        "i": 14
+      },
+      "stdout": ""
+    },
+    {
+      "step": 59,
+      "line": 7,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11",
+          "Fizz",
+          "13"
+        ],
+        "i": 14
+      },
+      "stdout": "",
+      "note": "This branch — `elif i % 3 == 0 and i % 5 == 0` — can never run: any number divisible by both is already caught by the `i % 3 == 0` test above it."
+    },
+    {
+      "step": 60,
+      "line": 10,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11",
+          "Fizz",
+          "13",
+          "14"
+        ],
+        "i": 14
+      },
+      "stdout": ""
+    },
+    {
+      "step": 61,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11",
+          "Fizz",
+          "13",
+          "14"
+        ],
+        "i": 15
+      },
+      "stdout": ""
+    },
+    {
+      "step": 62,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11",
+          "Fizz",
+          "13",
+          "14"
+        ],
+        "i": 15
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "15 is divisible by both 3 and 5, so it should be FizzBuzz. This ladder tests `i % 3 == 0` first. What will it append for 15?"
+    },
+    {
+      "step": 63,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11",
+          "Fizz",
+          "13",
+          "14",
+          "Fizz"
+        ],
+        "i": 15
+      },
+      "stdout": "",
+      "note": "15 is a multiple of 3 and of 5, but `i % 3 == 0` matched first, so it appended 'Fizz'. The both-divisible branch is unreachable."
+    },
+    {
+      "step": 64,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "result": [
+          "1",
+          "2",
+          "Fizz",
+          "4",
+          "Buzz",
+          "Fizz",
+          "7",
+          "8",
+          "Fizz",
+          "Buzz",
+          "11",
+          "Fizz",
+          "13",
+          "14",
+          "Fizz"
+        ],
+        "i": 15
+      },
+      "stdout": "",
+      "note": "Result ends with 'Fizz' at position 15, not 'FizzBuzz'. The order of the ladder, not the logic of each test, is the bug — test the strictest case first."
+    }
+  ]
+}

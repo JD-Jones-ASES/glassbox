@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/multipacket/buggy.trace.json";
 import procedural from "../../../derived/multipacket/procedural.trace.json";
 
@@ -19,8 +20,8 @@ const registers = [buggy, procedural];
   <p class="lede">
     A message does not cross the internet in one piece. It is chopped into numbered <em>packets</em>, each
     of which finds its own way to the destination — so they arrive <em>out of order</em> and have to be put
-    back together by sequence number. Switch the abstraction on and watch three packets (the numbered dots)
-    fan out across the network and reassemble at <code>D</code>.
+    back together by sequence number. Switch the abstraction on and watch three <Term s="packet">packets</Term> (the numbered dots)
+    fan out across the network and <Term s="reassembly">reassemble</Term> at <code>D</code>.
   </p>
 
   <TracePlayer registers={registers} client:visible />

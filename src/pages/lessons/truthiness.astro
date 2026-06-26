@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
+import Term from "../../components/Term.astro";
 import buggy from "../../../derived/truthiness/buggy.trace.json";
 import procedural from "../../../derived/truthiness/procedural.trace.json";
 
@@ -13,7 +14,7 @@ const registers = [buggy, procedural];
   <LessonNav slug="truthiness" position="top" />
 
   <h1>Truthiness: what counts as true</h1>
-  <p class="lede">Python lets any value stand in a yes/no test: empty containers, 0, '' and <code>None</code> are 'falsy', everything else 'truthy'. But truthy is not the same as <em>equal to</em> <code>True</code> — and confusing the two skips the branch you wanted.</p>
+  <p class="lede">Python lets any <Term s="value">value</Term> stand in a yes/no test: empty containers, 0, '' and <code>None</code> are 'falsy', everything else 'truthy'. But <Term s="truthiness">truthy</Term> is not the same as <em>equal to</em> <code>True</code> — and confusing the two skips the branch you wanted.</p>
 
   <TracePlayer registers={registers} client:visible />
 
@@ -21,7 +22,7 @@ const registers = [buggy, procedural];
     <h2>What you are looking at</h2>
     <p>Watch which branch runs, and what <code>label</code> ends up as.</p>
     <ul>
-      <li><strong>Buggy</strong> — <code>if items == True:</code> compares the list <code>[3, 8]</code> to the bool <code>True</code> — and a list never equals <code>True</code>, so the test is <code>False</code> and we wrongly land on <code>'empty'</code>.</li>
+      <li><strong>Buggy</strong> — <code>if items == True:</code> compares the <Term s="list">list</Term> <code>[3, 8]</code> to the bool <code>True</code> — and a list never equals <code>True</code>, so the test is <code>False</code> and we wrongly land on <code>'empty'</code>.</li>
       <li><strong>Procedural</strong> — <code>if items:</code> asks whether the list is truthy. A non-empty list is, so we correctly land on <code>'has items'</code>.</li>
     </ul>
     <p class="fineprint">Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.</p>

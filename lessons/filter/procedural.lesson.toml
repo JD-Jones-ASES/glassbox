@@ -30,3 +30,11 @@ text = "22 is over 10, so it passes the gate and joins big. nums itself never ch
 [[notes]]
 step = 16
 text = "15 passes too. big ends as [22, 18, 15] — the three big numbers, in order — and nums is exactly as it started. Building a new list keeps the original safe."
+
+[abstraction]
+type = "piles"
+
+[abstraction.bind]
+nums = "source"
+n = "cursor"
+big = "pile_a"
