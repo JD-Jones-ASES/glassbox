@@ -103,19 +103,34 @@ Pages (Source: GitHub Actions) when the owner is ready to go public.
 
 ## Extending GlassBox (how to add the next lesson)
 
-Adding a lesson is the common task; it touches data, never the engine:
+Adding a lesson is the common task; it touches data, never the engine. The house pattern is **two
+registers, buggy-first** (`naive` shown as "Buggy", then `procedural`/`idiomatic`) so the learner watches
+the bug fail before seeing it fixed — the most valuable register. (Exceptions where the bug only lands
+after a baseline — `functions`, `speedup` — keep their own order.)
 
 1. **Author** `lessons/<topic>/<register>.lesson.toml` — `id`, `title`, `register`
    (`naive|procedural|idiomatic|clever`), `problem`, `author`, `created`, a `source` (TOML multi-line
-   string of real Python), an optional `[abstraction]` (`type` + a `bind` mapping variables to that
-   abstraction's slots), and `[[notes]]` keyed by step index.
+   string of real Python), and `[[notes]]` keyed by step index. Optional:
+   - `[abstraction]` (`type` + a `bind` mapping variables → that renderer's slots). Skip it to ride the
+     generic variables table — most newer lessons do.
+   - `domain_model = "author-asserted-simulation"` — **required** when the program is a toy model of a
+     real-world process (a network/dns/gantt sim); the build gate fails without it for those abstractions.
+   - `[[checkpoints]]` (`step` + optional `ask`) — surfaces a custom prediction question at that step
+     **when the learner is in Predict mode**. Author one where a scalar state-delta is predictable and
+     the wrong guess is instructive; network/structural lessons (the insight is visual) can skip it.
+     A checkpoint may not sit on the last step (nothing to predict). It never stores an answer — the real
+     next state adjudicates (ADR-0011).
 2. **Generate, reading the steps off the trace.** Run the tracer over your source first to read the real
-   step indices before writing notes — the trace is the ground truth, never guess indices. `npm run trace`
-   writes `derived/<topic>/<register>.trace.json`; `npm run prepare:traces` then runs the schema + scan gates.
+   step indices before writing notes/checkpoints — the trace is the ground truth, never guess indices.
+   `npm run trace` writes `derived/<topic>/<register>.trace.json`; `npm run prepare:traces` then runs the
+   schema + scan gates. (`uv --project tracer run python -c "from glassbox_tracer.trace import trace; ..."`
+   is the quick way to dump step/line/state.)
 3. **Page + catalog.** Add `src/pages/lessons/<topic>.astro` (import the trace JSON, mount
    `<TracePlayer registers={[...]} client:visible />`, write a short worked explanation) and a line in the
-   `pillars` list in `src/pages/lessons/index.astro`. (Watch Astro's whitespace: keep an inline `<code>`/
-   `<a>` on the same line as the word before it, or the space is dropped.)
+   `pillars` list in `src/pages/lessons/index.astro`. **Astro whitespace gotcha:** a space next to an inline
+   element (`<code>`, `<a>`, `<strong>`) is dropped if a newline falls between them — keep the element and
+   its adjacent word on the SAME line (this bit the `speedup` page: `<strong>Speedup</strong>\nmeasures`
+   rendered as "Speedupmeasures").
 4. **New abstraction?** Only if the generic state view / call-stack chrome isn't enough. Add
    `src/lib/abstractions/<type>.js` (a pure `(abstraction, state) → viewModel`), register it in
    `src/lib/abstractions/index.js`, and add one `{:else if … model.kind === "<type>"}` branch + scoped
@@ -151,14 +166,14 @@ from `/lessons/`:
 Renderers: cups, piles, binary, network (with `down` + multi-`packet` slots), call-stack, and `gantt`
 (lane chart). Many newer lessons ride the **generic state view** (no bespoke renderer).
 
-**Phase 2 (DONE) — the prediction–evidence–revision loop (the pedagogical product; ADR-0011).** A
-`checkpoint` step gates forward motion and asks the learner to predict the next step's state; the real
-`trace[k+1].state` is the sole adjudicator (no authored answer). Authored via a `[[checkpoints]]` table
-(`step` + optional `ask`); swap/buggy and swap/procedural carry the canonical contrast. Two practice modes
-ship: **predict** (every step becomes a checkpoint) and **findline** (hide the lit line; identify which one
-produced the state, adjudicated vs `steps[k].line`). The third mode, construct-the-viz (fill the `bind`
-mapping, adjudicate vs `abstractionModel()`), is **deferred** — highest effort, most in need of live UX
-iteration.
+**Phase 2 (DONE) — the prediction–evidence–revision loop (the pedagogical product; ADR-0011).** Three
+learner-chosen practice modes, selected under the problem statement: **watch** (passive stepping — the
+default, never gates), **predict** (every non-final step gates: predict the next state before it's
+revealed), and **findline** (hide the lit line; click the one that produced the state). The real
+`trace[k+1].state` is the sole adjudicator — no authored answer. A lesson's `[[checkpoints]]` table just
+supplies a better `ask` at chosen steps, shown when the learner is in Predict mode. The fourth mode,
+construct-the-viz (fill the `bind` mapping, adjudicate vs `abstractionModel()`), is **deferred** — highest
+effort, most in need of live UX iteration.
 
 **Phase 3 (DONE) — content to rigorous, exam-relevant coverage (P0+P1, all execution-derived, each with a
 buggy register).** Ten new lessons shipped this line of work (accumulate, search, filter, rle, bindecimal,
@@ -175,7 +190,8 @@ lessons are traced sims (`domain_model = author-asserted-simulation`).
   (truthiness, modular arithmetic, if/elif ladder, function variants); weak-guarantee "reveals" (metadata,
   lossy/lossless, bandwidth) — out of the execution-derived core by design.
 
-When adding a lesson, see "Extending GlassBox" above. New convention since Phase 2: author a
-`[[checkpoints]]` table where a scalar state-delta is predictable (most lessons); network/structural
-lessons may ship without one (the insight is visual). Network/gantt/dns abstractions MUST set
-`domain_model = "author-asserted-simulation"` or the build gate fails.
+**Starting a lesson-buildout session?** Read "Extending GlassBox" above for the full recipe and
+conventions. The deferred lessons listed here are the obvious next targets; the internet-vs-web composite
+and DNS reuse the existing `network.js` (no new renderer), while the granular pedagogical cluster rides
+the generic view. Engine, player, schemas, and gates are stable — expect to touch only `lessons/`,
+`derived/`, and `src/pages/lessons/`.
