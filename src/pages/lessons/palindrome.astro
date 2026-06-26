@@ -4,9 +4,10 @@ import TracePlayer from "../../islands/TracePlayer.svelte";
 import LessonNav from "../../components/LessonNav.astro";
 import buggy from "../../../derived/palindrome/buggy.trace.json";
 import procedural from "../../../derived/palindrome/procedural.trace.json";
+import idiomatic from "../../../derived/palindrome/idiomatic.trace.json";
 
-// Buggy first: watch it fail in real state, then watch the fix.
-const registers = [buggy, procedural];
+// Buggy first: the wrong pair, then the mirror compare, then the Pythonic reverse-and-compare.
+const registers = [buggy, procedural, idiomatic];
 ---
 
 <Base title="Palindrome check — GlassBox" description="Does a word read the same backwards? Watch comparing the wrong pair of letters break it.">
@@ -23,6 +24,7 @@ const registers = [buggy, procedural];
     <ul>
       <li><strong>Buggy</strong> — compares each letter with its NEIGHBOUR (<code>s[i]</code> vs <code>s[i + 1]</code>), so 'racecar' fails at the very first pair even though it is a palindrome.</li>
       <li><strong>Procedural</strong> — compares each letter with its MIRROR (<code>s[i]</code> vs <code>s[len(s) - 1 - i]</code>), so 'racecar' stays True.</li>
+      <li><strong>Idiomatic</strong> — <code>s == s[::-1]</code> compares the whole word to its reverse in one line. <code>s[::-1]</code> is the Pythonic way to reverse a sequence.</li>
     </ul>
     <p class="milestone-note">This is a <strong>milestone</strong> — it puts several earlier ideas together into one small program.</p>
     <p class="fineprint">Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.</p>

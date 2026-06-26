@@ -1,0 +1,41 @@
+{
+  "id": "palindrome-idiomatic",
+  "title": "Palindrome — compare with the reverse",
+  "problem": "Decide whether a word reads the same forwards and backwards.",
+  "register": "idiomatic",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "s = \"racecar\"\nis_palindrome = s == s[::-1]\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "s": "racecar"
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "s[::-1] is s reversed. After `is_palindrome = s == s[::-1]` runs, what will is_palindrome be?"
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "s": "racecar",
+        "is_palindrome": true
+      },
+      "stdout": "",
+      "note": "s[::-1] is the whole string reversed; comparing s to its reverse IS the palindrome check, in one line. 'racecar' reversed is still 'racecar', so is_palindrome is True."
+    }
+  ]
+}

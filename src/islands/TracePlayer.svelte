@@ -424,6 +424,21 @@
             </div>
             {#if model.total != null}<div class="water-total">trapped water = <strong>{model.total}</strong></div>{/if}
           </div>
+        {:else if view === "abstraction" && model && model.kind === "scan"}
+          <div class="scan">
+            <div class="scan-row">
+              {#each model.items as it}<span class="chip src" class:active={it.active}>{fmtChip(it.value)}</span>{/each}
+            </div>
+            {#if model.cmp}
+              <div class="scan-cmp">
+                is <code>{model.currentName}</code> <span class="chip cur">{fmtChip(model.cmp.current)}</span>
+                &gt; <code>{model.bestName}</code> <span class="chip best">{fmtChip(model.cmp.best)}</span> ?
+                <span class="scan-verdict" class:yes={model.cmp.beats}>{model.cmp.beats ? "yes — new max" : "no — keep it"}</span>
+              </div>
+            {:else if model.best != null}
+              <div class="scan-cmp"><code>{model.bestName}</code> = <span class="chip best">{fmtChip(model.best)}</span></div>
+            {/if}
+          </div>
         {:else}
           <table class="vars">
             <thead><tr><th>variable</th><th>value</th></tr></thead>
@@ -731,14 +746,25 @@
   .water-total { font-family: var(--font-mono); font-size: 0.95rem; color: var(--ink-soft); }
   .water-total strong { color: var(--live-ink); font-size: 1.1rem; }
 
+  .scan { padding: 1rem 0.8rem; display: flex; flex-direction: column; gap: 0.9rem; }
+  .scan-row { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+  .scan-cmp { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; font-size: 0.95rem; color: var(--ink-soft); }
+  .chip.best { background: var(--asserted-wash); border-color: var(--asserted); color: var(--asserted); }
+  .scan-verdict {
+    font-family: var(--font-display); font-weight: 600; font-size: 0.85rem; padding: 0.15rem 0.6rem;
+    border-radius: 999px; background: var(--surface); border: 1px solid var(--border-strong); color: var(--ink-soft);
+  }
+  .scan-verdict.yes { background: var(--live-wash); border-color: var(--live); color: var(--live-ink); }
+
   @media (prefers-reduced-motion: no-preference) {
     .fill { transition: d 0.25s ease, fill 0.25s ease; }
     .line.hl { transition: background 0.15s ease; }
   }
 
-  .vars { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.9rem; }
+  .vars { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.9rem; table-layout: fixed; }
   .vars th { text-align: left; font-weight: 500; color: var(--ink-faint); font-size: 0.74rem; padding: 0.5rem 0.8rem; }
-  .vars td { padding: 0.34rem 0.8rem; border-top: 1px solid var(--border); }
+  .vars th:first-child, .vars td:first-child { width: 8.5rem; }
+  .vars td { padding: 0.34rem 0.8rem; border-top: 1px solid var(--border); overflow-wrap: anywhere; vertical-align: top; }
   .vars td:first-child { color: var(--live-ink); }
   .muted { color: var(--ink-faint); font-style: italic; }
 

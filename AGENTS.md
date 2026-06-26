@@ -140,75 +140,61 @@ after a baseline — `functions`, `speedup` — keep their own order.)
 4. **New abstraction?** Only if the generic state view / call-stack chrome isn't enough. Add
    `src/lib/abstractions/<type>.js` (a pure `(abstraction, state) → viewModel`), register it in
    `src/lib/abstractions/index.js`, and add one `{:else if … model.kind === "<type>"}` branch + scoped
-   styles in `src/islands/TracePlayer.svelte`. Existing renderers: `cups`, `piles`, `binary`, `network`
-   (slots: topology/current/path/route/down/packets/arrived), `gantt` (lane chart); functions use the
-   built-in call-stack chrome — no renderer. Many lessons need none and ride the generic variables table.
+   styles in `src/islands/TracePlayer.svelte`. Existing renderers: `cups`, `piles` (source / cursor /
+   `cursor_index` / pile_a–c), `binary`, `network` (topology/current/path/route/down/packets/arrived),
+   `gantt` (lane chart), `water` (bar+water histogram), `scan` (a walk with a running value + live
+   comparison); functions use the built-in call-stack chrome — no renderer. Many lessons ride the generic
+   variables table.
+5. **Milestone?** A milestone is an ordinary lesson with `milestone: true` in its manifest entry; the
+   syllabus badges it. Use it for an integrative problem that combines several earlier ideas (FizzBuzz,
+   collecting rainwater).
+
+**Glossary.** Terms live in `src/lib/glossary.js` (`{ slug, term, category, short, body, related, lessons }`
++ helpers). To define a term, add an entry; to use it in prose, wrap the word with
+`<Term s="<slug>">word</Term>` (manual, so code blocks never get false popups). The site-wide hover/focus
+popup (a script in `src/layouts/Base.astro`) and the `/glossary/` page read the module; `relatedLessons`
+links back via `curriculum.js`. Keep the inline `<Term>` on the same line as its neighbours (the whitespace
+gotcha).
 
 The engine (`tracer/`) should rarely change. If it must, keep the `swap` and `partition-procedural` traces
 byte-identical (`partition-buggy` carries aliasing `refs` by design; ADR-0009) and add a golden test in
 `tracer/tests/`; `uv --project tracer run pytest` must stay green.
 
-## Status & roadmap
+## Current state (v1.0.0)
 
-**The engine and trust foundation are hardened (Phase 1, ADR-0008/0009/0010).** The tracer handles
-straight-line code, loops, lists, dicts, and **multi-frame functions** (call/return, depth, return values,
-recursion, defaults), with **object identity** (`refs` make aliasing visible — the `partition-buggy`
-repair), a **two-axis provenance** model (`derivation_source` + `domain_model`; routing is a real trace of
-an author-asserted model), and serialization hardening (typed dict keys, cycle back-edges, deterministic
-set reprs, captured return-value flags).
+GlassBox is a finished v1.0.0 course; the engine, player, schemas, and gates are stable. Expect to add
+**content** (`lessons/`, `derived/`, `src/pages/lessons/`, a `curriculum.js` entry, glossary terms), not
+change the engine. The development history is in [`CHANGELOG.md`](./CHANGELOG.md); the architecture decision
+log is [`DECISIONS.md`](./DECISIONS.md).
 
-**Phase 2 (DONE) — the prediction–evidence–revision loop (the pedagogical product; ADR-0011).** Three
-learner-chosen practice modes, selected under the problem statement: **watch** (passive stepping — the
-default, never gates), **predict** (every non-final step gates: predict the next state before it's
-revealed), and **findline** (hide the lit line; click the one that produced the state). The real
-`trace[k+1].state` is the sole adjudicator — no authored answer. A lesson's `[[checkpoints]]` table just
-supplies a better `ask` at chosen steps, shown when the learner is in Predict mode. The fourth mode,
-construct-the-viz (fill the `bind` mapping, adjudicate vs `abstractionModel()`), is **deferred** — highest
-effort, most in need of live UX iteration.
+**The course** — 32 lessons in one ordered path of nine modules, browsable at `/lessons/` as a numbered
+syllabus and navigable lesson-to-lesson (manifest-driven; ADR-0012). Every lesson is execution-derived and
+buggy-first; most carry a prediction checkpoint. Four are integrative **milestone** projects (★).
 
-**Phase 3 + 4 (DONE) — a full beginner course with progression navigation.** Twenty-eight lessons now run
-as **one ordered path of nine modules**, browsable from `/lessons/` as a numbered syllabus and navigable
-lesson-to-lesson. Every new lesson is execution-derived with a buggy-first register; most carry a checkpoint.
+- **0 · Foundations** — values, datatypes (`//` vs `/`), conversion (`int()` vs `round()`).
+- **1 · Arithmetic** — arithmetic (precedence), exponent (`^` is XOR), modulo (clock wrap).
+- **2 · Comparisons & booleans** — comparison (a stored bool), truthiness, booleanops (`x == 1 or 2` → `2`).
+- **3 · Decisions** — ifelse (two ifs both run), elifladder (first true branch wins), fizzbuzz ★.
+- **4 · Programs & state** — swap (cups), accumulate (=vs+=), runningmax ★, search, filter, palindrome ★,
+  rainwater ★ (water viz).
+- **5 · Mutability & aliasing** — aliasing (`b = a` shares one list), partition (piles).
+- **6 · Functions** — functions (call stack; forgot-`return`), parameters (positional order).
+- **7 · Data & representation** — binary, bindecimal, rle, overflow, roundoff.
+- **8 · Systems & networks** — routing, faulttolerance, multipacket, speedup (all
+  `domain_model = author-asserted-simulation`).
 
-- **0 · Foundations** — `values` (rebinding loses the old value), `datatypes` (`//` vs `/`: int vs float),
-  `conversion` (`int()` truncates vs `round()`).
-- **1 · Arithmetic & division** — `arithmetic` (× before +), `exponent` (`^` is XOR, not power),
-  `modulo` (the remainder / clock wrap; feeds `overflow`).
-- **2 · Comparisons & booleans** — `comparison` (a comparison is a stored bool; `>` vs `>=`),
-  `truthiness` (`== True` vs `if items:`), `booleanops` (`x == 1 or 2` returns the int `2`).
-- **3 · Decisions** — `ifelse` (two ifs both run), `elifladder` (first true branch wins; order matters).
-- **4 · Programs & state** — `swap` (cups), `accumulate` (=vs+=), `search` (index-vs-value), `filter`
-  (delete-while-looping skip).
-- **5 · Mutability & aliasing** — `aliasing` (`b = a` shares one list; refs prove it), `partition`
-  (piles; the aliasing bug, re-homed here).
-- **6 · Functions** — `functions` (call stack; forgot-`return`), `parameters` (positional order; keyword args).
-- **7 · Data & representation** — `binary`, `bindecimal`, `rle`, `overflow`, `roundoff`.
-- **8 · Systems & networks** — `routing`, `faulttolerance`, `multipacket`, `speedup`
-  (all `domain_model = author-asserted-simulation`).
+**Learner modes** — watch; predict (call the next state, the real trace adjudicates — ADR-0011);
+find-the-line.
 
-Renderers: cups, piles, binary, network (with `down` + multi-`packet` slots), call-stack, and `gantt`
-(lane chart). The 13 Foundations→Decisions→Mutability→Functions additions all ride the **generic state
-view** (no bespoke renderer; `aliasing` reuses the existing `refs` mechanism).
+**Renderers** — cups, piles, binary, network, gantt, water, scan; the call-stack chrome for functions; the
+generic variables table for everything else.
 
-**Navigation (ADR-0012).** Order, grouping, and prerequisites live in a single UI-layer manifest
-`src/lib/curriculum.js` (modules → ordered lessons → `prereqs` + helpers). The lessons index renders a
-numbered syllabus from it, the home "Start here" is `firstLesson()`, and `src/components/LessonNav.astro`
-gives every lesson a breadcrumb, a "Best after" prerequisite callout, and prev/next. The trace pipeline
-(lesson TOML, schemas, `build.py`, the player) is untouched by it.
+**Glossary** — ~86 cross-linked terms at `/glossary/`, with a site-wide hover/focus definition popup.
 
-**Remaining / next:**
-- *Pages go-live* — owner enables GitHub Pages in repo Settings when ready (Source: GitHub Actions).
-- *Milestone projects* — a couple of integrative intro-CS problems (e.g. collecting-rainwater) that combine
-  several ideas and make a strong visual, placed as checkpoints along the lesson path.
-- *Interlinked glossary* — a breadth-first glossary of programming + networking terms (basics through
-  "truthiness", http/www/dns/ip-address, polynomial vs exponential time), cross-linked to lessons, with a
-  mouseover quick-definition popup integrated across the site.
-- *Transfer-measurement rubric* — the predict/findline modes are the instrument; a light static rubric is
-  the deliverable.
-- *Deferred:* construct-the-viz exercise mode; the internet-vs-web composite ("type a URL → page loads") and
-  a standalone DNS lesson (both reuse `network.js`); weak-guarantee "reveals" (metadata, lossy/lossless,
-  bandwidth) — out of the execution-derived core by design.
+**Deploy** — push to `main` → `.github/workflows/deploy.yml` builds and publishes to GitHub Pages
+(base path `/glassbox`).
 
-**Starting a lesson-buildout session?** Read "Extending GlassBox" above for the full recipe. Engine, player,
-schemas, and gates are stable — expect to touch only `lessons/`, `derived/`, `src/pages/lessons/`, and the
-`src/lib/curriculum.js` manifest entry.
+**Deferred by design (not gaps):** the construct-the-viz exercise mode; an internet-vs-web composite and a
+standalone DNS lesson (would reuse `network.js`); weak-guarantee "reveals" (metadata, lossy/lossless,
+bandwidth) that sit outside the execution-derived core; and a transfer-measurement rubric over the
+predict / find-the-line modes.

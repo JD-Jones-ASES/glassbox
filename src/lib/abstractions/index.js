@@ -6,6 +6,7 @@ import { binaryModel } from "./binary.js";
 import { networkModel } from "./network.js";
 import { ganttModel } from "./gantt.js";
 import { waterModel } from "./water.js";
+import { scanModel } from "./scan.js";
 
 const REGISTRY = {
   cups: cupsModel,
@@ -14,6 +15,7 @@ const REGISTRY = {
   network: networkModel,
   gantt: ganttModel,
   water: waterModel,
+  scan: scanModel,
 };
 
 export function abstractionModel(abstraction, state) {

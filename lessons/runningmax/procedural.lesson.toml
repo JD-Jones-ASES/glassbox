@@ -14,11 +14,12 @@ for n in nums:
 """
 
 [abstraction]
-type = "piles"
+type = "scan"
 
 [abstraction.bind]
 nums = "source"
-n = "cursor"
+n = "current"
+max_so_far = "best"
 
 
 [[checkpoints]]

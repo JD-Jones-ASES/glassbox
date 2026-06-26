@@ -14,10 +14,11 @@
     "created": "2026-06-26"
   },
   "abstraction": {
-    "type": "piles",
+    "type": "scan",
     "bind": {
       "nums": "source",
-      "n": "cursor"
+      "n": "current",
+      "max_so_far": "best"
     }
   },
   "source": "nums = [-5, -2, -8, -1]\nmax_so_far = 0\nfor n in nums:\n    if n > max_so_far:\n        max_so_far = n\n",

@@ -1,0 +1,19 @@
+id = "palindrome-idiomatic"
+title = "Palindrome — compare with the reverse"
+register = "idiomatic"
+problem = "Decide whether a word reads the same forwards and backwards."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+s = "racecar"
+is_palindrome = s == s[::-1]
+"""
+
+[[checkpoints]]
+step = 0
+ask = "s[::-1] is s reversed. After `is_palindrome = s == s[::-1]` runs, what will is_palindrome be?"
+
+[[notes]]
+step = 1
+text = "s[::-1] is the whole string reversed; comparing s to its reverse IS the palindrome check, in one line. 'racecar' reversed is still 'racecar', so is_palindrome is True."
