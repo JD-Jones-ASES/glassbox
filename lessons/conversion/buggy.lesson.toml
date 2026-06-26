@@ -1,0 +1,19 @@
+id = "conversion-buggy"
+title = "int() truncates, it doesn't round"
+register = "naive"
+problem = "Round the measurement 3.9 to a whole number (we want 4)."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+measurement = 3.9
+rounded = int(measurement)
+"""
+
+[[checkpoints]]
+step = 0
+ask = "measurement is 3.9. After `rounded = int(measurement)` runs, what will rounded be?"
+
+[[notes]]
+step = 1
+text = "int(3.9) = 3, not 4. int() truncates toward zero — it chops the fraction off rather than rounding."

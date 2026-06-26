@@ -1,0 +1,19 @@
+id = "exponent-buggy"
+title = "^ is not 'to the power of'"
+register = "naive"
+problem = "Raise base (2) to the power of 3 (we want 8)."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+base = 2
+power = base ^ 3
+"""
+
+[[checkpoints]]
+step = 0
+ask = "base is 2. After `power = base ^ 3` runs, what will power be?"
+
+[[notes]]
+step = 1
+text = "power = 2 ^ 3 = 1, not 8. In Python `^` is bitwise XOR, not exponentiation — and 2 XOR 3 is 1. No error is raised; the answer is just silently wrong."

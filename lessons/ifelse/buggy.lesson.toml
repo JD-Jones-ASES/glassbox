@@ -1,0 +1,30 @@
+id = "ifelse-buggy"
+title = "Two ifs both run"
+register = "naive"
+problem = "Grade a score of 85: 'distinction' for 80 and up, otherwise 'pass' for 50 and up."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+score = 85
+if score >= 80:
+    grade = "distinction"
+if score >= 50:
+    grade = "pass"
+"""
+
+[[checkpoints]]
+step = 3
+ask = "grade is already 'distinction'. The next line is a separate `if score >= 50:`. After it runs, what will grade be?"
+
+[[notes]]
+step = 2
+text = "First if: 85 >= 80, so grade = 'distinction'. So far so good."
+
+[[notes]]
+step = 3
+text = "A second, separate `if` — it runs too, because it isn't joined to the first. And 85 >= 50 is also true."
+
+[[notes]]
+step = 4
+text = "grade = 'pass', overwriting 'distinction'. Both ifs fired and the second clobbered the first. We wanted only one branch to win."

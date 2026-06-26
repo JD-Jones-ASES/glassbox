@@ -1,0 +1,91 @@
+---
+// Per-lesson chrome, fully derived from the curriculum manifest — takes only a slug (+ position).
+//   position="top"    -> breadcrumb ("Lessons / Module · Step N of M") + optional prerequisite callout
+//   position="bottom" -> prev / next links in course order
+// Adding/removing/reordering lessons in src/lib/curriculum.js updates every page automatically.
+import { withBase } from "../lib/withBase.js";
+import { breadcrumbFor, prereqsOf, neighbors } from "../lib/curriculum.js";
+
+const { slug, position = "top" } = Astro.props;
+const crumb = breadcrumbFor(slug);
+const prereqs = position === "top" ? prereqsOf(slug) : [];
+const { prev, next } = position === "bottom" ? neighbors(slug) : { prev: null, next: null };
+---
+
+{position === "top" && crumb && (
+  <nav class="lesson-crumb" aria-label="Course position">
+    <a href={withBase("/lessons/")}>Lessons</a>
+    <span class="sep">/</span>
+    <span class="crumb-mod">{crumb.moduleName}</span>
+    <span class="sep">·</span>
+    <span class="crumb-step">Step {crumb.stepNumber} of {crumb.stepCount}</span>
+  </nav>
+)}
+
+{position === "top" && prereqs.length > 0 && (
+  <p class="prereq">
+    <span class="prereq-label">Best after</span>
+    {prereqs.map((p, i) => (
+      <>
+        {i > 0 && <span class="sep">·</span>}
+        <a href={withBase(`/lessons/${p.slug}/`)}>{p.title}</a>
+      </>
+    ))}
+  </p>
+)}
+
+{position === "bottom" && (prev || next) && (
+  <nav class="lesson-pager" aria-label="Previous and next lesson">
+    {prev ? (
+      <a class="pager prev" href={withBase(`/lessons/${prev.slug}/`)}>
+        <span class="dir">← Previous</span>
+        <span class="pager-title">{prev.title}</span>
+      </a>
+    ) : <span class="pager spacer"></span>}
+    {next ? (
+      <a class="pager next" href={withBase(`/lessons/${next.slug}/`)}>
+        <span class="dir">Next →</span>
+        <span class="pager-title">{next.title}</span>
+      </a>
+    ) : <span class="pager spacer"></span>}
+  </nav>
+)}
+
+<style>
+  .lesson-crumb {
+    display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+    font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-faint);
+    margin: 0.2rem 0 0.6rem;
+  }
+  .lesson-crumb a { color: var(--ink-soft); text-decoration: none; }
+  .lesson-crumb a:hover { color: var(--live); }
+  .crumb-mod { color: var(--ink-soft); }
+  .sep { color: var(--ink-faint); }
+
+  .prereq {
+    display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+    background: var(--asserted-wash); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 0.45rem 0.7rem; font-size: 0.9rem; margin: 0 0 1rem;
+  }
+  .prereq-label {
+    font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.03em; color: var(--asserted);
+  }
+  .prereq a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+  .prereq a:hover { color: var(--live); }
+
+  .lesson-pager {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 1.6rem;
+  }
+  @media (max-width: 560px) { .lesson-pager { grid-template-columns: 1fr; } }
+  .pager {
+    display: flex; flex-direction: column; gap: 0.15rem;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 0.7rem 0.9rem; text-decoration: none; color: var(--ink);
+  }
+  .pager.spacer { background: none; border: none; box-shadow: none; }
+  .pager.next { text-align: right; }
+  .pager:hover { border-color: var(--live); }
+  .dir { font-family: var(--font-mono); font-size: 0.75rem; color: var(--live); }
+  .pager-title { font-family: var(--font-display); font-weight: 600; font-size: 0.98rem; }
+</style>

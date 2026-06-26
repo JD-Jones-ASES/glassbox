@@ -1,0 +1,72 @@
+{
+  "id": "ifelse-buggy",
+  "title": "Two ifs both run",
+  "problem": "Grade a score of 85: 'distinction' for 80 and up, otherwise 'pass' for 50 and up.",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "score = 85\nif score >= 80:\n    grade = \"distinction\"\nif score >= 50:\n    grade = \"pass\"\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "score": 85
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "score": 85
+      },
+      "stdout": ""
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "score": 85,
+        "grade": "distinction"
+      },
+      "stdout": "",
+      "note": "First if: 85 >= 80, so grade = 'distinction'. So far so good."
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "score": 85,
+        "grade": "distinction"
+      },
+      "stdout": "",
+      "note": "A second, separate `if` — it runs too, because it isn't joined to the first. And 85 >= 50 is also true.",
+      "checkpoint": true,
+      "checkpoint_prompt": "grade is already 'distinction'. The next line is a separate `if score >= 50:`. After it runs, what will grade be?"
+    },
+    {
+      "step": 4,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "score": 85,
+        "grade": "pass"
+      },
+      "stdout": "",
+      "note": "grade = 'pass', overwriting 'distinction'. Both ifs fired and the second clobbered the first. We wanted only one branch to win."
+    }
+  ]
+}

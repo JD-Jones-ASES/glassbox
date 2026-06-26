@@ -1,6 +1,10 @@
 ---
 import Base from "../layouts/Base.astro";
 import { withBase } from "../lib/withBase.js";
+import { firstLesson } from "../lib/curriculum.js";
+
+// "Start here" follows the course manifest, so the entry point tracks the curriculum order automatically.
+const start = firstLesson();
 ---
 
 <Base title="GlassBox — watch code actually run">
@@ -36,8 +40,12 @@ import { withBase } from "../lib/withBase.js";
   <section class="start card">
     <h2>Start here</h2>
     <p>
-      The <a href={withBase("/lessons/swap/")}>swap lesson</a> proves the whole idea: three ways to swap
-      two cups, one of which destroys a value before your eyes.
+      Begin with <a href={withBase(`/lessons/${start.slug}/`)}>{start.title}</a> and follow the course in order.
+      Or open the <a href={withBase("/lessons/")}>full outline</a> and pick whatever you came for.
+    </p>
+    <p>
+      Want the lesson that proves the whole idea first? The <a href={withBase("/lessons/swap/")}>swap lesson</a> shows
+      three ways to swap two cups — one of which destroys a value before your eyes.
     </p>
     <p class="aside">
       Curious how we keep it honest? See <a href={withBase("/verification/")}>what the tracer proves</a>.

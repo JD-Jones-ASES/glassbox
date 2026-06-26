@@ -1,0 +1,77 @@
+{
+  "id": "aliasing-buggy",
+  "title": "Assignment doesn't copy a list",
+  "problem": "Make a backup of the scores list, then add 30 to the original — the backup should keep the first two scores.",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "scores = [10, 20]\nbackup = scores\nscores.append(30)\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "scores": [
+          10,
+          20
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "scores": [
+          10,
+          20
+        ],
+        "backup": [
+          10,
+          20
+        ]
+      },
+      "stdout": "",
+      "refs": {
+        "scores": 1,
+        "backup": 1
+      },
+      "note": "`backup = scores` does NOT copy the list. Both names now point at the same list object — notice the matching ref ids on scores and backup.",
+      "checkpoint": true,
+      "checkpoint_prompt": "backup was just set to scores. The next line appends 30 to scores. After it runs, what will backup hold?"
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "scores": [
+          10,
+          20,
+          30
+        ],
+        "backup": [
+          10,
+          20,
+          30
+        ]
+      },
+      "stdout": "",
+      "refs": {
+        "scores": 1,
+        "backup": 1
+      },
+      "note": "Appending to scores also changed backup: they are one and the same object. The 'backup' was never independent."
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+id = "datatypes-procedural"
+title = "True division keeps the fraction"
+register = "procedural"
+problem = "Find the average of total = 7 shared between count = 2 (we want 3.5)."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+total = 7
+count = 2
+avg = total / count
+"""
+
+[[checkpoints]]
+step = 1
+ask = "total is 7 and count is 2. After `avg = total / count` runs, what will avg be?"
+
+[[notes]]
+step = 2
+text = "avg = 7 / 2 = 3.5. A single slash is true division — it keeps the fraction and gives a float. The operator chose the type of the result."

@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
+import LessonNav from "../../components/LessonNav.astro";
 import procedural from "../../../derived/functions/procedural.trace.json";
 import idiomatic from "../../../derived/functions/idiomatic.trace.json";
 import naive from "../../../derived/functions/naive.trace.json";
@@ -14,6 +15,8 @@ const registers = [procedural, idiomatic, naive, clever];
   title="Functions — GlassBox"
   description="The same job four ways — and what a function actually adds: its own scope and a value handed back."
 >
+  <LessonNav slug="functions" position="top" />
+
   <h1>Functions: package an idea you can call</h1>
   <p class="lede">
     A function is a named recipe with its own scratch space. When you call it, a fresh scope opens (watch
@@ -52,6 +55,7 @@ const registers = [procedural, idiomatic, naive, clever];
       see <a href="../../verification/">how GlassBox stays honest</a>.
     </p>
   </section>
+  <LessonNav slug="functions" position="bottom" />
 </Base>
 
 <style>

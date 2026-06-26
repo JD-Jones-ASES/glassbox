@@ -1,0 +1,19 @@
+id = "booleanops-procedural"
+title = "Compare against both values"
+register = "procedural"
+problem = "Check whether x (which is 5) is equal to 1 or 2."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+x = 5
+match = x == 1 or x == 2
+"""
+
+[[checkpoints]]
+step = 0
+ask = "x is 5 and the test is `x == 1 or x == 2`. After it runs, what will match be?"
+
+[[notes]]
+step = 1
+text = "match = False, a real bool. You have to compare against each value in full: `x == 1 or x == 2`. Now the result is the True/False you expected."

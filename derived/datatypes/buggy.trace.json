@@ -1,0 +1,52 @@
+{
+  "id": "datatypes-buggy",
+  "title": "Dividing with // drops the remainder",
+  "problem": "Find the average of total = 7 shared between count = 2 (we want 3.5).",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "total = 7\ncount = 2\navg = total // count\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "total": 7
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "total": 7,
+        "count": 2
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "total is 7 and count is 2. After `avg = total // count` runs, what will avg be — and is it a whole number or a fraction?"
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "total": 7,
+        "count": 2,
+        "avg": 3
+      },
+      "stdout": "",
+      "note": "avg = 7 // 2 = 3. The // operator is floor division: it throws the remainder away and gives a whole int. Half a unit is lost."
+    }
+  ]
+}

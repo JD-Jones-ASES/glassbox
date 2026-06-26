@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
+import LessonNav from "../../components/LessonNav.astro";
 import buggy from "../../../derived/faulttolerance/buggy.trace.json";
 import procedural from "../../../derived/faulttolerance/procedural.trace.json";
 
@@ -12,6 +13,8 @@ const registers = [buggy, procedural];
   title="Fault tolerance — GlassBox"
   description="Kill a node mid-network and watch a redundant path reroute around it — while a single-path network strands the packet."
 >
+  <LessonNav slug="faulttolerance" position="top" />
+
   <h1>Fault tolerance</h1>
   <p class="lede">
     The internet keeps working when pieces of it fail because there is usually more than one path between
@@ -40,6 +43,7 @@ const registers = [buggy, procedural];
       The packet's path is real execution output; the little network is a hand-built model (marked <em>model: author-asserted</em>) — see <a href="../../verification/">how GlassBox stays honest</a>.
     </p>
   </section>
+  <LessonNav slug="faulttolerance" position="bottom" />
 </Base>
 
 <style>

@@ -1,0 +1,37 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import LessonNav from "../../components/LessonNav.astro";
+import buggy from "../../../derived/conversion/buggy.trace.json";
+import procedural from "../../../derived/conversion/procedural.trace.json";
+
+// Buggy first: watch it fail in real state, then watch the fix.
+const registers = [buggy, procedural];
+---
+
+<Base title="Float to int — GlassBox" description="int() truncates toward zero; round() rounds to the nearest. The wrong one drops a whole unit.">
+  <LessonNav slug="conversion" position="top" />
+
+  <h1>Converting a float to an int</h1>
+  <p class="lede">Turning a decimal into a whole number sounds like rounding — but Python's <code>int()</code> doesn't round. Watch <code>3.9</code> become two different whole numbers depending on which function you reach for.</p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>Watch <code>rounded</code> — does <code>3.9</code> become 3 or 4?</p>
+    <ul>
+      <li><strong>Buggy</strong> — <code>rounded = int(3.9)</code> gives <code>3</code>. <code>int()</code> truncates — it chops the fractional part off rather than rounding to the nearest.</li>
+      <li><strong>Procedural</strong> — <code>rounded = round(3.9)</code> gives <code>4</code>. When you actually want rounding, <code>round()</code> is the tool.</li>
+    </ul>
+    <p class="fineprint">Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.</p>
+  </section>
+  <LessonNav slug="conversion" position="bottom" />
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>

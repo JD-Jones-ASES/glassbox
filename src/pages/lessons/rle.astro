@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
+import LessonNav from "../../components/LessonNav.astro";
 import buggy from "../../../derived/rle/buggy.trace.json";
 import procedural from "../../../derived/rle/procedural.trace.json";
 
@@ -12,6 +13,8 @@ const registers = [buggy, procedural];
   title="Run-length encoding — GlassBox"
   description="Compress a row of pixels into (length, colour) pairs — a lossless compression that is also a program you can trace."
 >
+  <LessonNav slug="rle" position="top" />
+
   <h1>Run-length encoding</h1>
   <p class="lede">
     Run-length encoding is the bridge between the two halves of this course: it is <em>lossless
@@ -44,6 +47,7 @@ const registers = [buggy, procedural];
       Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.
     </p>
   </section>
+  <LessonNav slug="rle" position="bottom" />
 </Base>
 
 <style>

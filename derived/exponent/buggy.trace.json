@@ -1,0 +1,41 @@
+{
+  "id": "exponent-buggy",
+  "title": "^ is not 'to the power of'",
+  "problem": "Raise base (2) to the power of 3 (we want 8).",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "base = 2\npower = base ^ 3\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "base": 2
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "base is 2. After `power = base ^ 3` runs, what will power be?"
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "base": 2,
+        "power": 1
+      },
+      "stdout": "",
+      "note": "power = 2 ^ 3 = 1, not 8. In Python `^` is bitwise XOR, not exponentiation — and 2 XOR 3 is 1. No error is raised; the answer is just silently wrong."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+id = "modulo-procedural"
+title = "% wraps the value around"
+register = "procedural"
+problem = "It's 10 o'clock. What hour shows on a 12-hour clock 5 hours later? (we want 3)."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+start = 10
+clock = (start + 5) % 12
+"""
+
+[[checkpoints]]
+step = 0
+ask = "It's 10 o'clock. After `clock = (start + 5) % 12` runs, what will clock show?"
+
+[[notes]]
+step = 1
+text = "clock = (10 + 5) % 12 = 3. The % (remainder) operator wraps the value around 12, so 15 becomes 3. The same wrap-around is what fixed-width numbers do — see Overflow."

@@ -1,0 +1,26 @@
+id = "truthiness-buggy"
+title = "Comparing a list to True"
+register = "naive"
+problem = "Set label to 'has items' when the list has something in it, otherwise 'empty'."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+items = [3, 8]
+if items == True:
+    label = "has items"
+else:
+    label = "empty"
+"""
+
+[[checkpoints]]
+step = 1
+ask = "items is [3, 8] and the test is `items == True`. Which branch runs — does label become 'has items' or 'empty'?"
+
+[[notes]]
+step = 1
+text = "`items == True` is False. A non-empty list is 'truthy', but it is NOT equal to the bool True — so this comparison fails and we fall to the else."
+
+[[notes]]
+step = 2
+text = "label ends as 'empty', even though the list clearly has items. Comparing to True is not the same as asking whether the list is truthy."

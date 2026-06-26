@@ -1,144 +1,76 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { withBase } from "../../lib/withBase.js";
+import { modules, flatLessons } from "../../lib/curriculum.js";
 
-// The lesson catalog. One entry per anchor; add a line as each lesson lands. (Could be generated from
-// derived/ later, but the editorial titles/blurbs live here for now.)
-const pillars = [
-  {
-    name: "Programs & State",
-    blurb: "The small programs, traced line by line.",
-    lessons: [
-      {
-        slug: "swap",
-        title: "Swapping two values",
-        blurb: "Three ways to swap two cups — including the one a beginner writes, watched failing.",
-      },
-      {
-        slug: "partition",
-        title: "Sorting into two piles",
-        blurb: "Split numbers into evens and odds — and watch a one-character bug merge the piles.",
-      },
-      {
-        slug: "accumulate",
-        title: "Adding up a list",
-        blurb: "Keep a running total — and watch the = vs += bug stop it from ever adding.",
-      },
-      {
-        slug: "search",
-        title: "Linear search",
-        blurb: "Find where a value lives — and watch the index-vs-value mix-up return the wrong thing.",
-      },
-      {
-        slug: "filter",
-        title: "Filtering a list",
-        blurb: "Keep the items that pass a test — and watch deleting-while-looping skip an element.",
-      },
-      {
-        slug: "functions",
-        title: "Functions: package an idea you can call",
-        blurb: "The same job four ways — see a function open its own scope and hand a value back.",
-      },
-    ],
-  },
-  {
-    name: "Data",
-    blurb: "How computers represent information — every bit of it a program you can trace.",
-    lessons: [
-      {
-        slug: "binary",
-        title: "Decimal to binary",
-        blurb: "Watch 13 fill the powers-of-two columns to become 1101 — place value, traced as real Python.",
-      },
-      {
-        slug: "rle",
-        title: "Run-length encoding",
-        blurb: "Compress a row of pixels into (length, colour) pairs — and watch the bug that drops the last run.",
-      },
-      {
-        slug: "bindecimal",
-        title: "Binary to decimal",
-        blurb: "Turn 1101 back into 13 by doubling — and watch the base mix-up read it as eleven hundred.",
-      },
-      {
-        slug: "overflow",
-        title: "Overflow",
-        blurb: "Watch an 8-bit counter wrap 255 → 0 — and watch Python's unbounded ints refuse to.",
-      },
-      {
-        slug: "roundoff",
-        title: "Roundoff",
-        blurb: "Watch 0.1 + 0.2 come out as 0.30000000000000004 — and why == is a trap on floats.",
-      },
-    ],
-  },
-  {
-    name: "Systems & Networks",
-    blurb: "How machines talk — modelled as small simulations and traced like any other program.",
-    lessons: [
-      {
-        slug: "routing",
-        title: "Packet switching",
-        blurb: "Follow a packet hopping across a network graph from A to D, one hop at a time.",
-      },
-      {
-        slug: "faulttolerance",
-        title: "Fault tolerance",
-        blurb: "Fail a node and watch a redundant network reroute — while a single-path one strands the packet.",
-      },
-      {
-        slug: "multipacket",
-        title: "Packets take different routes",
-        blurb: "One message, three packets, three routes — arriving out of order and reassembled by sequence number.",
-      },
-      {
-        slug: "speedup",
-        title: "Parallel speedup",
-        blurb: "Watch two workers halve the time on independent tasks — and a dependency chain refuse to speed up at all.",
-      },
-    ],
-  },
-];
+// The catalog is now a course OUTLINE driven by the curriculum manifest (src/lib/curriculum.js) — one
+// ordered path instead of a flat card grid. Module order = the course arc; the step number on each row is
+// the continuous course index. Editorial titles/blurbs live in the manifest, the single source of truth.
+const courseIndexBySlug = Object.fromEntries(flatLessons().map((l) => [l.slug, l.courseIndex]));
 ---
 
-<Base title="Lessons — GlassBox" description="Step through small programs and watch their state, line by line.">
-  <h1>Lessons</h1>
+<Base title="Lessons — GlassBox" description="A step-by-step course: watch small programs run, one line at a time.">
+  <h1>The course</h1>
   <p class="lede">
-    Each lesson is a small program you step through, watching the state change one line at a time. Pick a
-    register — including the buggy one — and let CPython, not a teacher, show you what really happens.
+    One path, in order. Each lesson is a small program you step through, watching the state change line by
+    line — and most ship with the buggy version a beginner writes, watched failing. Start at the top, or
+    jump to whatever you came for.
   </p>
 
-  {pillars.map((p) => (
-    <section class="pillar">
-      <h2>{p.name}</h2>
-      <p class="pillar-blurb">{p.blurb}</p>
-      <ul class="lesson-list">
-        {p.lessons.map((l) => (
-          <li class="card">
-            <a href={withBase(`/lessons/${l.slug}/`)}>
-              <span class="lesson-title">{l.title}</span>
-              <span class="lesson-blurb">{l.blurb}</span>
-              <span class="go">Open →</span>
+  {modules.map((m, mi) => (
+    <section class="module">
+      <h2><span class="mod-num">{mi + 1}</span>{m.name}</h2>
+      <p class="module-blurb">{m.blurb}</p>
+      <ol class="steps">
+        {m.lessons.map((l) => (
+          <li class="step">
+            <span class="step-num">{courseIndexBySlug[l.slug]}</span>
+            <a class="step-link" href={withBase(`/lessons/${l.slug}/`)}>
+              <span class="step-head">
+                <span class="step-title">{l.title}</span>
+                {l.kind === "author-asserted-simulation" && (
+                  <span class="badge asserted"><span class="led"></span>simulation</span>
+                )}
+              </span>
+              <span class="step-blurb">{l.blurb}</span>
             </a>
           </li>
         ))}
-      </ul>
+      </ol>
     </section>
   ))}
 </Base>
 
 <style>
-  .pillar { margin-top: 1.6rem; }
-  .pillar-blurb { color: var(--ink-faint); margin: 0 0 0.8rem; }
-  .lesson-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
-  @media (max-width: 720px) { .lesson-list { grid-template-columns: 1fr; } }
-  .lesson-list .card { padding: 0; }
-  .lesson-list a {
-    display: flex; flex-direction: column; gap: 0.3rem; padding: 1rem 1.1rem; text-decoration: none;
-    color: var(--ink); height: 100%;
+  .module { margin-top: 1.8rem; }
+  .module h2 { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.2rem; }
+  .mod-num {
+    font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; color: var(--live);
+    border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    padding: 0.05rem 0.5rem; line-height: 1.4;
   }
-  .lesson-title { font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; }
-  .lesson-blurb { color: var(--ink-soft); font-size: 0.92rem; }
-  .go { margin-top: auto; color: var(--live); font-size: 0.85rem; font-weight: 600; }
-  .lesson-list a:hover .go { text-decoration: underline; }
+  .module-blurb { color: var(--ink-faint); margin: 0 0 0.8rem; max-width: 64ch; }
+
+  /* The stepped path: a connector line runs down the left, with each step's number sitting on it. */
+  .steps {
+    list-style: none; margin: 0; padding: 0 0 0 1.4rem;
+    border-left: 2px solid var(--border); display: flex; flex-direction: column; gap: 0.7rem;
+  }
+  .step { position: relative; }
+  .step-num {
+    position: absolute; left: calc(-1.4rem - 1px); top: 0.9rem; transform: translateX(-50%);
+    width: 1.6rem; height: 1.6rem; border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600;
+    color: var(--live-ink); background: var(--live-wash); border: 1px solid var(--live);
+  }
+  .step-link {
+    display: flex; flex-direction: column; gap: 0.2rem;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 0.75rem 1rem; text-decoration: none; color: var(--ink);
+  }
+  .step-link:hover { border-color: var(--live); }
+  .step-head { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+  .step-title { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; }
+  .step-blurb { color: var(--ink-soft); font-size: 0.92rem; }
 </style>

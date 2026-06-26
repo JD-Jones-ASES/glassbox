@@ -1,0 +1,51 @@
+{
+  "id": "elifladder-buggy",
+  "title": "Loosest test first",
+  "problem": "Grade a score of 95: 90+ is an A, 80+ a B, 70+ a C, anything lower a D.",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "score = 95\nif score >= 60:\n    grade = \"D\"\nelif score >= 70:\n    grade = \"C\"\nelif score >= 80:\n    grade = \"B\"\nelif score >= 90:\n    grade = \"A\"\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "score": 95
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "score": 95
+      },
+      "stdout": "",
+      "note": "The first test, 95 >= 60, is true — so this branch wins and every later `elif` is skipped.",
+      "checkpoint": true,
+      "checkpoint_prompt": "score is 95 and the ladder tests `>= 60` first. What grade will it land on?"
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "score": 95,
+        "grade": "D"
+      },
+      "stdout": "",
+      "note": "grade = 'D' for a 95. The ladder is ordered loosest-first, so the >= 90 branch is never reached. The first true branch wins."
+    }
+  ]
+}

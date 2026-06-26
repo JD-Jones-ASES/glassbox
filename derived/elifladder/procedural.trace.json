@@ -1,0 +1,51 @@
+{
+  "id": "elifladder-procedural",
+  "title": "Strictest test first",
+  "problem": "Grade a score of 95: 90+ is an A, 80+ a B, 70+ a C, anything lower a D.",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "score = 95\nif score >= 90:\n    grade = \"A\"\nelif score >= 80:\n    grade = \"B\"\nelif score >= 70:\n    grade = \"C\"\nelse:\n    grade = \"D\"\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "score": 95
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "score": 95
+      },
+      "stdout": "",
+      "note": "95 >= 90 is true, so we take the A branch and skip the rest.",
+      "checkpoint": true,
+      "checkpoint_prompt": "score is 95 and this ladder tests `>= 90` first. What grade will it land on?"
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "score": 95,
+        "grade": "A"
+      },
+      "stdout": "",
+      "note": "grade = 'A'. Order a ladder strictest-first, so the narrowest band gets the first chance to match."
+    }
+  ]
+}

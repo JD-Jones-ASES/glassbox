@@ -1,0 +1,19 @@
+id = "modulo-buggy"
+title = "Forgetting to wrap the clock"
+register = "naive"
+problem = "It's 10 o'clock. What hour shows on a 12-hour clock 5 hours later? (we want 3)."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+start = 10
+clock = start + 5
+"""
+
+[[checkpoints]]
+step = 0
+ask = "It's 10 o'clock. After `clock = start + 5` runs, what will clock show?"
+
+[[notes]]
+step = 1
+text = "clock = 10 + 5 = 15. There's no 15 on a 12-hour clock — the code never wrapped the value back around to 3."

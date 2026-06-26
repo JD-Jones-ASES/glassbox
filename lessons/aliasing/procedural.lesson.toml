@@ -1,0 +1,24 @@
+id = "aliasing-procedural"
+title = "Slice to make a real copy"
+register = "procedural"
+problem = "Make a backup of the scores list, then add 30 to the original — the backup should keep the first two scores."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+scores = [10, 20]
+backup = scores[:]
+scores.append(30)
+"""
+
+[[checkpoints]]
+step = 1
+ask = "backup was set to scores[:] (a slice). The next line appends 30 to scores. After it runs, what will backup hold?"
+
+[[notes]]
+step = 1
+text = "`scores[:]` builds a brand-new list with the same contents. backup and scores are now separate objects — no shared ref id."
+
+[[notes]]
+step = 2
+text = "Appending to scores left backup untouched at [10, 20]. To copy a list, slice it (or use list(...)); plain assignment only adds a name."

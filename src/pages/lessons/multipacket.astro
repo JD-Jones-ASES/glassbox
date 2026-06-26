@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
+import LessonNav from "../../components/LessonNav.astro";
 import buggy from "../../../derived/multipacket/buggy.trace.json";
 import procedural from "../../../derived/multipacket/procedural.trace.json";
 
@@ -12,6 +13,8 @@ const registers = [buggy, procedural];
   title="Packet switching — GlassBox"
   description="Watch one message split into packets that take different routes, arrive out of order, and reassemble by sequence number."
 >
+  <LessonNav slug="multipacket" position="top" />
+
   <h1>Packets take different routes</h1>
   <p class="lede">
     A message does not cross the internet in one piece. It is chopped into numbered <em>packets</em>, each
@@ -45,6 +48,7 @@ const registers = [buggy, procedural];
       The packets' movements are real execution output; the little network is a hand-built model (marked <em>model: author-asserted</em>) — see <a href="../../verification/">how GlassBox stays honest</a>.
     </p>
   </section>
+  <LessonNav slug="multipacket" position="bottom" />
 </Base>
 
 <style>

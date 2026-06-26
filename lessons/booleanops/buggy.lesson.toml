@@ -1,0 +1,19 @@
+id = "booleanops-buggy"
+title = "x == 1 or 2 is always truthy"
+register = "naive"
+problem = "Check whether x (which is 5) is equal to 1 or 2."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+x = 5
+match = x == 1 or 2
+"""
+
+[[checkpoints]]
+step = 0
+ask = "x is 5 and the test is `x == 1 or 2`. After it runs, what value does match hold?"
+
+[[notes]]
+step = 1
+text = "match = 2 — an integer, not True and not False. Python read it as `(x == 1) or 2`: that's `False or 2`, and `or` hands back its first truthy operand, which is 2. Since 2 is truthy, an `if match:` would always fire."

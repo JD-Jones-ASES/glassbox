@@ -1,0 +1,41 @@
+{
+  "id": "modulo-buggy",
+  "title": "Forgetting to wrap the clock",
+  "problem": "It's 10 o'clock. What hour shows on a 12-hour clock 5 hours later? (we want 3).",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "start = 10\nclock = start + 5\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "start": 10
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "It's 10 o'clock. After `clock = start + 5` runs, what will clock show?"
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "start": 10,
+        "clock": 15
+      },
+      "stdout": "",
+      "note": "clock = 10 + 5 = 15. There's no 15 on a 12-hour clock — the code never wrapped the value back around to 3."
+    }
+  ]
+}

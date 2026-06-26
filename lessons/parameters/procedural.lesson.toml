@@ -1,0 +1,29 @@
+id = "parameters-procedural"
+title = "Name the arguments"
+register = "procedural"
+problem = "We have a budget of 100 and have spent 30. Work out how much is left (we want 70)."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+def remaining(budget, spent):
+    return budget - spent
+
+left = remaining(budget=100, spent=30)
+"""
+
+[[checkpoints]]
+step = 0
+ask = "This time we call remaining(budget=100, spent=30) by name. Inside the function, what will budget and spent be?"
+
+[[notes]]
+step = 1
+text = "Naming the arguments (budget=100, spent=30) binds each one explicitly, whatever the order."
+
+[[notes]]
+step = 3
+text = "It returns budget - spent = 100 - 30 = 70."
+
+[[notes]]
+step = 4
+text = "left = 70 — correct. Keyword arguments make the intent unmissable."

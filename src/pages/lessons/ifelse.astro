@@ -1,0 +1,37 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import LessonNav from "../../components/LessonNav.astro";
+import buggy from "../../../derived/ifelse/buggy.trace.json";
+import procedural from "../../../derived/ifelse/procedural.trace.json";
+
+// Buggy first: watch it fail in real state, then watch the fix.
+const registers = [buggy, procedural];
+---
+
+<Base title="if / else — GlassBox" description="Two separate ifs both run; the second clobbers the first. elif/else makes exactly one win.">
+  <LessonNav slug="ifelse" position="top" />
+
+  <h1>Choosing one branch with if / else</h1>
+  <p class="lede">Two back-to-back <code>if</code> statements are two independent decisions — both can run. When you meant 'do one or the other', that's a bug, and the last branch silently wins. Watch <code>grade</code> get set, then overwritten.</p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>Watch <code>grade</code>: it's set once, then changed again.</p>
+    <ul>
+      <li><strong>Buggy</strong> — Both <code>if</code>s test true for 85, so <code>grade</code> becomes <code>'distinction'</code> and is then overwritten by <code>'pass'</code>. Two separate ifs, both fired.</li>
+      <li><strong>Procedural</strong> — Joining them with <code>elif</code> makes them one decision — the moment the first matches, the rest are skipped, so <code>grade</code> stays <code>'distinction'</code>.</li>
+    </ul>
+    <p class="fineprint">Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.</p>
+  </section>
+  <LessonNav slug="ifelse" position="bottom" />
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>

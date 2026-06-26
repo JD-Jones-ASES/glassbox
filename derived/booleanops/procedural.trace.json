@@ -1,0 +1,41 @@
+{
+  "id": "booleanops-procedural",
+  "title": "Compare against both values",
+  "problem": "Check whether x (which is 5) is equal to 1 or 2.",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "x = 5\nmatch = x == 1 or x == 2\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "x": 5
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "x is 5 and the test is `x == 1 or x == 2`. After it runs, what will match be?"
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "x": 5,
+        "match": false
+      },
+      "stdout": "",
+      "note": "match = False, a real bool. You have to compare against each value in full: `x == 1 or x == 2`. Now the result is the True/False you expected."
+    }
+  ]
+}

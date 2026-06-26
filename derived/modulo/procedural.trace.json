@@ -1,0 +1,41 @@
+{
+  "id": "modulo-procedural",
+  "title": "% wraps the value around",
+  "problem": "It's 10 o'clock. What hour shows on a 12-hour clock 5 hours later? (we want 3).",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "start = 10\nclock = (start + 5) % 12\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "start": 10
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "It's 10 o'clock. After `clock = (start + 5) % 12` runs, what will clock show?"
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "start": 10,
+        "clock": 3
+      },
+      "stdout": "",
+      "note": "clock = (10 + 5) % 12 = 3. The % (remainder) operator wraps the value around 12, so 15 becomes 3. The same wrap-around is what fixed-width numbers do — see Overflow."
+    }
+  ]
+}

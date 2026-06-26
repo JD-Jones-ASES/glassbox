@@ -1,0 +1,29 @@
+id = "parameters-buggy"
+title = "Arguments in the wrong order"
+register = "naive"
+problem = "We have a budget of 100 and have spent 30. Work out how much is left (we want 70)."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+def remaining(budget, spent):
+    return budget - spent
+
+left = remaining(30, 100)
+"""
+
+[[checkpoints]]
+step = 0
+ask = "We call remaining(30, 100), meaning to pass budget then spent. Arguments fill parameters left-to-right. Inside the function, what will budget and spent be?"
+
+[[notes]]
+step = 1
+text = "Inside the function, arguments bind by POSITION: budget = 30 and spent = 100 — the opposite of what we wanted (budget should be 100)."
+
+[[notes]]
+step = 3
+text = "It returns budget - spent = 30 - 100 = -70."
+
+[[notes]]
+step = 4
+text = "left = -70 — a negative amount 'remaining', the giveaway that the arguments went in backwards."

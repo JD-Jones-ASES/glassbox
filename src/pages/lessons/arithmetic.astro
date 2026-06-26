@@ -1,0 +1,37 @@
+---
+import Base from "../../layouts/Base.astro";
+import TracePlayer from "../../islands/TracePlayer.svelte";
+import LessonNav from "../../components/LessonNav.astro";
+import buggy from "../../../derived/arithmetic/buggy.trace.json";
+import procedural from "../../../derived/arithmetic/procedural.trace.json";
+
+// Buggy first: watch it fail in real state, then watch the fix.
+const registers = [buggy, procedural];
+---
+
+<Base title="Operator precedence — GlassBox" description="Python evaluates * before +, not left to right. Forgetting parentheses gives the wrong total.">
+  <LessonNav slug="arithmetic" position="top" />
+
+  <h1>Operator precedence: × before +</h1>
+  <p class="lede">Python doesn't read arithmetic left to right — it follows the usual maths rules, doing multiplication before addition. If you meant the addition to happen first, you have to say so. Watch the same numbers give two different totals.</p>
+
+  <TracePlayer registers={registers} client:visible />
+
+  <section class="explain card">
+    <h2>What you are looking at</h2>
+    <p>Watch <code>result</code>: the order the operators run in decides the answer.</p>
+    <ul>
+      <li><strong>Buggy</strong> — <code>result = base + extra * 4</code> computes <code>3 * 4 = 12</code> first, then <code>+ 2</code>, giving <code>14</code> — not the <code>20</code> we wanted.</li>
+      <li><strong>Procedural</strong> — <code>result = (base + extra) * 4</code> forces the addition first: <code>5 * 4 = 20</code>. Parentheses make the order explicit.</li>
+    </ul>
+    <p class="fineprint">Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.</p>
+  </section>
+  <LessonNav slug="arithmetic" position="bottom" />
+</Base>
+
+<style>
+  .explain { margin-top: 1.4rem; }
+  .explain ul { margin: 0.6rem 0; padding-left: 1.1rem; }
+  .explain li { margin: 0.5rem 0; }
+  .fineprint { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 0; }
+</style>

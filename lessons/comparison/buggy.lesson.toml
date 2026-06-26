@@ -1,0 +1,19 @@
+id = "comparison-buggy"
+title = "> misses the boundary"
+register = "naive"
+problem = "Decide whether someone aged 18 counts as an adult (18 or older) and store the yes/no answer."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+age = 18
+is_adult = age > 18
+"""
+
+[[checkpoints]]
+step = 0
+ask = "age is 18, and 18 counts as an adult. After `is_adult = age > 18` runs, what will is_adult be?"
+
+[[notes]]
+step = 1
+text = "is_adult = (18 > 18) = False. Two things to notice: the comparison produced a real bool you stored, and `>` excludes 18 itself — the boundary is wrong."

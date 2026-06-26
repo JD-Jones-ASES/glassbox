@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
+import LessonNav from "../../components/LessonNav.astro";
 import buggy from "../../../derived/swap/buggy.trace.json";
 import procedural from "../../../derived/swap/procedural.trace.json";
 import idiomatic from "../../../derived/swap/idiomatic.trace.json";
@@ -13,6 +14,8 @@ const registers = [buggy, procedural, idiomatic];
   title="Swap — GlassBox"
   description="Three ways to swap two values — including the one a real beginner writes, watched failing."
 >
+  <LessonNav slug="swap" position="top" />
+
   <h1>Swapping two values</h1>
   <p class="lede">
     Swapping two variables looks trivial until you try the obvious thing and a value vanishes. Step
@@ -49,6 +52,7 @@ const registers = [buggy, procedural, idiomatic];
       stays honest</a>.
     </p>
   </section>
+  <LessonNav slug="swap" position="bottom" />
 </Base>
 
 <style>

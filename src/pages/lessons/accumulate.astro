@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
+import LessonNav from "../../components/LessonNav.astro";
 import buggy from "../../../derived/accumulate/buggy.trace.json";
 import procedural from "../../../derived/accumulate/procedural.trace.json";
 
@@ -12,6 +13,8 @@ const registers = [buggy, procedural];
   title="Running total — GlassBox"
   description="Add up a list with an accumulator — and watch the one-word bug that stops it from adding."
 >
+  <LessonNav slug="accumulate" position="top" />
+
   <h1>Adding up a list</h1>
   <p class="lede">
     Adding up a list is the most common loop you will ever write: keep a running total, and add each
@@ -44,6 +47,7 @@ const registers = [buggy, procedural];
       Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.
     </p>
   </section>
+  <LessonNav slug="accumulate" position="bottom" />
 </Base>
 
 <style>

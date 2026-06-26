@@ -72,7 +72,7 @@ derived/<topic>/   GENERATED trace JSON (committed; schema-valid) — what the p
 tracer/            the producer: a uv package; src/glassbox_tracer/{trace,snapshot,build}.py + tests/
 schemas/           JSON-Schema contracts (draft 2020-12, additionalProperties:false)
 scripts/validate/  validate-traces.mjs (Ajv gate) + scan-text.mjs (provider-agnostic gate)
-src/               Astro app: pages/, components/, islands/ (Svelte), lib/ (vanilla ES), styles/
+src/               Astro app: pages/, components/ (LessonNav), islands/ (Svelte player), lib/ (withBase + curriculum manifest + abstractions), styles/
 .github/workflows/deploy.yml   push to main -> astro build -> GitHub Pages (Pages disabled until reviewed)
 ```
 
@@ -125,12 +125,18 @@ after a baseline — `functions`, `speedup` — keep their own order.)
    `npm run trace` writes `derived/<topic>/<register>.trace.json`; `npm run prepare:traces` then runs the
    schema + scan gates. (`uv --project tracer run python -c "from glassbox_tracer.trace import trace; ..."`
    is the quick way to dump step/line/state.)
-3. **Page + catalog.** Add `src/pages/lessons/<topic>.astro` (import the trace JSON, mount
-   `<TracePlayer registers={[...]} client:visible />`, write a short worked explanation) and a line in the
-   `pillars` list in `src/pages/lessons/index.astro`. **Astro whitespace gotcha:** a space next to an inline
-   element (`<code>`, `<a>`, `<strong>`) is dropped if a newline falls between them — keep the element and
-   its adjacent word on the SAME line (this bit the `speedup` page: `<strong>Speedup</strong>\nmeasures`
-   rendered as "Speedupmeasures").
+3. **Page + manifest.** Add `src/pages/lessons/<topic>.astro` (import the trace JSON, mount
+   `<TracePlayer registers={[...]} client:visible />`, write a short worked explanation, and drop a
+   `<LessonNav slug="<topic>" position="top"/>` just inside `<Base>` and `position="bottom"` just before
+   `</Base>`). Then add the lesson to the right module in `src/lib/curriculum.js` —
+   `{ slug, title, blurb, prereqs: [...], kind }`. **The catalog is the manifest**: the lessons index
+   (numbered syllabus), the home "Start here" (`firstLesson()`), and every page's breadcrumb + prerequisite
+   callout + prev/next all render from `curriculum.js`, in array order — there is no hand-maintained
+   `pillars` list anymore (ADR-0012). Curriculum metadata lives *only* here, never in the lesson TOML (whose
+   schema is `additionalProperties:false` and feeds the trace pipeline). **Astro whitespace gotcha:** a space
+   next to an inline element (`<code>`, `<a>`, `<strong>`) is dropped if a newline falls between them — keep
+   the element and its adjacent word on the SAME line (this bit the `speedup` page:
+   `<strong>Speedup</strong>\nmeasures` rendered as "Speedupmeasures").
 4. **New abstraction?** Only if the generic state view / call-stack chrome isn't enough. Add
    `src/lib/abstractions/<type>.js` (a pure `(abstraction, state) → viewModel`), register it in
    `src/lib/abstractions/index.js`, and add one `{:else if … model.kind === "<type>"}` branch + scoped
@@ -144,27 +150,12 @@ byte-identical (`partition-buggy` carries aliasing `refs` by design; ADR-0009) a
 
 ## Status & roadmap
 
-**The spine is built, and the trust foundation is hardened (Phase 1, ADR-0009/0010).** The tracer handles
-straight-line code, loops, lists, and **multi-frame functions** (call/return, depth, return values,
-recursion, defaults; ADR-0008), now with **object identity** (`refs` make aliasing visible — the
-`partition-buggy` repair), a **two-axis provenance** model (`derivation_source` + `domain_model`; routing is
-a real trace of an author-asserted model), and serialization hardening (typed dict keys, cycle back-edges,
-deterministic set reprs, captured return-value flags). Fifteen lessons across three pillars, browsable
-from `/lessons/`:
-
-- **Programs & State** — `swap` (cups), `partition` (piles; aliasing bug via `refs`), `accumulate`
-  (=vs+= running total), `search` (linear search; index-vs-value bug), `filter` (build-new-list vs the
-  delete-while-looping skip), `functions` (call stack; forgot-`return` bug).
-- **Data** — `binary` (decimal→binary place-value columns), `rle` (run-length encoding; the compression
-  bridge; lost-last-run bug), `bindecimal` (binary→decimal; ×2-vs-×10 base confusion), `overflow` (8-bit
-  wrap vs Python's unbounded int), `roundoff` (0.1+0.2; the == trap vs a tolerance).
-- **Systems & Networks** — `routing` (node-link graph; a traced packet sim, ADR-0006), `faulttolerance`
-  (reroute around a dead node vs strand on a single path), `multipacket` (one message, three packets,
-  different routes, out-of-order arrival + reassembly), `speedup` (parallel vs a dependency chain; the
-  Gantt lane chart, live `speedup = sequential/parallel`).
-
-Renderers: cups, piles, binary, network (with `down` + multi-`packet` slots), call-stack, and `gantt`
-(lane chart). Many newer lessons ride the **generic state view** (no bespoke renderer).
+**The engine and trust foundation are hardened (Phase 1, ADR-0008/0009/0010).** The tracer handles
+straight-line code, loops, lists, dicts, and **multi-frame functions** (call/return, depth, return values,
+recursion, defaults), with **object identity** (`refs` make aliasing visible — the `partition-buggy`
+repair), a **two-axis provenance** model (`derivation_source` + `domain_model`; routing is a real trace of
+an author-asserted model), and serialization hardening (typed dict keys, cycle back-edges, deterministic
+set reprs, captured return-value flags).
 
 **Phase 2 (DONE) — the prediction–evidence–revision loop (the pedagogical product; ADR-0011).** Three
 learner-chosen practice modes, selected under the problem statement: **watch** (passive stepping — the
@@ -175,23 +166,49 @@ supplies a better `ask` at chosen steps, shown when the learner is in Predict mo
 construct-the-viz (fill the `bind` mapping, adjudicate vs `abstractionModel()`), is **deferred** — highest
 effort, most in need of live UX iteration.
 
-**Phase 3 (DONE) — content to rigorous, exam-relevant coverage (P0+P1, all execution-derived, each with a
-buggy register).** Ten new lessons shipped this line of work (accumulate, search, filter, rle, bindecimal,
-overflow, roundoff, faulttolerance, multipacket, speedup), spanning iteration/search/filtering, binary &
-representation limits, and packet switching / fault tolerance / parallel speedup. The network and gantt
-lessons are traced sims (`domain_model = author-asserted-simulation`).
+**Phase 3 + 4 (DONE) — a full beginner course with progression navigation.** Twenty-eight lessons now run
+as **one ordered path of nine modules**, browsable from `/lessons/` as a numbered syllabus and navigable
+lesson-to-lesson. Every new lesson is execution-derived with a buggy-first register; most carry a checkpoint.
 
-**Phase 4 / remaining (mostly owner-gated or optional):**
+- **0 · Foundations** — `values` (rebinding loses the old value), `datatypes` (`//` vs `/`: int vs float),
+  `conversion` (`int()` truncates vs `round()`).
+- **1 · Arithmetic & division** — `arithmetic` (× before +), `exponent` (`^` is XOR, not power),
+  `modulo` (the remainder / clock wrap; feeds `overflow`).
+- **2 · Comparisons & booleans** — `comparison` (a comparison is a stored bool; `>` vs `>=`),
+  `truthiness` (`== True` vs `if items:`), `booleanops` (`x == 1 or 2` returns the int `2`).
+- **3 · Decisions** — `ifelse` (two ifs both run), `elifladder` (first true branch wins; order matters).
+- **4 · Programs & state** — `swap` (cups), `accumulate` (=vs+=), `search` (index-vs-value), `filter`
+  (delete-while-looping skip).
+- **5 · Mutability & aliasing** — `aliasing` (`b = a` shares one list; refs prove it), `partition`
+  (piles; the aliasing bug, re-homed here).
+- **6 · Functions** — `functions` (call stack; forgot-`return`), `parameters` (positional order; keyword args).
+- **7 · Data & representation** — `binary`, `bindecimal`, `rle`, `overflow`, `roundoff`.
+- **8 · Systems & networks** — `routing`, `faulttolerance`, `multipacket`, `speedup`
+  (all `domain_model = author-asserted-simulation`).
+
+Renderers: cups, piles, binary, network (with `down` + multi-`packet` slots), call-stack, and `gantt`
+(lane chart). The 13 Foundations→Decisions→Mutability→Functions additions all ride the **generic state
+view** (no bespoke renderer; `aliasing` reuses the existing `refs` mechanism).
+
+**Navigation (ADR-0012).** Order, grouping, and prerequisites live in a single UI-layer manifest
+`src/lib/curriculum.js` (modules → ordered lessons → `prereqs` + helpers). The lessons index renders a
+numbered syllabus from it, the home "Start here" is `firstLesson()`, and `src/components/LessonNav.astro`
+gives every lesson a breadcrumb, a "Best after" prerequisite callout, and prev/next. The trace pipeline
+(lesson TOML, schemas, `build.py`, the player) is untouched by it.
+
+**Remaining / next:**
 - *Pages go-live* — owner enables GitHub Pages in repo Settings when ready (Source: GitHub Actions).
-- *Transfer-measurement rubric* — the predict/findline exercise modes are the instrument; a light static
-  rubric (prediction accuracy, first-divergence step, transfer to an unseen example) is the deliverable.
-- *Deferred lessons/features:* construct-the-viz exercise mode; the internet-vs-web composite ("type a URL
-  → page loads") and a standalone DNS lesson (both reuse `network.js`); granular pedagogical lessons
-  (truthiness, modular arithmetic, if/elif ladder, function variants); weak-guarantee "reveals" (metadata,
-  lossy/lossless, bandwidth) — out of the execution-derived core by design.
+- *Milestone projects* — a couple of integrative intro-CS problems (e.g. collecting-rainwater) that combine
+  several ideas and make a strong visual, placed as checkpoints along the lesson path.
+- *Interlinked glossary* — a breadth-first glossary of programming + networking terms (basics through
+  "truthiness", http/www/dns/ip-address, polynomial vs exponential time), cross-linked to lessons, with a
+  mouseover quick-definition popup integrated across the site.
+- *Transfer-measurement rubric* — the predict/findline modes are the instrument; a light static rubric is
+  the deliverable.
+- *Deferred:* construct-the-viz exercise mode; the internet-vs-web composite ("type a URL → page loads") and
+  a standalone DNS lesson (both reuse `network.js`); weak-guarantee "reveals" (metadata, lossy/lossless,
+  bandwidth) — out of the execution-derived core by design.
 
-**Starting a lesson-buildout session?** Read "Extending GlassBox" above for the full recipe and
-conventions. The deferred lessons listed here are the obvious next targets; the internet-vs-web composite
-and DNS reuse the existing `network.js` (no new renderer), while the granular pedagogical cluster rides
-the generic view. Engine, player, schemas, and gates are stable — expect to touch only `lessons/`,
-`derived/`, and `src/pages/lessons/`.
+**Starting a lesson-buildout session?** Read "Extending GlassBox" above for the full recipe. Engine, player,
+schemas, and gates are stable — expect to touch only `lessons/`, `derived/`, `src/pages/lessons/`, and the
+`src/lib/curriculum.js` manifest entry.

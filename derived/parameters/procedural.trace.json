@@ -1,0 +1,92 @@
+{
+  "id": "parameters-procedural",
+  "title": "Name the arguments",
+  "problem": "We have a budget of 100 and have spent 30. Work out how much is left (we want 70).",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "def remaining(budget, spent):\n    return budget - spent\n\nleft = remaining(budget=100, spent=30)\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "remaining": {
+          "__repr__": "<function remaining>",
+          "__unserializable__": true
+        }
+      },
+      "stdout": "",
+      "value_flags": {
+        "remaining": "repr-coerced"
+      },
+      "checkpoint": true,
+      "checkpoint_prompt": "This time we call remaining(budget=100, spent=30) by name. Inside the function, what will budget and spent be?"
+    },
+    {
+      "step": 1,
+      "line": 1,
+      "event": "call",
+      "frame": "remaining",
+      "depth": 1,
+      "state": {
+        "budget": 100,
+        "spent": 30
+      },
+      "stdout": "",
+      "note": "Naming the arguments (budget=100, spent=30) binds each one explicitly, whatever the order."
+    },
+    {
+      "step": 2,
+      "line": 2,
+      "event": "line",
+      "frame": "remaining",
+      "depth": 1,
+      "state": {
+        "budget": 100,
+        "spent": 30
+      },
+      "stdout": ""
+    },
+    {
+      "step": 3,
+      "line": 2,
+      "event": "return",
+      "frame": "remaining",
+      "depth": 1,
+      "state": {
+        "budget": 100,
+        "spent": 30
+      },
+      "stdout": "",
+      "return_value": 70,
+      "note": "It returns budget - spent = 100 - 30 = 70."
+    },
+    {
+      "step": 4,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "remaining": {
+          "__repr__": "<function remaining>",
+          "__unserializable__": true
+        },
+        "left": 70
+      },
+      "stdout": "",
+      "value_flags": {
+        "remaining": "repr-coerced"
+      },
+      "note": "left = 70 — correct. Keyword arguments make the intent unmissable."
+    }
+  ]
+}

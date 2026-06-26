@@ -1,0 +1,20 @@
+id = "datatypes-buggy"
+title = "Dividing with // drops the remainder"
+register = "naive"
+problem = "Find the average of total = 7 shared between count = 2 (we want 3.5)."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+total = 7
+count = 2
+avg = total // count
+"""
+
+[[checkpoints]]
+step = 1
+ask = "total is 7 and count is 2. After `avg = total // count` runs, what will avg be — and is it a whole number or a fraction?"
+
+[[notes]]
+step = 2
+text = "avg = 7 // 2 = 3. The // operator is floor division: it throws the remainder away and gives a whole int. Half a unit is lost."

@@ -1,0 +1,24 @@
+id = "aliasing-buggy"
+title = "Assignment doesn't copy a list"
+register = "naive"
+problem = "Make a backup of the scores list, then add 30 to the original — the backup should keep the first two scores."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+scores = [10, 20]
+backup = scores
+scores.append(30)
+"""
+
+[[checkpoints]]
+step = 1
+ask = "backup was just set to scores. The next line appends 30 to scores. After it runs, what will backup hold?"
+
+[[notes]]
+step = 1
+text = "`backup = scores` does NOT copy the list. Both names now point at the same list object — notice the matching ref ids on scores and backup."
+
+[[notes]]
+step = 2
+text = "Appending to scores also changed backup: they are one and the same object. The 'backup' was never independent."

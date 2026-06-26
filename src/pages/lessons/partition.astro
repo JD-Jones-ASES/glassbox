@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
+import LessonNav from "../../components/LessonNav.astro";
 import buggy from "../../../derived/partition/buggy.trace.json";
 import procedural from "../../../derived/partition/procedural.trace.json";
 
@@ -12,6 +13,8 @@ const registers = [buggy, procedural];
   title="Partition — GlassBox"
   description="Sort numbers into two piles — and watch a one-character setup bug put them all in one."
 >
+  <LessonNav slug="partition" position="top" />
+
   <h1>Sorting into two piles</h1>
   <p class="lede">
     Walk down a row of numbers and drop each one onto the evens pile or the odds pile. Easy — until the
@@ -47,6 +50,7 @@ const registers = [buggy, procedural];
       see <a href="../../verification/">how GlassBox stays honest</a>.
     </p>
   </section>
+  <LessonNav slug="partition" position="bottom" />
 </Base>
 
 <style>

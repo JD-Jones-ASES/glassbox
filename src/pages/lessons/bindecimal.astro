@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
+import LessonNav from "../../components/LessonNav.astro";
 import buggy from "../../../derived/bindecimal/buggy.trace.json";
 import procedural from "../../../derived/bindecimal/procedural.trace.json";
 
@@ -12,6 +13,8 @@ const registers = [buggy, procedural];
   title="Binary to decimal — GlassBox"
   description="Turn a binary number back into decimal — and watch the base mix-up that reads 1101 as eleven hundred."
 >
+  <LessonNav slug="bindecimal" position="top" />
+
   <h1>Binary to decimal</h1>
   <p class="lede">
     Going from binary back to decimal is one loop: read the bits left to right, and at each step double
@@ -41,6 +44,7 @@ const registers = [buggy, procedural];
       Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.
     </p>
   </section>
+  <LessonNav slug="bindecimal" position="bottom" />
 </Base>
 
 <style>

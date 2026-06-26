@@ -1,0 +1,30 @@
+id = "elifladder-procedural"
+title = "Strictest test first"
+register = "procedural"
+problem = "Grade a score of 95: 90+ is an A, 80+ a B, 70+ a C, anything lower a D."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+score = 95
+if score >= 90:
+    grade = "A"
+elif score >= 80:
+    grade = "B"
+elif score >= 70:
+    grade = "C"
+else:
+    grade = "D"
+"""
+
+[[checkpoints]]
+step = 1
+ask = "score is 95 and this ladder tests `>= 90` first. What grade will it land on?"
+
+[[notes]]
+step = 1
+text = "95 >= 90 is true, so we take the A branch and skip the rest."
+
+[[notes]]
+step = 2
+text = "grade = 'A'. Order a ladder strictest-first, so the narrowest band gets the first chance to match."

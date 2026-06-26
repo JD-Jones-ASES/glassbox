@@ -1,0 +1,41 @@
+{
+  "id": "booleanops-buggy",
+  "title": "x == 1 or 2 is always truthy",
+  "problem": "Check whether x (which is 5) is equal to 1 or 2.",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "x = 5\nmatch = x == 1 or 2\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "x": 5
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "x is 5 and the test is `x == 1 or 2`. After it runs, what value does match hold?"
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "x": 5,
+        "match": 2
+      },
+      "stdout": "",
+      "note": "match = 2 — an integer, not True and not False. Python read it as `(x == 1) or 2`: that's `False or 2`, and `or` hands back its first truthy operand, which is 2. Since 2 is truthy, an `if match:` would always fire."
+    }
+  ]
+}

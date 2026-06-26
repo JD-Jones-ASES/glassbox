@@ -41,10 +41,14 @@ for the decision log.
 
 ## Status
 
-**The spine is built.** The tracer handles straight-line code, loops, lists, and multi-frame functions
-(calls, returns, recursion). Six lessons span three pillars — Programs & State (`swap`, `partition`,
-`functions`), Data (`binary`), and Systems & Networks (`routing`) — each with its own abstraction and a
-buggy register that fails in front of you. The rest of the curriculum is more of the same: more traces. See
+**A full beginner course, built.** The tracer handles straight-line code, loops, lists, dicts, multi-frame
+functions (calls, returns, recursion), and object identity/aliasing. **Twenty-eight lessons run as one
+ordered path of nine modules** — from `values`, types, arithmetic, comparisons & booleans and the if/elif
+ladder, through the original spine (swap, partition, accumulate, search, filter, functions), into data
+representation (binary, run-length encoding, overflow, roundoff) and traced network/parallelism sims
+(routing, fault tolerance, multipacket, speedup). Each ships with a *buggy* register that fails in front of
+you, and most with a checkpoint for **Predict** mode. Navigation is a numbered syllabus driven by a single
+curriculum manifest, with per-lesson breadcrumb, prerequisite callouts, and prev/next. See
 [`AGENTS.md`](./AGENTS.md) for the architecture, the "how to add a lesson" recipe, and the roadmap.
 
 ## License

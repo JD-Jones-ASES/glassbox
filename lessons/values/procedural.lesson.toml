@@ -1,0 +1,29 @@
+id = "values-procedural"
+title = "Save the old value first"
+register = "procedural"
+problem = "price starts at 5, then becomes 7. Add the original price and the new price together (we want 5 + 7 = 12)."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+price = 5
+old = price
+price = 7
+answer = old + price
+"""
+
+[[checkpoints]]
+step = 2
+ask = "old is 5 and price is now 7. After `answer = old + price` runs, what will answer be?"
+
+[[notes]]
+step = 1
+text = "Before changing price, we copy its value into a second name. Now old = 5."
+
+[[notes]]
+step = 2
+text = "price becomes 7 — but old still holds 5, untouched. Two names, two values."
+
+[[notes]]
+step = 3
+text = "answer = old + price = 5 + 7 = 12. Saving the old value first is what kept both numbers available."

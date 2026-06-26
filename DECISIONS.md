@@ -199,3 +199,28 @@ has a UI; `checkpoint_prompt` is added to the trace schema.
 existing step data, and the "trace is the product" guarantee extends cleanly to "the trace is also the answer
 key." The "hide one corner of the triangle" exercise modes (Phase 2.2) follow the same rule: identify-the-line
 adjudicates against `steps[k].line`, construct-the-viz against the pure `abstractionModel()` output.
+
+## ADR-0012 — Course progression via a UI-layer curriculum manifest (2026-06-26)
+
+**Context.** The lessons index was a flat grid of "pillar" cards hardcoded in `index.astro`, with no notion
+of order, prerequisites, or position — the catalog read as a pile, not a path. As the lesson count grew
+(15 → 28), the owner wanted the *natural progression* of topics shown and lesson-to-lesson navigation. The
+obvious place to encode order — the lesson TOML — is the wrong one: its schema is `additionalProperties:false`
+and feeds the trace pipeline, so curriculum fields there would ripple through `schema → build.py →
+trace.schema` and entangle pedagogy ordering with the honesty-critical producer.
+
+**Decision.** Keep all curriculum metadata in a single **UI-layer** module, `src/lib/curriculum.js`
+(`modules` → ordered `lessons` with `{ slug, title, blurb, prereqs, kind }`, plus helpers `flatLessons`,
+`neighbors`, `prereqsOf`, `firstLesson`, `breadcrumbFor`). Order is array position at both levels. Three
+consumers read it: the lessons index renders a **numbered syllabus** (modules as sections, continuous course
+numbering, a connector-line path, `kind`-driven provenance pills); the home "Start here" is `firstLesson()`;
+and a reusable `src/components/LessonNav.astro` gives every lesson page a breadcrumb (`Module · Step N of M`),
+an advisory "Best after" prerequisite callout, and prev/next. The lesson TOML, schemas, `build.py`, and the
+TracePlayer are **untouched**. Existing slugs/URLs are unchanged; `partition` is re-homed into a new
+Mutability module as a manifest move only (its TOML and committed trace are byte-identical).
+
+**Consequences.** The course is reorderable as data — adding a lesson is a TOML + page + one manifest entry;
+the trace "is the product" pipeline stays pure. Prereqs are a soft callout, not a hard gate (no auth/state on
+a static site). Completion tracking (localStorage) and a visual prerequisite-DAG map are forward-looking
+adds over the same manifest. A future `[slug].astro` dynamic route could collapse the per-page `LessonNav`
+insertion to one file, deferred to avoid rewiring each page's trace-JSON imports.

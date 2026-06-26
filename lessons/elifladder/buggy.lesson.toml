@@ -1,0 +1,30 @@
+id = "elifladder-buggy"
+title = "Loosest test first"
+register = "naive"
+problem = "Grade a score of 95: 90+ is an A, 80+ a B, 70+ a C, anything lower a D."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+score = 95
+if score >= 60:
+    grade = "D"
+elif score >= 70:
+    grade = "C"
+elif score >= 80:
+    grade = "B"
+elif score >= 90:
+    grade = "A"
+"""
+
+[[checkpoints]]
+step = 1
+ask = "score is 95 and the ladder tests `>= 60` first. What grade will it land on?"
+
+[[notes]]
+step = 1
+text = "The first test, 95 >= 60, is true — so this branch wins and every later `elif` is skipped."
+
+[[notes]]
+step = 2
+text = "grade = 'D' for a 95. The ladder is ordered loosest-first, so the >= 90 branch is never reached. The first true branch wins."

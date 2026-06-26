@@ -1,0 +1,24 @@
+id = "values-buggy"
+title = "Reusing a name — the old value is gone"
+register = "naive"
+problem = "price starts at 5, then becomes 7. Add the original price and the new price together (we want 5 + 7 = 12)."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+price = 5
+price = 7
+answer = price + price
+"""
+
+[[checkpoints]]
+step = 1
+ask = "price was 5, now it's 7. After `answer = price + price` runs, what will answer be?"
+
+[[notes]]
+step = 1
+text = "price is rebound to 7. The 5 isn't kept anywhere — the name `price` simply points at 7 now."
+
+[[notes]]
+step = 2
+text = "answer = price + price = 7 + 7 = 14, not 5 + 7. The original 5 was gone the moment price changed."

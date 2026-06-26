@@ -1,0 +1,64 @@
+{
+  "id": "values-procedural",
+  "title": "Save the old value first",
+  "problem": "price starts at 5, then becomes 7. Add the original price and the new price together (we want 5 + 7 = 12).",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "price = 5\nold = price\nprice = 7\nanswer = old + price\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "price": 5
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "price": 5,
+        "old": 5
+      },
+      "stdout": "",
+      "note": "Before changing price, we copy its value into a second name. Now old = 5."
+    },
+    {
+      "step": 2,
+      "line": 3,
+      "event": "line",
+      "state": {
+        "price": 7,
+        "old": 5
+      },
+      "stdout": "",
+      "note": "price becomes 7 — but old still holds 5, untouched. Two names, two values.",
+      "checkpoint": true,
+      "checkpoint_prompt": "old is 5 and price is now 7. After `answer = old + price` runs, what will answer be?"
+    },
+    {
+      "step": 3,
+      "line": 4,
+      "event": "line",
+      "state": {
+        "price": 7,
+        "old": 5,
+        "answer": 12
+      },
+      "stdout": "",
+      "note": "answer = old + price = 5 + 7 = 12. Saving the old value first is what kept both numbers available."
+    }
+  ]
+}

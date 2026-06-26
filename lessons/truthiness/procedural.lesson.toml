@@ -1,0 +1,26 @@
+id = "truthiness-procedural"
+title = "Just ask: if items"
+register = "procedural"
+problem = "Set label to 'has items' when the list has something in it, otherwise 'empty'."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+items = [3, 8]
+if items:
+    label = "has items"
+else:
+    label = "empty"
+"""
+
+[[checkpoints]]
+step = 1
+ask = "items is [3, 8] and the test is `if items:`. Which branch runs?"
+
+[[notes]]
+step = 1
+text = "`if items:` asks whether items is truthy. A non-empty list is truthy, so we take the first branch."
+
+[[notes]]
+step = 2
+text = "label = 'has items'. The falsy values are empty containers, 0, '' and None; everything else is truthy. Let the value speak for itself."

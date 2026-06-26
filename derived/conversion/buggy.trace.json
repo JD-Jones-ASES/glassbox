@@ -1,0 +1,41 @@
+{
+  "id": "conversion-buggy",
+  "title": "int() truncates, it doesn't round",
+  "problem": "Round the measurement 3.9 to a whole number (we want 4).",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "measurement = 3.9\nrounded = int(measurement)\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "measurement": 3.9
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "measurement is 3.9. After `rounded = int(measurement)` runs, what will rounded be?"
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "measurement": 3.9,
+        "rounded": 3
+      },
+      "stdout": "",
+      "note": "int(3.9) = 3, not 4. int() truncates toward zero — it chops the fraction off rather than rounding."
+    }
+  ]
+}

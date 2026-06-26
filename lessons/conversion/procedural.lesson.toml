@@ -1,0 +1,19 @@
+id = "conversion-procedural"
+title = "round() rounds to the nearest"
+register = "procedural"
+problem = "Round the measurement 3.9 to a whole number (we want 4)."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+measurement = 3.9
+rounded = round(measurement)
+"""
+
+[[checkpoints]]
+step = 0
+ask = "measurement is 3.9. After `rounded = round(measurement)` runs, what will rounded be?"
+
+[[notes]]
+step = 1
+text = "round(3.9) = 4. round() goes to the nearest whole number — the tool to use when you want rounding, not int()."

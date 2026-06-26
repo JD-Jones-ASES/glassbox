@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
+import LessonNav from "../../components/LessonNav.astro";
 import buggy from "../../../derived/roundoff/buggy.trace.json";
 import procedural from "../../../derived/roundoff/procedural.trace.json";
 
@@ -12,6 +13,8 @@ const registers = [buggy, procedural];
   title="Roundoff — GlassBox"
   description="Watch 0.1 + 0.2 come out as 0.30000000000000004 — and why comparing floats with == is a trap."
 >
+  <LessonNav slug="roundoff" position="top" />
+
   <h1>Roundoff</h1>
   <p class="lede">
     Decimals like <code>0.1</code> have no exact representation in binary, the same way <code>1/3</code> has no exact decimal. So <code>0.1 + 0.2</code> lands a hair off <code>0.3</code>, and asking <code>== 0.3</code> returns <code>False</code>. This is roundoff — a representation error — and it is a different beast from <a href="../overflow/">overflow</a>, which is a fixed-width wrap.
@@ -39,6 +42,7 @@ const registers = [buggy, procedural];
       Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.
     </p>
   </section>
+  <LessonNav slug="roundoff" position="bottom" />
 </Base>
 
 <style>

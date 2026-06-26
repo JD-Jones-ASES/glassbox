@@ -1,0 +1,22 @@
+id = "ifelse-procedural"
+title = "elif picks just one"
+register = "procedural"
+problem = "Grade a score of 85: 'distinction' for 80 and up, otherwise 'pass' for 50 and up."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+score = 85
+if score >= 80:
+    grade = "distinction"
+elif score >= 50:
+    grade = "pass"
+"""
+
+[[checkpoints]]
+step = 1
+ask = "score is 85. With `if score >= 80:` then `elif score >= 50:`, what will grade end up as?"
+
+[[notes]]
+step = 2
+text = "grade = 'distinction'. Because the second test is an `elif`, it's skipped the instant the first matches — exactly one branch runs."

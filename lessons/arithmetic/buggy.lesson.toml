@@ -1,0 +1,20 @@
+id = "arithmetic-buggy"
+title = "Forgetting the parentheses"
+register = "naive"
+problem = "Add base (2) and extra (3), then multiply the sum by 4 (we want 20)."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+base = 2
+extra = 3
+result = base + extra * 4
+"""
+
+[[checkpoints]]
+step = 1
+ask = "We want (2 + 3) x 4 = 20. After `result = base + extra * 4` runs, what will result be?"
+
+[[notes]]
+step = 2
+text = "result = 2 + 3 * 4 = 14. Python does * before +, so it computed 3 * 4 = 12 first, then added 2. Left-to-right is not how it works."

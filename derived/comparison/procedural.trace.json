@@ -1,0 +1,41 @@
+{
+  "id": "comparison-procedural",
+  "title": ">= includes the boundary",
+  "problem": "Decide whether someone aged 18 counts as an adult (18 or older) and store the yes/no answer.",
+  "register": "procedural",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "age = 18\nis_adult = age >= 18\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "age": 18
+      },
+      "stdout": "",
+      "checkpoint": true,
+      "checkpoint_prompt": "age is 18. After `is_adult = age >= 18` runs, what will is_adult be?"
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "age": 18,
+        "is_adult": true
+      },
+      "stdout": "",
+      "note": "is_adult = (18 >= 18) = True. `>=` includes the boundary. The stored value is a bool — a comparison is a yes/no value you can keep and reuse."
+    }
+  ]
+}

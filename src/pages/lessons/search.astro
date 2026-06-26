@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
+import LessonNav from "../../components/LessonNav.astro";
 import buggy from "../../../derived/search/buggy.trace.json";
 import procedural from "../../../derived/search/procedural.trace.json";
 
@@ -12,6 +13,8 @@ const registers = [buggy, procedural];
   title="Linear search — GlassBox"
   description="Walk a list and find where a value lives — and watch the index-vs-value confusion that returns the wrong thing."
 >
+  <LessonNav slug="search" position="top" />
+
   <h1>Linear search</h1>
   <p class="lede">
     To find something in an unsorted list, you check each element in turn until you spot it. The subtle
@@ -40,6 +43,7 @@ const registers = [buggy, procedural];
       Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.
     </p>
   </section>
+  <LessonNav slug="search" position="bottom" />
 </Base>
 
 <style>

@@ -1,0 +1,60 @@
+{
+  "id": "truthiness-buggy",
+  "title": "Comparing a list to True",
+  "problem": "Set label to 'has items' when the list has something in it, otherwise 'empty'.",
+  "register": "naive",
+  "language": "python",
+  "derivation_source": "execution-derived",
+  "domain_model": "execution-derived",
+  "provenance": {
+    "language": "python",
+    "trace_source": "sys.settrace",
+    "tracer_version": "0.1.0",
+    "author": "GlassBox",
+    "created": "2026-06-26"
+  },
+  "source": "items = [3, 8]\nif items == True:\n    label = \"has items\"\nelse:\n    label = \"empty\"\n",
+  "trace": [
+    {
+      "step": 0,
+      "line": 1,
+      "event": "line",
+      "state": {
+        "items": [
+          3,
+          8
+        ]
+      },
+      "stdout": ""
+    },
+    {
+      "step": 1,
+      "line": 2,
+      "event": "line",
+      "state": {
+        "items": [
+          3,
+          8
+        ]
+      },
+      "stdout": "",
+      "note": "`items == True` is False. A non-empty list is 'truthy', but it is NOT equal to the bool True — so this comparison fails and we fall to the else.",
+      "checkpoint": true,
+      "checkpoint_prompt": "items is [3, 8] and the test is `items == True`. Which branch runs — does label become 'has items' or 'empty'?"
+    },
+    {
+      "step": 2,
+      "line": 5,
+      "event": "line",
+      "state": {
+        "items": [
+          3,
+          8
+        ],
+        "label": "empty"
+      },
+      "stdout": "",
+      "note": "label ends as 'empty', even though the list clearly has items. Comparing to True is not the same as asking whether the list is truthy."
+    }
+  ]
+}

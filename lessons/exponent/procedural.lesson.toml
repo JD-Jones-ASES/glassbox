@@ -1,0 +1,19 @@
+id = "exponent-procedural"
+title = "** is the power operator"
+register = "procedural"
+problem = "Raise base (2) to the power of 3 (we want 8)."
+author = "GlassBox"
+created = "2026-06-26"
+
+source = """
+base = 2
+power = base ** 3
+"""
+
+[[checkpoints]]
+step = 0
+ask = "base is 2. After `power = base ** 3` runs, what will power be?"
+
+[[notes]]
+step = 1
+text = "power = 2 ** 3 = 8. The double-star `**` is Python's power operator."

@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import TracePlayer from "../../islands/TracePlayer.svelte";
+import LessonNav from "../../components/LessonNav.astro";
 import buggy from "../../../derived/filter/buggy.trace.json";
 import procedural from "../../../derived/filter/procedural.trace.json";
 
@@ -12,6 +13,8 @@ const registers = [buggy, procedural];
   title="Filtering a list — GlassBox"
   description="Keep the items that pass a test — and watch why deleting from a list while looping over it skips elements."
 >
+  <LessonNav slug="filter" position="top" />
+
   <h1>Filtering a list</h1>
   <p class="lede">
     Filtering — keeping only the items that pass some test — is the everyday move behind "find the data
@@ -41,6 +44,7 @@ const registers = [buggy, procedural];
       Every state you see came from running the program under CPython's tracer at build time — see <a href="../../verification/">how GlassBox stays honest</a>.
     </p>
   </section>
+  <LessonNav slug="filter" position="bottom" />
 </Base>
 
 <style>
