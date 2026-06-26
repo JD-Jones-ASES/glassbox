@@ -39,9 +39,10 @@
   const stateEntries = $derived(cur ? Object.entries(cur.state) : []);
   const isFinal = $derived(safeStep === stepCount - 1);
   const stepKey = $derived(regIdx + ":" + safeStep);
-  // A checkpoint gates the reveal of the NEXT step (so there must be a next step to predict). In
-  // "predict" mode EVERY non-final step is a checkpoint; in "findline" mode the prediction panel is off.
-  const isCheckpoint = $derived(!!(cur && !isFinal && mode !== "findline" && (cur.checkpoint === true || mode === "predict")));
+  // Prediction gating belongs to "predict" mode only: it makes EVERY non-final step a checkpoint. "Watch"
+  // steps freely (passive reading); "findline" runs its own exercise. An authored `checkpoint`/`ask` is
+  // not a gate of its own — it just supplies a better question when the learner IS predicting that step.
+  const isCheckpoint = $derived(!!(cur && !isFinal && mode === "predict"));
   const checkpointKey = $derived(stepKey);
   const answered = $derived(answeredKeys.has(checkpointKey));
   const nextState = $derived(!isFinal && steps[safeStep + 1] ? steps[safeStep + 1].state : null);
