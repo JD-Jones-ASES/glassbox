@@ -2,8 +2,8 @@
 # Pure `astro build` — generated trace JSON (derived/) is committed, so CI does NOT run the Python
 # tracer. There is no Python in CI. Project base is /glassbox (see astro.config.mjs).
 #
-# NOTE: this workflow is committed and ready, but Pages is left DISABLED until Phase 0 is reviewed.
-# Enable it in repo Settings → Pages (Source: GitHub Actions) when ready to go public.
+# Pages is LIVE and the repo is public (the v1.0.0 flip — ADR-0013): a push to main publishes the site
+# at https://jd-jones-ases.github.io/glassbox/. Gates stay local-only; validate before pushing data.
 name: Deploy to GitHub Pages
 
 on:

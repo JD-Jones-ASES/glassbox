@@ -224,3 +224,21 @@ the trace "is the product" pipeline stays pure. Prereqs are a soft callout, not 
 a static site). Completion tracking (localStorage) and a visual prerequisite-DAG map are forward-looking
 adds over the same manifest. A future `[slug].astro` dynamic route could collapse the per-page `LessonNav`
 insertion to one file, deferred to avoid rewiring each page's trace-JSON imports.
+
+## ADR-0013 — The repo is public with Pages live; the v1.0.0 flip recorded (2026-07-10)
+
+**Context.** The deploy docs were written pre-review: `AGENTS.md §Deploy` said "private, Pages not yet
+enabled" and `deploy.yml`'s header said "Pages left DISABLED until Phase 0 is reviewed." At v1.0.0
+(2026-06-26) the owner went public — the CHANGELOG even says "first public release" — but the flip itself
+was done out-of-band in GitHub settings and the two deploy texts were never updated. Found 2026-07-10 at
+incorporation into the hub, the same drift class as two sibling repos. Hub lesson: record visibility flips
+as ADRs when they happen.
+
+**Decision.** Record the standing fact: `JD-Jones-ASES/glassbox` is **public** (verified via `gh repo view`,
+2026-07-10) with Pages live at https://jd-jones-ases.github.io/glassbox/, licensed MIT (code, `LICENSE`) +
+CC BY-SA 4.0 (content, `LICENSE-content.md`). `AGENTS.md §Deploy`, the repo-map line, and `deploy.yml`'s
+header are corrected. Because gates are local-only here (invariant 5), a push to `main` publishes whatever
+is committed — the deploy texts now say so explicitly.
+
+**Consequences.** Docs match GitHub state; the "enable Pages when ready" instruction is retired. Any future
+visibility change is an owner-gated event recorded as an ADR at flip time.

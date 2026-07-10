@@ -73,7 +73,7 @@ tracer/            the producer: a uv package; src/glassbox_tracer/{trace,snapsh
 schemas/           JSON-Schema contracts (draft 2020-12, additionalProperties:false)
 scripts/validate/  validate-traces.mjs (Ajv gate) + scan-text.mjs (provider-agnostic gate)
 src/               Astro app: pages/, components/ (LessonNav), islands/ (Svelte player), lib/ (withBase + curriculum manifest + abstractions), styles/
-.github/workflows/deploy.yml   push to main -> astro build -> GitHub Pages (Pages disabled until reviewed)
+.github/workflows/deploy.yml   push to main -> astro build -> GitHub Pages (live — ADR-0013)
 ```
 
 ## Provenance & honesty (non-negotiable)
@@ -98,8 +98,10 @@ src/               Astro app: pages/, components/ (LessonNav), islands/ (Svelte 
 ## Deploy
 
 Push to `main` → GitHub Actions runs `astro build` → GitHub Pages. Project base path is `/glassbox` (see
-`astro.config.mjs`). The repo is private and Pages is **not yet enabled**; turn it on in repo Settings →
-Pages (Source: GitHub Actions) when the owner is ready to go public.
+`astro.config.mjs`). The repo is **public** and Pages is **live** at
+<https://jd-jones-ases.github.io/glassbox/> (ADR-0013 — the v1.0.0 flip, recorded 2026-07-10). A push to
+`main` therefore publishes; the gates are local-only (invariant 5), so run `npm run prepare:traces` green
+before pushing data.
 
 ## Extending GlassBox (how to add the next lesson)
 
