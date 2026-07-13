@@ -1,9 +1,11 @@
 # Build the static Astro site and deploy it to GitHub Pages.
-# Pure `astro build` — generated trace JSON (derived/) is committed, so CI does NOT run the Python
-# tracer. There is no Python in CI. Project base is /glassbox (see astro.config.mjs).
+# Generated trace JSON (derived/) is committed, so CI does NOT run the Python tracer; the admitgate
+# seal below runs the gates (validate-traces, scan-text) against it on every build. Project base is
+# /glassbox (see astro.config.mjs).
 #
 # Pages is LIVE and the repo is public (the v1.0.0 flip — ADR-0013): a push to main publishes the site
-# at https://jd-jones-ases.github.io/glassbox/. Gates stay local-only; validate before pushing data.
+# at https://jd-jones-ases.github.io/glassbox/ — and the seal blocks the deploy on refused data:
+# generate-then-gate, never generate-then-ship.
 name: Deploy to GitHub Pages
 
 on:
@@ -33,6 +35,9 @@ jobs:
       # npm install (not `npm ci`): the committed lockfile is generated on Windows and may omit some
       # Linux-only optional native deps; install reconciles them.
       - run: npm install --no-audit --no-fund
+      # The admitgate seal: audit + the gates registered in gates.toml
+      # (validate-traces, scan-text). Refused data cannot ship.
+      - uses: JD-Jones-ASES/admitgate@e56267392d616f7127d62cd7c589637c380fd0e0 # M1 pre-1.0 SHA pin
       - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

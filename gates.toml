@@ -1,0 +1,28 @@
+# admitgate — deploy-blocking admission gates (M1 dogfood wiring).
+# Wraps the existing validators by exit code: the seal runs them in CI, so
+# committed-but-unvalidated data can no longer ship. No records are earned
+# yet (require = [], the ledger starts empty): M1 puts the gates in the
+# deploy path; record-earning is a later milestone.
+
+[policy]
+ledger  = "audit/verdicts"
+require = []
+
+[[items]]
+# Honest floor for a mixed corpus: derived/ holds execution-derived, hybrid,
+# AND hand-authored traces, so the blanket declaration is the weakest level.
+# Per-item levels arrive when records are earned.
+match      = "derived/**/*.trace.json"
+derivation = "asserted"
+
+[[gates]]
+# Schema + honesty cross-checks: a trace claiming execution-derived must be
+# traced, language-consistent, and free of author-asserted steps (etc.).
+name = "derivation-honesty"
+run  = "node scripts/validate/validate-traces.mjs"
+
+[[gates]]
+# Provider-agnostic text policy: repo policy stays a user gate, exactly as
+# admitgate intends (its zero-config `scan` covers generation residue only).
+name = "provider-agnostic-text"
+run  = "node scripts/validate/scan-text.mjs"
