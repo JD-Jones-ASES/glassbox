@@ -40,8 +40,9 @@ uv --project tracer run pytest   # the tracer's golden-trace test suite (the hea
 ```
 
 `prepare:traces` regenerates the committed `derived/` traces from `lessons/` + the tracer, then runs the
-gates. **CI does NOT run the tracer** — it runs a pure `astro build` over the committed JSON. So: edit a
-lesson → `prepare:traces` locally → commit the regenerated `derived/` → push.
+gates. **CI does NOT run the tracer** — it runs the admitgate seal (the same two gates: `validate-traces`,
+`scan-text`) and then `astro build` over the committed JSON; refused data fails the build and cannot ship.
+So: edit a lesson → `prepare:traces` locally → commit the regenerated `derived/` → push.
 
 ## How it works (the factory invariant)
 
@@ -92,16 +93,18 @@ src/               Astro app: pages/, components/ (LessonNav), islands/ (Svelte 
    masquerades as execution output.
 4. **Schemas are contracts.** A mismatch means one side is wrong — fix it explicitly; never silence the gate.
 5. **Static, local-first.** No runtime backend, no client-side Python. The tracer runs locally (supervised);
-   CI is a pure `astro build` over committed JSON.
+   CI never runs it — CI verifies the committed JSON (the admitgate seal runs the gates in the deploy path)
+   and then does a plain `astro build`.
 6. **Provider-agnostic.** No course/exam/standards-body names anywhere shipped. `scan-text.mjs` enforces it.
 
 ## Deploy
 
-Push to `main` → GitHub Actions runs `astro build` → GitHub Pages. Project base path is `/glassbox` (see
-`astro.config.mjs`). The repo is **public** and Pages is **live** at
-<https://jd-jones-ases.github.io/glassbox/> (ADR-0013 — the v1.0.0 flip, recorded 2026-07-10). A push to
-`main` therefore publishes; the gates are local-only (invariant 5), so run `npm run prepare:traces` green
-before pushing data.
+Push to `main` → GitHub Actions runs the admitgate seal (`validate-traces` + `scan-text`, in the deploy
+path) and then `astro build` → GitHub Pages. Project base path is `/glassbox` (see `astro.config.mjs`).
+The repo is **public** and Pages is **live** at <https://jd-jones-ases.github.io/glassbox/> (ADR-0013 —
+the v1.0.0 flip, recorded 2026-07-10). A push to `main` publishes only what the seal admits — refused data
+fails the build job and cannot ship. Run `npm run prepare:traces` green before pushing data to spare
+yourself the red CI run.
 
 ## Extending GlassBox (how to add the next lesson)
 
@@ -193,8 +196,8 @@ generic variables table for everything else.
 
 **Glossary** — ~86 cross-linked terms at `/glossary/`, with a site-wide hover/focus definition popup.
 
-**Deploy** — push to `main` → `.github/workflows/deploy.yml` builds and publishes to GitHub Pages
-(base path `/glassbox`).
+**Deploy** — push to `main` → `.github/workflows/deploy.yml` runs the admitgate seal, builds, and
+publishes to GitHub Pages (base path `/glassbox`); refused data cannot ship.
 
 **Deferred by design (not gaps):** the construct-the-viz exercise mode; an internet-vs-web composite and a
 standalone DNS lesson (would reuse `network.js`); weak-guarantee "reveals" (metadata, lossy/lossless,
